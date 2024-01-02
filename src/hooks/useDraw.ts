@@ -6,11 +6,12 @@ import TempEdge from "@/app/elements/temp-edge";
 
 export const useDraw = () => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
+
     var vertices = new Array<Vertex>();
     var edges = new Array<Edge>();
     var tempEdge: TempEdge | null;
 
-    var selectedObject: Vertex | null = null;
+    var selectedObject: Vertex | Edge | null = null;
     var heldObject: Vertex | null = null;
     var originalPosition: {x: number, y: number};
     var isShiftPressed = false, isMoving = false;
@@ -53,9 +54,9 @@ export const useDraw = () => {
             selectedObject = selectObject(point.x, point.y);
             console.log(selectedObject);
 
-            if (selectedObject && isShiftPressed) {
+            if (selectedObject instanceof Vertex && isShiftPressed) {
                 tempEdge = new TempEdge(selectedObject, point.x, point.y);
-            } else if (selectedObject) {
+            } else if (selectedObject instanceof Vertex) {
                 heldObject = selectedObject;
                 originalPosition = {x: (selectedObject.x), y: (selectedObject.y)};
             }
@@ -67,10 +68,10 @@ export const useDraw = () => {
                 if (!point) return;
 
                 selectedObject = selectObject(point.x, point.y);
-                if (!selectedObject) {
+                if (!(selectedObject instanceof Vertex)) {
                     tempEdge.px = point.x;
                     tempEdge.py = point.y;
-                } else {
+                } else if (selectedObject instanceof Vertex) {
                     var midX = (selectedObject.x + tempEdge.vx) / 2;
                     var midY = (selectedObject.y + tempEdge.vy) / 2;
                     var p = selectedObject.computeClosestPoint(midX, midY);
@@ -94,8 +95,7 @@ export const useDraw = () => {
             const point = computePointInCanvas(e);
             if (!point) return;
             selectedObject = selectObject(point.x, point.y);
-            if (selectedObject && tempEdge && selectedObject != tempEdge.vertex) {
-                console.log("REACHED HERE");
+            if (selectedObject instanceof Vertex && tempEdge && selectedObject != tempEdge.vertex) {
                 var edge = new Edge(0, selectedObject, tempEdge.vertex);
                 edges.push(edge);
             }
@@ -112,8 +112,8 @@ export const useDraw = () => {
                     heldObject.x = point.x;
                     heldObject.y = point.y;
                 }
+                relocateEdges();
             }
-            relocateEdges();
             tempEdge = null;
             heldObject = null;
             isMoving = false;
@@ -170,6 +170,10 @@ export const useDraw = () => {
                 if (vertices[i].containsPoint(x, y)) 
                     return vertices[i];
             }
+            for (let i = 0; i < edges.length; i++) {
+                if (edges[i].containsPoint(x, y)) 
+                    return edges[i];
+            }
             return null;
         }
 
@@ -195,8 +199,10 @@ export const useDraw = () => {
 
             // draw edges
             for (let i = 0; i < edges.length; i++) {
+                ctx.strokeStyle = (edges[i] == selectedObject) ? 'blue' : 'white';
                 edges[i].draw(ctx);
             }
+            ctx.strokeStyle = 'white';
         }
 
         // add event listeners
