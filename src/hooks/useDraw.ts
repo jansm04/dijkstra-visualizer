@@ -41,6 +41,7 @@ export const useDraw = () => {
             if (selectedObject) {
                 drawGraph(canvasRef.current?.getContext("2d"));
             }
+            console.log(edges);
         }
 
         const onMouseDown= (e: MouseEvent) => {
@@ -80,7 +81,8 @@ export const useDraw = () => {
             const point = computePointInCanvas(e);
             if (!point) return;
             selectedObject = selectObject(point.x, point.y);
-            if (selectedObject && tempEdge) {
+            if (selectedObject && tempEdge && selectedObject != tempEdge.vertex) {
+                console.log("REACHED HERE");
                 var edge = new Edge(0, selectedObject, tempEdge.vertex);
                 edges.push(edge);
             }
@@ -136,6 +138,11 @@ export const useDraw = () => {
             if (tempEdge && !tempEdge.vertex.containsPoint(tempEdge.px, tempEdge.py)) { 
                 tempEdge.draw(ctx);
             } 
+
+            // draw edges
+            for (let i = 0; i < edges.length; i++) {
+                edges[i].draw(ctx);
+            }
         }
 
         // add event listeners

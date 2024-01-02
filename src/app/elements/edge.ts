@@ -21,9 +21,16 @@ class Edge {
         this.by = endpoints.by;
     }
 
+    draw(ctx: CanvasRenderingContext2D) {
+        ctx.beginPath();
+        ctx.moveTo(this.ax, this.ay);
+        ctx.lineTo(this.bx, this.by);
+        ctx.stroke();
+    }
+
     computeEndPoints() {
         var midX = (this.va.x + this.vb.x) / 2;
-        var midY = (this.vb.x + this.vb.y) / 2;
+        var midY = (this.va.y + this.vb.y) / 2;
 
         var a = this.va.computeClosestPoint(midX, midY);
         var b = this.vb.computeClosestPoint(midX, midY);
