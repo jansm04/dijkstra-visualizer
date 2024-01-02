@@ -11,7 +11,9 @@ export const useDraw = () => {
     var tempEdge: TempEdge | null;
 
     var selectedObject: Vertex | null = null;
-    var isShiftPressed = false;
+    var heldObject: Vertex | null = null;
+    var originalPosition: {x: number, y: number};
+    var isShiftPressed = false, isMoving = false;
     var count = 0;
 
     useEffect(() => {
@@ -53,6 +55,9 @@ export const useDraw = () => {
 
             if (selectedObject && isShiftPressed) {
                 tempEdge = new TempEdge(selectedObject, point.x, point.y);
+            } else if (selectedObject) {
+                heldObject = selectedObject;
+                originalPosition = {x: (selectedObject.x), y: (selectedObject.y)};
             }
         }
 
@@ -72,7 +77,15 @@ export const useDraw = () => {
                     tempEdge.px = p.px;
                     tempEdge.py = p.py;
                 }
-                
+                drawGraph(canvasRef.current?.getContext("2d"));
+            }
+            if (heldObject) {
+                var point = computePointInCanvas(e);
+                if (!point) return;
+                isMoving = true;
+                heldObject.x = point.x;
+                heldObject.y = point.y;
+                relocateEdges();
                 drawGraph(canvasRef.current?.getContext("2d"));
             }
         }
@@ -86,7 +99,24 @@ export const useDraw = () => {
                 var edge = new Edge(0, selectedObject, tempEdge.vertex);
                 edges.push(edge);
             }
+            if (heldObject && isMoving) {
+                var isValid = true;
+                for (let i = 0; i < vertices.length; i++) {
+                    if (vertices[i] != heldObject && vertices[i].containsPoint(point.x, point.y)) {
+                        heldObject.x = originalPosition.x;
+                        heldObject.y = originalPosition.y;
+                        isValid = false;
+                    }      
+                }
+                if (isValid) {
+                    heldObject.x = point.x;
+                    heldObject.y = point.y;
+                }
+            }
+            relocateEdges();
             tempEdge = null;
+            heldObject = null;
+            isMoving = false;
             drawGraph(canvasRef.current?.getContext("2d"));
         }
 
@@ -113,6 +143,28 @@ export const useDraw = () => {
             return {x, y};
         }
 
+        const relocateEdges = () => {
+            if (!heldObject) return;
+            for (let i = 0; i < heldObject.edges.length; i++) {
+                var edge: Edge = heldObject.edges[i];
+                if (edge.va == heldObject) {
+                    var midX = (heldObject.x + edge.bx) / 2;
+                    var midY = (heldObject.y + edge.by) / 2;
+                    var a = heldObject.computeClosestPoint(midX, midY);
+                    var b = edge.vb.computeClosestPoint(midX, midY); 
+                } else {
+                    var midX = (heldObject.x + edge.ax) / 2;
+                    var midY = (heldObject.y + edge.ay) / 2;
+                    var a = edge.va.computeClosestPoint(midX, midY);
+                    var b = heldObject.computeClosestPoint(midX, midY);
+                }
+                edge.ax = a.px;
+                edge.ay = a.py;
+                edge.bx = b.px;
+                edge.by = b.py;
+            }
+        }
+
         const selectObject = (x: number, y: number) => {
             for (let i = 0; i < vertices.length; i++) {
                 if (vertices[i].containsPoint(x, y)) 
@@ -131,10 +183,10 @@ export const useDraw = () => {
 
             // draw vertices
             for (let i = 0; i < vertices.length; i++) {
-                ctx.strokeStyle = (vertices[i] == selectedObject) ? 'blue' : 'black';
+                ctx.strokeStyle = (vertices[i] == selectedObject) ? 'blue' : 'white';
                 vertices[i].draw(ctx);
             }
-            ctx.strokeStyle = 'black';
+            ctx.strokeStyle = 'white';
 
             // draw temp edge
             if (tempEdge && !tempEdge.vertex.containsPoint(tempEdge.px, tempEdge.py)) { 
