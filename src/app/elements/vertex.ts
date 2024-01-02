@@ -17,6 +17,16 @@ class Vertex {
         ctx.stroke();
     }
 
+    computeClosestPoint(x: number, y: number) {
+        var distX = x - this.x;
+        var distY = y - this.y;
+        var dist = Math.sqrt(distX * distX + distY * distY);
+        
+        var px = this.x + distX * vertexRadius / dist;
+        var py = this.y + distY * vertexRadius / dist;
+        return {px, py};
+    }
+
     containsPoint(x: number, y: number) {
         return vertexRadius*vertexRadius > (x - this.x)*(x - this.x) + (y - this.y)*(y - this.y);
     }
