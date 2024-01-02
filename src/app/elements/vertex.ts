@@ -1,4 +1,4 @@
-const vertexRadius = 40;
+const vertexRadius = 30;
 
 class Vertex {
     x: number;

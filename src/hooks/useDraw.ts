@@ -127,12 +127,14 @@ export const useDraw = () => {
             const rect = canvasRef.current?.getBoundingClientRect();
             if (!rect) return;
             ctx?.clearRect(0, 0, rect.width, rect.height);
+            ctx.lineWidth = 2;
 
             // draw vertices
             for (let i = 0; i < vertices.length; i++) {
                 ctx.strokeStyle = (vertices[i] == selectedObject) ? 'blue' : 'black';
                 vertices[i].draw(ctx);
             }
+            ctx.strokeStyle = 'black';
 
             // draw temp edge
             if (tempEdge && !tempEdge.vertex.containsPoint(tempEdge.px, tempEdge.py)) { 
