@@ -1,5 +1,7 @@
 import Vertex from "./vertex";
 
+const percentageError = 1.003;
+
 class Edge {
     ax: number;
     ay: number;
@@ -29,6 +31,19 @@ class Edge {
         ctx.moveTo(this.ax, this.ay);
         ctx.lineTo(this.bx, this.by);
         ctx.stroke();
+    }
+
+    containsPoint(x: number, y: number) {
+        var totalDist = this.computeDistance(this.ax, this.ay, this.bx, this.by);
+        var halfDist1 = this.computeDistance(x, y, this.ax, this.ay);
+        var halfDist2 = this.computeDistance(x, y, this.bx, this.by);
+        return (halfDist1 + halfDist2) < (totalDist * percentageError);
+    }
+
+    computeDistance(ax: number, ay: number, bx: number, by: number) {
+        var distX = bx - ax;
+        var distY = by - ay;
+        return Math.sqrt(distX*distX + distY*distY);
     }
 
     computeEndPoints() {
