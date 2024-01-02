@@ -123,10 +123,12 @@ export const useDraw = () => {
 
             // draw temp edge
             if (tempEdge) {
+                let isFree = true;
                 for (let i = 0; i < vertices.length; i++) {
-                    if (vertices[i].containsPoint(tempEdge.px, tempEdge.py)) break;
+                    if (vertices[i].containsPoint(tempEdge.px, tempEdge.py)) 
+                        isFree = false;
                 }
-                tempEdge.draw(ctx);
+                if (isFree) tempEdge.draw(ctx);
             } 
         }
 
