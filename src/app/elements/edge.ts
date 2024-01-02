@@ -14,6 +14,9 @@ class Edge {
         this.va = va;
         this.vb = vb;
 
+        this.va.addEdge(this);
+        this.vb.addEdge(this);
+
         var endpoints = this.computeEndPoints();
         this.ax = endpoints.ax;
         this.ay = endpoints.ay;
