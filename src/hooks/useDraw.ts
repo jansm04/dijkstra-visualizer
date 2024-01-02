@@ -35,15 +35,6 @@ export const useDraw = () => {
             drawGraph();
         }
 
-        const onClick = (e: MouseEvent) => {
-            const point = computePointInCanvas(e);
-            if (!point) return;
-            selectedObject = selectObject(point.x, point.y);
-            if (selectedObject) {
-                drawGraph();
-            }
-        }
-
         const onMouseDown= (e: MouseEvent) => {
             var point = computePointInCanvas(e);
             if (!point) return;
@@ -91,6 +82,7 @@ export const useDraw = () => {
             selectedObject = selectObject(point.x, point.y);
             if (selectedObject instanceof Vertex && tempEdge && selectedObject != tempEdge.vertex) {
                 var edge = new Edge(0, selectedObject, tempEdge.vertex);
+                selectedObject = edge;
                 edges.push(edge);
             }
             if (heldObject && isMoving) {
@@ -175,24 +167,22 @@ export const useDraw = () => {
             if (!ctx || !rect) return;
             ctx?.clearRect(0, 0, rect.width, rect.height);
             ctx.lineWidth = 2;
-
-            for (let i = 0; i < vertices.length; i++) {
-                ctx.strokeStyle = (vertices[i] == selectedObject) ? 'blue' : 'white';
-                vertices[i].draw(ctx);
-            }
             if (tempEdge && !tempEdge.vertex.containsPoint(tempEdge.px, tempEdge.py)) { 
-                ctx.strokeStyle = 'white';
+                ctx.strokeStyle = 'blue';
                 tempEdge.draw(ctx);
             } 
             for (let i = 0; i < edges.length; i++) {
                 ctx.strokeStyle = (edges[i] == selectedObject) ? 'blue' : 'white';
                 edges[i].draw(ctx);
             }
+            for (let i = 0; i < vertices.length; i++) {
+                ctx.strokeStyle = (vertices[i] == selectedObject) ? 'blue' : 'white';
+                vertices[i].draw(ctx);
+            }
         }
 
         // add event listeners
         canvasRef.current?.addEventListener('dblclick', onDoubleClick);
-        canvasRef.current?.addEventListener('click', onClick);
         canvasRef.current?.addEventListener('mousedown', onMouseDown);
         canvasRef.current?.addEventListener('mousemove', onMouseMove);
         canvasRef.current?.addEventListener('mouseup', onMouseUp);
@@ -202,7 +192,6 @@ export const useDraw = () => {
         // remove event listeners
         return () => {
             canvasRef.current?.addEventListener('dblclick', onDoubleClick);
-            canvasRef.current?.addEventListener('click', onClick);
             canvasRef.current?.addEventListener('mousedown', onMouseDown);
             canvasRef.current?.addEventListener('mousemove', onMouseMove);
             canvasRef.current?.addEventListener('mouseup', onMouseUp);
