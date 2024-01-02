@@ -59,8 +59,19 @@ export const useDraw = () => {
             if (tempEdge) {
                 var point = computePointInCanvas(e);
                 if (!point) return;
-                tempEdge.px = point.x;
-                tempEdge.py = point.y;
+
+                selectedObject = selectObject(point.x, point.y);
+                if (!selectedObject) {
+                    tempEdge.px = point.x;
+                    tempEdge.py = point.y;
+                } else {
+                    var midX = (selectedObject.x + tempEdge.vx) / 2;
+                    var midY = (selectedObject.y + tempEdge.vy) / 2;
+                    var p = selectedObject.computeClosestPoint(midX, midY);
+                    tempEdge.px = p.px;
+                    tempEdge.py = p.py;
+                }
+                
                 drawGraph(canvasRef.current?.getContext("2d"));
             }
         }
@@ -122,13 +133,8 @@ export const useDraw = () => {
             }
 
             // draw temp edge
-            if (tempEdge) {
-                let isFree = true;
-                for (let i = 0; i < vertices.length; i++) {
-                    if (vertices[i].containsPoint(tempEdge.px, tempEdge.py)) 
-                        isFree = false;
-                }
-                if (isFree) tempEdge.draw(ctx);
+            if (tempEdge && !tempEdge.vertex.containsPoint(tempEdge.px, tempEdge.py)) { 
+                tempEdge.draw(ctx);
             } 
         }
 
