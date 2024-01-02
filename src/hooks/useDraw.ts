@@ -1,8 +1,7 @@
 import Vertex from "@/app/elements/vertex";
 import Edge from "@/app/elements/edge";
-
-import { useEffect, useRef } from "react";
 import TempEdge from "@/app/elements/temp-edge";
+import { useEffect, useRef } from "react";
 
 export const useDraw = () => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -154,6 +153,7 @@ export const useDraw = () => {
                 if (vertices[i].containsPoint(x, y)) 
                     return vertices[i];
             }
+            if (tempEdge) return null;
             for (let i = 0; i < edges.length; i++) {
                 if (edges[i].containsPoint(x, y)) 
                     return edges[i];
