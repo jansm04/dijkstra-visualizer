@@ -1,6 +1,6 @@
 import Edge from "./edge";
 
-const vertexRadius = 30;
+const vertexRadius = 20;
 
 class Vertex {
     x: number;
