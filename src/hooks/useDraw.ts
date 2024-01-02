@@ -33,7 +33,7 @@ export const useDraw = () => {
                 selectedObject = vertex;
                 vertices.push(vertex);
             }
-            drawGraph(canvasRef.current?.getContext("2d"));
+            drawGraph();
             console.log(vertices);
         }
 
@@ -42,7 +42,7 @@ export const useDraw = () => {
             if (!point) return;
             selectedObject = selectObject(point.x, point.y);
             if (selectedObject) {
-                drawGraph(canvasRef.current?.getContext("2d"));
+                drawGraph();
             }
             console.log(edges);
         }
@@ -78,7 +78,7 @@ export const useDraw = () => {
                     tempEdge.px = p.px;
                     tempEdge.py = p.py;
                 }
-                drawGraph(canvasRef.current?.getContext("2d"));
+                drawGraph();
             }
             if (heldObject) {
                 var point = computePointInCanvas(e);
@@ -87,7 +87,7 @@ export const useDraw = () => {
                 heldObject.x = point.x;
                 heldObject.y = point.y;
                 relocateEdges();
-                drawGraph(canvasRef.current?.getContext("2d"));
+                drawGraph();
             }
         }
 
@@ -117,7 +117,7 @@ export const useDraw = () => {
             tempEdge = null;
             heldObject = null;
             isMoving = false;
-            drawGraph(canvasRef.current?.getContext("2d"));
+            drawGraph();
         }
 
         const onKeyDown = (e: KeyboardEvent) => {
@@ -177,7 +177,8 @@ export const useDraw = () => {
             return null;
         }
 
-        const drawGraph = (ctx: CanvasRenderingContext2D | null | undefined) => {
+        const drawGraph = () => {
+            var ctx = canvasRef.current?.getContext("2d");
             if (!ctx) return;
 
             const rect = canvasRef.current?.getBoundingClientRect();
