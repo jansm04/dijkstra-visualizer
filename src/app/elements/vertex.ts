@@ -11,8 +11,7 @@ class Vertex {
         this.label = label;
     }
 
-    draw(ctx: CanvasRenderingContext2D | null | undefined) {
-        if (!ctx) return;
+    draw(ctx: CanvasRenderingContext2D) {
         ctx.beginPath();
         ctx.arc(this.x, this.y, vertexRadius, 0, 2 * Math.PI);
         ctx.stroke();

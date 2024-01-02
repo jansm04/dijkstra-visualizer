@@ -4,9 +4,15 @@ import { useEffect, useRef } from "react";
 export const useDraw = () => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     var vertices = new Array<Vertex>();
-    var selectedObject = null;
+    var selectedObject: Vertex | null = null;
+    var count = 0;
 
     useEffect(() => {
+        if (count) {
+            count--;
+            return;
+        } else count++;
+
         const handler = (e: MouseEvent) => {
             const point = computePointInCanvas(e);
             if (!point) return;
@@ -14,10 +20,11 @@ export const useDraw = () => {
             selectedObject = selectObject(point.x, point.y);
             if (!selectedObject) {
                 var vertex: Vertex = new Vertex(point.x, point.y, '');
-                vertex.draw(canvasRef.current?.getContext("2d"));
+                selectedObject = vertex;
                 vertices.push(vertex);
             }
-            console.log(selectedObject);
+            draw(canvasRef.current?.getContext("2d"));
+            console.log(vertices);
         }
 
         const computePointInCanvas = (e: MouseEvent) => {
@@ -37,6 +44,19 @@ export const useDraw = () => {
                     return vertices[i];
             }
             return null;
+        }
+
+        const draw = (ctx: CanvasRenderingContext2D | null | undefined) => {
+            if (!ctx) return;
+            
+            const rect = canvasRef.current?.getBoundingClientRect();
+            if (!rect) return;
+            ctx?.clearRect(0, 0, rect.width, rect.height);
+
+            for (let i = 0; i < vertices.length; i++) {
+                ctx.strokeStyle = (vertices[i] == selectedObject) ? 'blue' : 'black';
+                vertices[i].draw(ctx);
+            }
         }
 
         // add event listeners
