@@ -1,20 +1,23 @@
+import Vertex from "@/app/elements/vertex";
 import { useEffect, useRef } from "react";
 
 export const useDraw = () => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
+    var vertices = new Array<Vertex>();
+    var selectedObject = null;
 
     useEffect(() => {
         const handler = (e: MouseEvent) => {
-            console.log({x: e.clientX, y: e.clientY});
             const point = computePointInCanvas(e);
             if (!point) return;
 
-            // draw circle
-            const ctx = canvasRef.current?.getContext("2d");
-            if (!ctx) return;
-            ctx.beginPath();
-            ctx.arc(point.x, point.y, 40, 0, 2 * Math.PI);
-            ctx.stroke();
+            selectedObject = selectObject(point.x, point.y);
+            if (!selectedObject) {
+                var vertex: Vertex = new Vertex(point.x, point.y, '');
+                vertex.draw(canvasRef.current?.getContext("2d"));
+                vertices.push(vertex);
+            }
+            console.log(selectedObject);
         }
 
         const computePointInCanvas = (e: MouseEvent) => {
@@ -26,6 +29,14 @@ export const useDraw = () => {
             const y = e.clientY - rect.top;
 
             return {x, y};
+        }
+
+        const selectObject = (x: number, y: number) => {
+            for (let i = 0; i < vertices.length; i++) {
+                if (vertices[i].containsPoint(x, y)) 
+                    return vertices[i];
+            }
+            return null;
         }
 
         // add event listeners
