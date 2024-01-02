@@ -26,15 +26,13 @@ export const useDraw = () => {
         const onDoubleClick = (e: MouseEvent) => {
             const point = computePointInCanvas(e);
             if (!point) return;
-
             selectedObject = selectObject(point.x, point.y);
-            if (!selectedObject) {
-                var vertex: Vertex = new Vertex(point.x, point.y, '');
+            if (!selectedObject && vertices.length < 26) {
+                var vertex: Vertex = new Vertex(point.x, point.y, String.fromCharCode(65+vertices.length));
                 selectedObject = vertex;
                 vertices.push(vertex);
             }
             drawGraph();
-            console.log(vertices);
         }
 
         const onClick = (e: MouseEvent) => {
@@ -44,16 +42,12 @@ export const useDraw = () => {
             if (selectedObject) {
                 drawGraph();
             }
-            console.log(edges);
         }
 
         const onMouseDown= (e: MouseEvent) => {
             var point = computePointInCanvas(e);
             if (!point) return;
-
             selectedObject = selectObject(point.x, point.y);
-            console.log(selectedObject);
-
             if (selectedObject instanceof Vertex && isShiftPressed) {
                 tempEdge = new TempEdge(selectedObject, point.x, point.y);
             } else if (selectedObject instanceof Vertex) {
@@ -135,11 +129,9 @@ export const useDraw = () => {
         const computePointInCanvas = (e: MouseEvent) => {
             const canvas = canvasRef.current;
             if (!canvas) return;
-
             const rect = canvas.getBoundingClientRect();
             const x = e.clientX - rect.left;
             const y = e.clientY - rect.top;
-
             return {x, y};
         }
 
@@ -178,32 +170,24 @@ export const useDraw = () => {
         }
 
         const drawGraph = () => {
-            var ctx = canvasRef.current?.getContext("2d");
-            if (!ctx) return;
-
+            const ctx = canvasRef.current?.getContext("2d");
             const rect = canvasRef.current?.getBoundingClientRect();
-            if (!rect) return;
+            if (!ctx || !rect) return;
             ctx?.clearRect(0, 0, rect.width, rect.height);
             ctx.lineWidth = 2;
 
-            // draw vertices
             for (let i = 0; i < vertices.length; i++) {
                 ctx.strokeStyle = (vertices[i] == selectedObject) ? 'blue' : 'white';
                 vertices[i].draw(ctx);
             }
-            ctx.strokeStyle = 'white';
-
-            // draw temp edge
             if (tempEdge && !tempEdge.vertex.containsPoint(tempEdge.px, tempEdge.py)) { 
+                ctx.strokeStyle = 'white';
                 tempEdge.draw(ctx);
             } 
-
-            // draw edges
             for (let i = 0; i < edges.length; i++) {
                 ctx.strokeStyle = (edges[i] == selectedObject) ? 'blue' : 'white';
                 edges[i].draw(ctx);
             }
-            ctx.strokeStyle = 'white';
         }
 
         // add event listeners

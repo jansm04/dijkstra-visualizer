@@ -1,6 +1,7 @@
 import Edge from "./edge";
 
 const vertexRadius = 20;
+const offset = 5;
 
 class Vertex {
     x: number;
@@ -15,10 +16,19 @@ class Vertex {
         this.edges = new Array<Edge>();
     }
 
+    drawLabel(ctx: CanvasRenderingContext2D) {
+        ctx.font = "12px Arial";
+        ctx.fillStyle = 'white';
+        var width = ctx.measureText(this.label).width;
+        var x = this.x - width / 2;
+        ctx.fillText(this.label, x, this.y + offset);
+    }
+
     draw(ctx: CanvasRenderingContext2D) {
         ctx.beginPath();
         ctx.arc(this.x, this.y, vertexRadius, 0, 2 * Math.PI);
         ctx.stroke();
+        this.drawLabel(ctx);
     }
     
     addEdge(edge: Edge) {
