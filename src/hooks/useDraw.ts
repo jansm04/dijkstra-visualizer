@@ -14,6 +14,7 @@ export const useDraw = () => {
     var heldObject: Vertex | null = null;
     var originalPosition: {x: number, y: number};
     var isShiftPressed = false, isMoving = false;
+    var takenLetters = "";
     var count = 0;
 
     useEffect(() => {
@@ -121,9 +122,12 @@ export const useDraw = () => {
                 selectedObject.weight = weight;
             } else if (selectedObject instanceof Vertex) {
                 var label = selectedObject.label;
-                if (!label && e.key.match('[a-z]|[A-Z]')) {
-                    label = e.key.toUpperCase();
+                var letter = e.key.toUpperCase();
+                if (!label && e.key.match('[a-z]|[A-Z]') && !takenLetters.includes(letter)) {
+                    label = letter;
+                    takenLetters += letter;
                 } else if (label && e.key == 'Backspace') {
+                    takenLetters = takenLetters.replaceAll(label, "");
                     label = null;
                 }
                 selectedObject.label = label;
