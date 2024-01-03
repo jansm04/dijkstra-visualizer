@@ -16,19 +16,20 @@ class Vertex {
         this.edges = new Array<Edge>();
     }
 
-    drawLabel(ctx: CanvasRenderingContext2D) {
+    drawLabel(ctx: CanvasRenderingContext2D, colour: string) {
         ctx.font = "12px Arial";
-        ctx.fillStyle = 'white';
+        ctx.fillStyle = colour;
         var width = ctx.measureText(this.label).width;
         var x = this.x - width / 2;
         ctx.fillText(this.label, x, this.y + offset);
     }
 
-    draw(ctx: CanvasRenderingContext2D) {
+    draw(ctx: CanvasRenderingContext2D, colour: string) {
+        ctx.strokeStyle = colour;
         ctx.beginPath();
         ctx.arc(this.x, this.y, vertexRadius, 0, 2 * Math.PI);
         ctx.stroke();
-        this.drawLabel(ctx);
+        this.drawLabel(ctx, colour);
     }
     
     addEdge(edge: Edge) {
