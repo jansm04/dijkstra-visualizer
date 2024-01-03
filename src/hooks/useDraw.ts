@@ -27,7 +27,7 @@ export const useDraw = () => {
             if (!point) return;
             selectedObject = selectObject(point.x, point.y);
             if (!selectedObject && vertices.length < 26) {
-                var vertex: Vertex = new Vertex(point.x, point.y, String.fromCharCode(65+vertices.length));
+                var vertex: Vertex = new Vertex(point.x, point.y);
                 selectedObject = vertex;
                 vertices.push(vertex);
             }
@@ -80,7 +80,7 @@ export const useDraw = () => {
             if (!point) return;
             selectedObject = selectObject(point.x, point.y);
             if (selectedObject instanceof Vertex && tempEdge && selectedObject != tempEdge.vertex) {
-                var edge = new Edge(null, selectedObject, tempEdge.vertex);
+                var edge = new Edge(selectedObject, tempEdge.vertex);
                 selectedObject = edge;
                 edges.push(edge);
             }
@@ -109,18 +109,24 @@ export const useDraw = () => {
             console.log(e.key);
             if (e.key == 'Shift') {
                 isShiftPressed = true;
-            }
-            if (selectedObject instanceof Edge) {
+            } else if (selectedObject instanceof Edge) {
                 var weight = selectedObject.weight;
                 if (Number.isInteger(parseInt(e.key, 10))) {
                     if (!weight) weight = parseInt(e.key, 10);
                     else weight = weight * 10 + parseInt(e.key, 10);
-                } else if (e.key == 'Backspace') {
-                    if (weight)
-                        if (weight < 10) weight = null;
-                        else weight = Math.floor(weight / 10);
+                } else if (weight && e.key == 'Backspace') {
+                    if (weight < 10) weight = null;
+                    else weight = Math.floor(weight / 10);
                 }
                 selectedObject.weight = weight;
+            } else if (selectedObject instanceof Vertex) {
+                var label = selectedObject.label;
+                if (!label && e.key.match('[a-z]|[A-Z]')) {
+                    label = e.key.toUpperCase();
+                } else if (label && e.key == 'Backspace') {
+                    label = null;
+                }
+                selectedObject.label = label;
             }
             drawGraph();
         }

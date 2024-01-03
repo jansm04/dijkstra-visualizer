@@ -6,17 +6,18 @@ const offset = 5;
 class Vertex {
     x: number;
     y: number;
-    label: string;
+    label: string | null;
     edges: Array<Edge>;
 
-    constructor(x: number, y: number, label: string) {
+    constructor(x: number, y: number) {
         this.x = x;
         this.y = y;
-        this.label = label;
+        this.label = null;
         this.edges = new Array<Edge>();
     }
 
     drawLabel(ctx: CanvasRenderingContext2D, colour: string) {
+        if (!this.label) return;
         ctx.font = "12px Arial";
         ctx.fillStyle = colour;
         var width = ctx.measureText(this.label).width;
