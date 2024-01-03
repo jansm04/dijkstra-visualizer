@@ -80,7 +80,7 @@ export const useDraw = () => {
             if (!point) return;
             selectedObject = selectObject(point.x, point.y);
             if (selectedObject instanceof Vertex && tempEdge && selectedObject != tempEdge.vertex) {
-                var edge = new Edge(0, selectedObject, tempEdge.vertex);
+                var edge = new Edge(edges.length+1, selectedObject, tempEdge.vertex);
                 selectedObject = edge;
                 edges.push(edge);
             }
@@ -168,16 +168,16 @@ export const useDraw = () => {
             ctx?.clearRect(0, 0, rect.width, rect.height);
             ctx.lineWidth = 2;
             if (tempEdge && !tempEdge.vertex.containsPoint(tempEdge.px, tempEdge.py)) { 
-                ctx.strokeStyle = 'blue';
+                ctx.strokeStyle = 'aqua';
                 tempEdge.draw(ctx);
             } 
             for (let i = 0; i < edges.length; i++) {
-                ctx.strokeStyle = (edges[i] == selectedObject) ? 'blue' : 'white';
-                edges[i].draw(ctx);
+                var strokeStyle = (edges[i] == selectedObject) ? 'aqua' : 'white';
+                edges[i].draw(ctx, strokeStyle);
             }
             for (let i = 0; i < vertices.length; i++) {
-                ctx.strokeStyle = (vertices[i] == selectedObject) ? 'blue' : 'white';
-                vertices[i].draw(ctx);
+                var strokeStyle = (vertices[i] == selectedObject) ? 'aqua' : 'white';
+                vertices[i].draw(ctx, strokeStyle);
             }
         }
 
