@@ -8,11 +8,11 @@ class Edge {
     ay: number;
     bx: number;
     by: number;
-    weight: number;
+    weight: number | null;
     va: Vertex;
     vb: Vertex;
     
-    constructor(weight: number, va: Vertex, vb: Vertex) {
+    constructor(weight: number | null, va: Vertex, vb: Vertex) {
         this.weight = weight;
         this.va = va;
         this.vb = vb;
@@ -31,7 +31,7 @@ class Edge {
         ctx.font = "12px Arial";
         ctx.fillStyle = colour;
         var point = this.smartPosition(ctx);
-        ctx.fillText((this.weight).toString(), point.x, point.y);
+        ctx.fillText(this.weight?(this.weight).toString():"", point.x, point.y);
     }
 
     draw(ctx: CanvasRenderingContext2D, colour: string) {
@@ -72,7 +72,7 @@ class Edge {
     }
 
     smartPosition(ctx: CanvasRenderingContext2D) {
-        var offsetX = ctx.measureText((this.weight).toString()).width / 2;
+        var offsetX = ctx.measureText(this.weight?(this.weight).toString():"").width / 2;
         var offsetY = 3;
         var midX = (this.ax + this.bx) / 2 - offsetX;
         var midY = (this.ay + this.by) / 2 + offsetY;
