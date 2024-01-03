@@ -1,6 +1,6 @@
 import Edge from "./edge";
 
-const vertexRadius = 20;
+const vertexRadius = 25;
 const offset = 5;
 
 class Vertex {
@@ -18,7 +18,7 @@ class Vertex {
 
     drawLabel(ctx: CanvasRenderingContext2D, colour: string) {
         if (!this.label) return;
-        ctx.font = "12px Arial";
+        ctx.font = "14px Arial";
         ctx.fillStyle = colour;
         var width = ctx.measureText(this.label).width;
         var x = this.x - width / 2;

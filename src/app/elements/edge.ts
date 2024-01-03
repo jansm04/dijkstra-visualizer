@@ -28,7 +28,7 @@ class Edge {
     }
 
     drawWeight(ctx: CanvasRenderingContext2D, colour: string) {
-        ctx.font = "12px Arial";
+        ctx.font = "14px Arial";
         ctx.fillStyle = colour;
         var point = this.smartPosition(ctx);
         ctx.fillText(this.weight?(this.weight).toString():"", point.x, point.y);
