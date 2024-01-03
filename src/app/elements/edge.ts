@@ -12,8 +12,8 @@ class Edge {
     va: Vertex;
     vb: Vertex;
     
-    constructor(weight: number | null, va: Vertex, vb: Vertex) {
-        this.weight = weight;
+    constructor(va: Vertex, vb: Vertex) {
+        this.weight = null;
         this.va = va;
         this.vb = vb;
 
