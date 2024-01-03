@@ -1,6 +1,7 @@
 import Vertex from "./vertex";
 
 const percentageError = 1.003;
+const factor = 15;
 
 class Edge {
     ax: number;
@@ -26,11 +27,19 @@ class Edge {
         this.by = endpoints.by;
     }
 
+    drawWeight(ctx: CanvasRenderingContext2D) {
+        ctx.font = "12px Arial";
+        ctx.fillStyle = 'white';
+        var point = this.smartPosition(ctx);
+        ctx.fillText((this.weight).toString(), point.x, point.y);
+    }
+
     draw(ctx: CanvasRenderingContext2D) {
         ctx.beginPath();
         ctx.moveTo(this.ax, this.ay);
         ctx.lineTo(this.bx, this.by);
         ctx.stroke();
+        this.drawWeight(ctx);
     }
 
     containsPoint(x: number, y: number) {
@@ -61,7 +70,16 @@ class Edge {
         return {ax, ay, bx, by};
     }
 
-
+    smartPosition(ctx: CanvasRenderingContext2D) {
+        var offsetX = ctx.measureText((this.weight).toString()).width / 2;
+        var offsetY = 3;
+        var midX = (this.ax + this.bx) / 2 - offsetX;
+        var midY = (this.ay + this.by) / 2 + offsetY;
+        var angle = Math.atan2(this.by - this.ay, this.bx - this.ax);
+        var x = midX + Math.sin(angle) * factor;
+        var y = midY - Math.cos(angle) * factor;
+        return {x, y};
+    }
 }
 
 export default Edge
