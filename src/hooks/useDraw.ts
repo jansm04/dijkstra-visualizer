@@ -118,37 +118,20 @@ export const useDraw = () => {
         }
 
         const onKeyDown = (e: KeyboardEvent) => {
-            console.log(e.key);
-            if (e.key == 'Shift') {
+            if (e.key == 'Shift')
                 isShiftPressed = true;
-            } else if (selectedObject instanceof Edge) {
-                if (e.key == 'Delete') {
-                    deleteEdgeFromCanvas(selectedObject);
-                } else {
-                    var weight = selectedObject.weight;
-                    if (Number.isInteger(parseInt(e.key, 10))) {
-                        if (!weight) weight = parseInt(e.key, 10);
-                        else weight = weight * 10 + parseInt(e.key, 10);
-                    } else if (weight && e.key == 'Backspace') {
-                        if (weight < 10) weight = null;
-                        else weight = Math.floor(weight / 10);
-                    } 
-                    selectedObject.weight = weight;
+            else {
+                if (selectedObject instanceof Edge) {
+                    if (e.key == 'Delete') 
+                        deleteEdgeFromCanvas(selectedObject);
+                    else 
+                        setEdgeWeight(e.key);
                 }
-            } else if (selectedObject instanceof Vertex) {
-                if (e.key == 'Delete') {
-                    deleteVertexFromCanvas(selectedObject);
-                } else {
-                    var label = selectedObject.label;
-                    var letter = e.key.toUpperCase();
-                    if (!label && e.key.length == 1 && e.key.match('[a-z]|[A-Z]') && !takenLetters.includes(letter)) {
-                        label = letter;
-                        takenLetters += letter;
-                    } else if (label && e.key == 'Backspace') {
-                        takenLetters = takenLetters.replaceAll(label, "");
-                        label = null;
-                    }
-                    selectedObject.label = label;
+                if (selectedObject instanceof Vertex) {
+                    if (e.key == 'Delete') 
+                        deleteVertexFromCanvas(selectedObject);
+                    else 
+                        setVertexLabel(e.key);
                 }
             }
             drawGraph();
@@ -157,6 +140,35 @@ export const useDraw = () => {
         const onKeyUp = (e: KeyboardEvent) => {
             if (e.key == 'Shift') {
                 isShiftPressed = false;
+            }
+        }
+
+        const setEdgeWeight = (key: string) => {
+            if (selectedObject instanceof Edge) {
+                var weight = selectedObject.weight;
+                if (Number.isInteger(parseInt(key, 10))) {
+                    if (!weight) weight = parseInt(key, 10);
+                    else weight = weight * 10 + parseInt(key, 10);
+                } else if (weight && key == 'Backspace') {
+                    if (weight < 10) weight = null;
+                    else weight = Math.floor(weight / 10);
+                } 
+                selectedObject.weight = weight;
+            }  
+        }
+
+        const setVertexLabel = (key: string) => {
+            if (selectedObject instanceof Vertex) {
+                var label = selectedObject.label;
+                var letter = key.toUpperCase();
+                if (!label && key.length == 1 && key.match('[a-z]|[A-Z]') && !takenLetters.includes(letter)) {
+                    label = letter;
+                    takenLetters += letter;
+                } else if (label && key == 'Backspace') {
+                    takenLetters = takenLetters.replaceAll(label, "");
+                    label = null;
+                }
+                selectedObject.label = label;
             }
         }
 
