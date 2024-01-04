@@ -27,7 +27,6 @@ class TempEdge {
 
     setClosestPoint(px: number, py: number) {
         var endpoint = this.vertex.computeClosestPoint(px, py);
-        // console.log({endpoint: endpoint});
         this.vx = endpoint.px;
         this.vy = endpoint.py;
     }

@@ -1,6 +1,6 @@
 import Vertex from "@/app/elements/vertex";
 import Edge from "@/app/elements/edge";
-import TempEdge from "@/app/elements/temp-edge";
+import TempEdge from "@/app/elements/temp_edge";
 import { useEffect, useRef } from "react";
 
 export const useDraw = () => {
