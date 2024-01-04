@@ -93,8 +93,9 @@ class Edge {
         var offsetY = 3;
         var midX = (this.ax + this.bx) / 2 - offsetX;
         var midY = (this.ay + this.by) / 2 + offsetY;
-        var angle = Math.atan2(this.by - this.ay, this.bx - this.ax);
-        var x = midX + Math.sin(angle) * factor;
+        var angle = Math.atan2(this.ay - this.by, this.bx - this.ax);
+        console.log(angle);
+        var x = midX - Math.sin(angle) * factor;
         var y = midY - Math.cos(angle) * factor;
         return {x, y};
     }

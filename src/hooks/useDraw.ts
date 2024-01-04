@@ -90,7 +90,7 @@ export const useDraw = () => {
             if (!point) return;
             selectedObject = selectObject(point.x, point.y);
             if (selectedObject instanceof Vertex && tempEdge && selectedObject != tempEdge.vertex) {
-                var edge = new Edge(selectedObject, tempEdge.vertex);
+                var edge = new Edge(tempEdge.vertex, selectedObject);
                 selectNewEdge(edge);
                 edges.push(edge);
             }
@@ -243,16 +243,6 @@ export const useDraw = () => {
         canvasRef.current?.addEventListener('mouseup', onMouseUp);
         canvasRef.current?.addEventListener('keydown', onKeyDown, true);
         canvasRef.current?.addEventListener('keyup', onKeyUp, true);
-
-        // remove event listeners
-        return () => {
-            canvasRef.current?.addEventListener('dblclick', onDoubleClick);
-            canvasRef.current?.addEventListener('mousedown', onMouseDown);
-            canvasRef.current?.addEventListener('mousemove', onMouseMove);
-            canvasRef.current?.addEventListener('mouseup', onMouseUp);
-            canvasRef.current?.addEventListener('keydown', onKeyDown, true);
-            canvasRef.current?.addEventListener('keyup', onKeyUp, true);
-        }
     }, [])
 
     return { canvasRef };
