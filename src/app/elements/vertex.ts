@@ -32,7 +32,7 @@ class Vertex {
 
     drawLabel(ctx: CanvasRenderingContext2D, colour: string) {
         this.drawCursor(ctx);
-        
+
         if (!this.label) return;
         ctx.font = "14px Arial";
         ctx.fillStyle = colour;
@@ -51,6 +51,15 @@ class Vertex {
     
     addEdge(edge: Edge) {
         this.edges.push(edge);
+    }
+
+    removeEdge(edge: Edge) {
+        for (let i = 0; i < this.edges.length; i++) {
+            if (this.edges[i] == edge) {
+                this.edges.splice(i, 1);
+                return;
+            }
+        }
     }
 
     computeClosestPoint(x: number, y: number) {

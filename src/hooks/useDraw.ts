@@ -19,6 +19,7 @@ export const useDraw = () => {
     var count = 0;
 
     useEffect(() => {
+        console.log('reached here');
         if (count) {
             count--;
             return;
@@ -121,26 +122,34 @@ export const useDraw = () => {
             if (e.key == 'Shift') {
                 isShiftPressed = true;
             } else if (selectedObject instanceof Edge) {
-                var weight = selectedObject.weight;
-                if (Number.isInteger(parseInt(e.key, 10))) {
-                    if (!weight) weight = parseInt(e.key, 10);
-                    else weight = weight * 10 + parseInt(e.key, 10);
-                } else if (weight && e.key == 'Backspace') {
-                    if (weight < 10) weight = null;
-                    else weight = Math.floor(weight / 10);
+                if (e.key == 'Delete') {
+                    deleteEdgeFromCanvas(selectedObject);
+                } else {
+                    var weight = selectedObject.weight;
+                    if (Number.isInteger(parseInt(e.key, 10))) {
+                        if (!weight) weight = parseInt(e.key, 10);
+                        else weight = weight * 10 + parseInt(e.key, 10);
+                    } else if (weight && e.key == 'Backspace') {
+                        if (weight < 10) weight = null;
+                        else weight = Math.floor(weight / 10);
+                    } 
+                    selectedObject.weight = weight;
                 }
-                selectedObject.weight = weight;
             } else if (selectedObject instanceof Vertex) {
-                var label = selectedObject.label;
-                var letter = e.key.toUpperCase();
-                if (!label && e.key.length == 1 && e.key.match('[a-z]|[A-Z]') && !takenLetters.includes(letter)) {
-                    label = letter;
-                    takenLetters += letter;
-                } else if (label && e.key == 'Backspace') {
-                    takenLetters = takenLetters.replaceAll(label, "");
-                    label = null;
+                if (e.key == 'Delete') {
+                    deleteVertexFromCanvas(selectedObject);
+                } else {
+                    var label = selectedObject.label;
+                    var letter = e.key.toUpperCase();
+                    if (!label && e.key.length == 1 && e.key.match('[a-z]|[A-Z]') && !takenLetters.includes(letter)) {
+                        label = letter;
+                        takenLetters += letter;
+                    } else if (label && e.key == 'Backspace') {
+                        takenLetters = takenLetters.replaceAll(label, "");
+                        label = null;
+                    }
+                    selectedObject.label = label;
                 }
-                selectedObject.label = label;
             }
             drawGraph();
         }
@@ -149,6 +158,26 @@ export const useDraw = () => {
             if (e.key == 'Shift') {
                 isShiftPressed = false;
             }
+        }
+
+        const deleteVertexFromCanvas = (vertex: Vertex) => {
+            var idx = vertices.indexOf(vertex);
+            var n = vertex.edges.length;
+            for (let i = 0; i < n; i++)
+                deleteEdgeFromCanvas(vertex.edges[0]);
+            selectedObject = null;
+            if (vertex.label)
+                takenLetters = takenLetters.replaceAll(vertex.label, "");
+            vertices.splice(idx, 1);
+        }
+
+        const deleteEdgeFromCanvas = (edge: Edge) => {
+            var idx = edges.indexOf(edge);
+            edge.va.removeEdge(edge);
+            edge.vb.removeEdge(edge);
+            if (selectedObject instanceof Edge) 
+                selectedObject = null;
+            edges.splice(idx, 1);
         }
 
         const computePointInCanvas = (e: MouseEvent) => {
