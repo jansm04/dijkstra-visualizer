@@ -133,7 +133,7 @@ export const useDraw = () => {
             } else if (selectedObject instanceof Vertex) {
                 var label = selectedObject.label;
                 var letter = e.key.toUpperCase();
-                if (!label && e.key.match('[a-z]|[A-Z]') && !takenLetters.includes(letter)) {
+                if (!label && e.key.length == 1 && e.key.match('[a-z]|[A-Z]') && !takenLetters.includes(letter)) {
                     label = letter;
                     takenLetters += letter;
                 } else if (label && e.key == 'Backspace') {
