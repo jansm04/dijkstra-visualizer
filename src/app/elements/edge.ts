@@ -11,6 +11,7 @@ class Edge {
     weight: number | null;
     va: Vertex;
     vb: Vertex;
+    isCursorVisible: boolean;
     
     constructor(va: Vertex, vb: Vertex) {
         this.weight = null;
@@ -25,13 +26,29 @@ class Edge {
         this.ay = endpoints.ay;
         this.bx = endpoints.bx;
         this.by = endpoints.by;
+        this.isCursorVisible = true;
+    }
+
+    drawCursor(ctx: CanvasRenderingContext2D, point: {x: number, y: number}) {
+        if (!this.isCursorVisible) return;
+        var width = ctx.measureText(this.weight?(this.weight).toString():"").width
+        var x = point.x + width;
+        ctx.beginPath();
+        ctx.lineWidth -= 1;
+        ctx.moveTo(x, point.y - 12);
+        ctx.lineTo(x, point.y + 4);
+        ctx.stroke();
+        ctx.lineWidth += 1;
     }
 
     drawWeight(ctx: CanvasRenderingContext2D, colour: string) {
+        var point = this.smartPosition(ctx);
+        this.drawCursor(ctx, point);
+
+        if (!this.weight) return;
         ctx.font = "14px Arial";
         ctx.fillStyle = colour;
-        var point = this.smartPosition(ctx);
-        ctx.fillText(this.weight?(this.weight).toString():"", point.x, point.y);
+        ctx.fillText(this.weight.toString(), point.x, point.y);
     }
 
     draw(ctx: CanvasRenderingContext2D, colour: string) {

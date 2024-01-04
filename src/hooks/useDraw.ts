@@ -14,6 +14,7 @@ export const useDraw = () => {
     var heldObject: Vertex | null = null;
     var originalPosition: {x: number, y: number};
     var isShiftPressed = false, isMoving = false;
+    var timer: NodeJS.Timeout;
     var takenLetters = "";
     var count = 0;
 
@@ -33,9 +34,11 @@ export const useDraw = () => {
                 vertices.push(vertex);
             }
             drawGraph();
+            pulseCursor();
         }
 
         const onMouseDown= (e: MouseEvent) => {
+            setTimeout(() => null, 1); // if moving vertex, allow mouseMove to clearInterval
             var point = computePointInCanvas(e);
             if (!point) return;
             selectedObject = selectObject(point.x, point.y);
@@ -45,6 +48,8 @@ export const useDraw = () => {
                 heldObject = selectedObject;
                 originalPosition = {x: (selectedObject.x), y: (selectedObject.y)};
             }
+            drawGraph();
+            if (selectedObject) pulseCursor();
         }
 
         const onMouseMove = (e: MouseEvent) => {
@@ -62,6 +67,8 @@ export const useDraw = () => {
                     var p = selectedObject.computeClosestPoint(midX, midY);
                     tempEdge.px = p.px;
                     tempEdge.py = p.py;
+                    selectedObject.isCursorVisible = false;
+                    clearInterval(timer);
                 }
                 drawGraph();
             }
@@ -71,6 +78,8 @@ export const useDraw = () => {
                 isMoving = true;
                 heldObject.x = point.x;
                 heldObject.y = point.y;
+                heldObject.isCursorVisible = false;
+                clearInterval(timer);
                 relocateEdges();
                 drawGraph();
             }
@@ -82,7 +91,7 @@ export const useDraw = () => {
             selectedObject = selectObject(point.x, point.y);
             if (selectedObject instanceof Vertex && tempEdge && selectedObject != tempEdge.vertex) {
                 var edge = new Edge(selectedObject, tempEdge.vertex);
-                selectedObject = edge;
+                selectNewEdge(edge);
                 edges.push(edge);
             }
             if (heldObject && isMoving) {
@@ -104,6 +113,7 @@ export const useDraw = () => {
             heldObject = null;
             isMoving = false;
             drawGraph();
+            pulseCursor();
         }
 
         const onKeyDown = (e: KeyboardEvent) => {
@@ -172,17 +182,38 @@ export const useDraw = () => {
             }
         }
 
+        const selectNewEdge = (edge: Edge) => {
+            if (!selectedObject) return;
+            selectedObject.isCursorVisible = false;
+            edge.isCursorVisible = true;
+            selectedObject = edge;
+        }
+
         const selectObject = (x: number, y: number) => {
+            if (selectedObject) selectedObject.isCursorVisible = false;
             for (let i = 0; i < vertices.length; i++) {
-                if (vertices[i].containsPoint(x, y)) 
+                if (vertices[i].containsPoint(x, y)) {
+                    vertices[i].isCursorVisible = true;
                     return vertices[i];
+                }
             }
             if (tempEdge) return null;
             for (let i = 0; i < edges.length; i++) {
-                if (edges[i].containsPoint(x, y)) 
+                if (edges[i].containsPoint(x, y)) {
+                    edges[i].isCursorVisible = true;
                     return edges[i];
+                } 
             }
             return null;
+        }
+
+        const pulseCursor = () => {
+            clearInterval(timer);
+            timer = setInterval(() => {
+                if (!selectedObject) return;
+                selectedObject.isCursorVisible = !selectedObject.isCursorVisible;
+                drawGraph();
+            }, 500);
         }
 
         const drawGraph = () => {
