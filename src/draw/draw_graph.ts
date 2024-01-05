@@ -173,8 +173,13 @@ export const addGraphVisualizer = (
     }
 
     function onEnterSelectMode(e: MouseEvent) {
+        startingVertex = null;
+        endingVertex = null;
         inSelectionMode = true;
+        if (selectModeRef.current) selectModeRef.current.innerHTML = "Reselect Start/End Vertices";
         if (startPromptRef.current) startPromptRef.current.hidden = false;
+        if (endPromptRef.current) endPromptRef.current.hidden = true;
+        if (startVisRef.current) startVisRef.current.hidden = true;
         drawGraphInSelectionMode();
     }
 
