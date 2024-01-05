@@ -1,34 +1,34 @@
-import Edge from "./edge";
+import Vertex from "./vertex";
 
 class PriorityQueue {
-    edges: Array<Edge>;
+    vertices: Array<Vertex>;
 
     constructor() {
-        this.edges = new Array<Edge>();
+        this.vertices = new Array<Vertex>();
     }
 
     front() {
-        if (this.edges.length > 0) return this.edges[0];
+        if (this.vertices.length > 0) return this.vertices[0];
     }
 
-    buildHeap(edges: Array<Edge>) {
-        if (edges.length == 0) return;
-        this.edges = new Array<Edge>(...edges);
-        var n = Math.floor(this.edges.length / 2);
+    buildHeap(vertices: Array<Vertex>) {
+        if (vertices.length == 0) return;
+        this.vertices = new Array<Vertex>(...vertices);
+        var n = Math.floor(this.vertices.length / 2);
         for (let idx = n; idx >= 0; idx--) {
             this.heapifyDown(idx);
         }
     }
 
-    enqueue(edge: Edge) {
-        this.edges.push(edge);
-        this.heapifyUp(this.edges.length - 1);
+    enqueue(vertex: Vertex) {
+        this.vertices.push(vertex);
+        this.heapifyUp(this.vertices.length - 1);
     }
 
     dequeue() {
-        if (this.edges.length == 0) return;
-        this.swap(0, this.edges.length - 1);
-        this.edges.pop();
+        if (this.vertices.length == 0) return;
+        this.swap(0, this.vertices.length - 1);
+        this.vertices.pop();
         this.heapifyDown(0);
     }
 
@@ -43,10 +43,10 @@ class PriorityQueue {
     }
 
     heapifyDown(idx: number) {
-        while (idx < Math.floor(this.edges.length / 2)) {
+        while (idx < Math.floor(this.vertices.length / 2)) {
             var leftIdx  = idx * 2 + 1;
             var rightIdx = idx * 2 + 2;
-            var minIdx = rightIdx < this.edges.length ? 
+            var minIdx = rightIdx < this.vertices.length ? 
                 (this.hasPriority(leftIdx, rightIdx) ? leftIdx : rightIdx) : leftIdx;
             if (this.hasPriority(idx, minIdx))
                 break;
@@ -56,17 +56,17 @@ class PriorityQueue {
     }
 
     hasPriority(idxA: number, idxB: number) {
-        var weightA = this.edges[idxA].weight;
-        var weightB = this.edges[idxB].weight;
-        if (!weightA || !weightB) 
+        var distA = this.vertices[idxA].dist;
+        var distB = this.vertices[idxB].dist;
+        if (distA == null || distB == null) 
             return false;
-        return weightA < weightB;
+        return distA < distB;
     }
 
     swap(idxA: number, idxB: number) {
-        var temp = this.edges[idxA];
-        this.edges[idxA] = this.edges[idxB];
-        this.edges[idxB] = temp;
+        var temp = this.vertices[idxA];
+        this.vertices[idxA] = this.vertices[idxB];
+        this.vertices[idxB] = temp;
     }
 }
 
