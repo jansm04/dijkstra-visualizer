@@ -15,14 +15,19 @@ export const addGraphVisualizer = (
 
     var tempEdge: TempEdge | null;
     var selectedObject: Vertex | Edge | null = null;
+    var startingVertex: Vertex | null = null;
+    var endingVertex: Vertex | null = null;
+
     var heldObject: Vertex | null = null;
     var originalPosition: {x: number, y: number};
     var isShiftPressed = false
     var isMoving = false;
+    var inSelectionMode = false;
     var timer: NodeJS.Timeout;
     var takenLetters = "";
 
     const onDoubleClick = (e: MouseEvent) => {
+        if (inSelectionMode) return;
         const point = computePointInCanvas(e);
         if (!point) return;
         selectedObject = selectObject(point.x, point.y);
@@ -39,7 +44,19 @@ export const addGraphVisualizer = (
         setTimeout(() => null, 1);
         var point = computePointInCanvas(e);
         if (!point) return;
+
         selectedObject = selectObject(point.x, point.y);
+        if (inSelectionMode) {
+            if (selectedObject instanceof Vertex) {
+                if (!startingVertex) startingVertex = selectedObject;
+                else if (!endingVertex) endingVertex = selectedObject;
+                else return;
+                selectedObject.isCursorVisible = false;
+                clearInterval(timer);
+                drawGraphInSelectionMode();
+            }
+            return;
+        }
         if (selectedObject instanceof Vertex && isShiftPressed) {
             tempEdge = new TempEdge(selectedObject, point.x, point.y);
         } else if (selectedObject instanceof Vertex) {
@@ -51,6 +68,7 @@ export const addGraphVisualizer = (
     }
 
     function onMouseMove(e: MouseEvent) {
+        if (inSelectionMode) return;
         if (tempEdge) {
             var point = computePointInCanvas(e);
             if (!point) return;
@@ -84,8 +102,10 @@ export const addGraphVisualizer = (
     }
 
     function onMouseUp(e: MouseEvent) {
+        if (inSelectionMode) return;
         const point = computePointInCanvas(e);
         if (!point) return;
+
         selectedObject = selectObject(point.x, point.y);
         if (selectedObject instanceof Vertex && tempEdge && selectedObject != tempEdge.vertex) {
             var edge = new Edge(tempEdge.vertex, selectedObject);
@@ -115,7 +135,7 @@ export const addGraphVisualizer = (
     }
 
     function onKeyDown(e: KeyboardEvent) {
-        console.log(e.key);
+        if (inSelectionMode) return;
         if (e.key == 'Shift')
             isShiftPressed = true;
         else {
@@ -136,16 +156,21 @@ export const addGraphVisualizer = (
     }
 
     function onKeyUp(e: KeyboardEvent) {
+        if (inSelectionMode) return;
         if (e.key == 'Shift') {
             isShiftPressed = false;
         }
     }
 
     function onSubmitStart(e: MouseEvent) {
-        pq.buildHeap(edges);
-        console.log("In draw graph:")
-        console.log(edges);
-        console.log(pq.edges);
+        inSelectionMode = true;
+        drawGraphInSelectionMode();
+    }
+
+    function onSubmitBuild(e: MouseEvent) {
+        if (startingVertex instanceof Vertex)
+            startingVertex.dist = 0;
+        pq.buildHeap(vertices);
     }
 
     function setEdgeWeight(key: string) {
@@ -262,22 +287,46 @@ export const addGraphVisualizer = (
         }, 500);
     }
 
-    function drawGraph() {
-        const ctx = canvasRef.current?.getContext("2d");
-        const rect = canvasRef.current?.getBoundingClientRect();
+    function resetContext() {
+        var ctx = canvasRef.current?.getContext("2d");
+        var rect = canvasRef.current?.getBoundingClientRect();
         if (!ctx || !rect) return;
-        ctx?.clearRect(0, 0, rect.width, rect.height);
+        ctx.clearRect(0, 0, rect.width, rect.height);
         ctx.lineWidth = 2;
+        return ctx;
+    }
+
+    function drawGraph() {
+        var colourScheme = { def: 'white', selected: 'aqua'};
+        const ctx = resetContext();
+        if (!ctx) return;
         if (tempEdge && !tempEdge.vertex.containsPoint(tempEdge.px, tempEdge.py)) { 
-            ctx.strokeStyle = 'aqua';
+            ctx.strokeStyle = colourScheme.selected;
             tempEdge.draw(ctx);
         } 
         for (let i = 0; i < edges.length; i++) {
-            var strokeStyle = (edges[i] == selectedObject) ? 'aqua' : 'white';
+            var strokeStyle = (edges[i] == selectedObject) ? colourScheme.selected : colourScheme.def;
             edges[i].draw(ctx, strokeStyle);
         }
         for (let i = 0; i < vertices.length; i++) {
-            var strokeStyle = (vertices[i] == selectedObject) ? 'aqua' : 'white';
+            var strokeStyle = (vertices[i] == selectedObject) ? colourScheme.selected : colourScheme.def;
+            vertices[i].draw(ctx, strokeStyle);
+        }
+    }
+
+    function drawGraphInSelectionMode() {
+        var colourScheme = { def: 'gray', start: 'green', end: 'red'};
+        const ctx = resetContext();
+        if (!ctx) return;
+        for (let i = 0; i < edges.length; i++) {
+            edges[i].draw(ctx, colourScheme.def);
+        }
+        for (let i = 0; i < vertices.length; i++) {
+            var strokeStyle = (vertices[i] == startingVertex) ? 
+                colourScheme.start : 
+                (vertices[i] == endingVertex) ? 
+                    colourScheme.end : 
+                    colourScheme.def;
             vertices[i].draw(ctx, strokeStyle);
         }
     }
