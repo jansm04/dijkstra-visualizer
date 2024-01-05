@@ -8,6 +8,8 @@ class Vertex {
     y: number;
     label: string | null;
     edges: Array<Edge>;
+    dist: number;
+    pred: Vertex | null;
     isCursorVisible: boolean;
 
     constructor(x: number, y: number) {
@@ -15,6 +17,8 @@ class Vertex {
         this.y = y;
         this.label = null;
         this.edges = new Array<Edge>();
+        this.dist = Infinity;
+        this.pred = null;
         this.isCursorVisible = true;
     }
 
