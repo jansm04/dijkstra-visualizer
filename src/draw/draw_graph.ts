@@ -1,23 +1,21 @@
 import Vertex from "@/app/elements/vertex";
 import Edge from "@/app/elements/edge";
 import TempEdge from "@/app/elements/temp_edge";
-import PriorityQueue from "@/app/elements/priority_queue";
 
 import { RefObject } from "react";
+import PriorityQueue from "@/app/elements/priority_queue";
 
-export const addGraphDesigner = (canvasRef: RefObject<HTMLCanvasElement>) => {
+export const addGraphVisualizer = (
+        canvasRef: RefObject<HTMLCanvasElement>,
+        submitRef: RefObject<HTMLButtonElement>,
+        vertices: Array<Vertex>,
+        edges: Array<Edge>,
+        pq: PriorityQueue
+    ) => {
 
-    // elements
-    var vertices = new Array<Vertex>();
-    var edges = new Array<Edge>();
     var tempEdge: TempEdge | null;
-    var pq = new PriorityQueue();
-
-    // objects
     var selectedObject: Vertex | Edge | null = null;
     var heldObject: Vertex | null = null;
-
-    // variables
     var originalPosition: {x: number, y: number};
     var isShiftPressed = false
     var isMoving = false;
@@ -141,6 +139,13 @@ export const addGraphDesigner = (canvasRef: RefObject<HTMLCanvasElement>) => {
         if (e.key == 'Shift') {
             isShiftPressed = false;
         }
+    }
+
+    function onSubmitStart(e: MouseEvent) {
+        pq.buildHeap(edges);
+        console.log("In draw graph:")
+        console.log(edges);
+        console.log(pq.edges);
     }
 
     function setEdgeWeight(key: string) {
@@ -277,7 +282,7 @@ export const addGraphDesigner = (canvasRef: RefObject<HTMLCanvasElement>) => {
         }
     }
 
-    if (!canvasRef.current) return;
+    if (!canvasRef.current || !submitRef.current) return;
     // mouse events
     canvasRef.current.addEventListener('dblclick', onDoubleClick);
     canvasRef.current.addEventListener('mousedown', onMouseDown);
@@ -286,4 +291,5 @@ export const addGraphDesigner = (canvasRef: RefObject<HTMLCanvasElement>) => {
     // key events
     canvasRef.current.addEventListener('keydown', onKeyDown, true);
     canvasRef.current.addEventListener('keyup', onKeyUp, true);
+    submitRef.current.addEventListener('click', onSubmitStart);
 }
