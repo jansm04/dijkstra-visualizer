@@ -7,7 +7,10 @@ import PriorityQueue from "@/app/elements/priority_queue";
 
 export const addGraphVisualizer = (
         canvasRef: RefObject<HTMLCanvasElement>,
-        submitRef: RefObject<HTMLButtonElement>,
+        selectModeRef: RefObject<HTMLButtonElement>,
+        startPromptRef: RefObject<HTMLParagraphElement>,
+        endPromptRef: RefObject<HTMLParagraphElement>,
+        startVisRef: RefObject<HTMLButtonElement>,
         vertices: Array<Vertex>,
         edges: Array<Edge>,
         pq: PriorityQueue
@@ -48,9 +51,16 @@ export const addGraphVisualizer = (
         selectedObject = selectObject(point.x, point.y);
         if (inSelectionMode) {
             if (selectedObject instanceof Vertex) {
-                if (!startingVertex) startingVertex = selectedObject;
-                else if (!endingVertex) endingVertex = selectedObject;
-                else return;
+                if (!startingVertex) {
+                    startingVertex = selectedObject;
+                    if (startPromptRef.current) startPromptRef.current.hidden = true;
+                    if (endPromptRef.current) endPromptRef.current.hidden = false;
+                }
+                else if (!endingVertex) { 
+                    endingVertex = selectedObject;
+                    if (endPromptRef.current) endPromptRef.current.hidden = true;
+                    if (startVisRef.current) startVisRef.current.hidden = false;
+                } else return;
                 selectedObject.isCursorVisible = false;
                 clearInterval(timer);
                 drawGraphInSelectionMode();
@@ -162,8 +172,9 @@ export const addGraphVisualizer = (
         }
     }
 
-    function onSubmitStart(e: MouseEvent) {
+    function onEnterSelectMode(e: MouseEvent) {
         inSelectionMode = true;
+        if (startPromptRef.current) startPromptRef.current.hidden = false;
         drawGraphInSelectionMode();
     }
 
@@ -331,7 +342,7 @@ export const addGraphVisualizer = (
         }
     }
 
-    if (!canvasRef.current || !submitRef.current) return;
+    if (!canvasRef.current || !selectModeRef.current) return;
     // mouse events
     canvasRef.current.addEventListener('dblclick', onDoubleClick);
     canvasRef.current.addEventListener('mousedown', onMouseDown);
@@ -340,5 +351,5 @@ export const addGraphVisualizer = (
     // key events
     canvasRef.current.addEventListener('keydown', onKeyDown, true);
     canvasRef.current.addEventListener('keyup', onKeyUp, true);
-    submitRef.current.addEventListener('click', onSubmitStart);
+    selectModeRef.current.addEventListener('click', onEnterSelectMode);
 }

@@ -9,7 +9,10 @@ import { addPQVisualizer } from "@/draw/draw_pq";
 export const useDraw = () => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const pqRef = useRef<HTMLCanvasElement>(null);
-    const startRef = useRef<HTMLButtonElement>(null);
+    const selectModeRef = useRef<HTMLButtonElement>(null);
+    const startPromptRef = useRef<HTMLParagraphElement>(null);
+    const endPromptRef = useRef<HTMLParagraphElement>(null);
+    const startVisRef = useRef<HTMLButtonElement>(null);
 
     var count = 0;
 
@@ -20,9 +23,10 @@ export const useDraw = () => {
     useEffect(() => {
         console.log('Entered useEffect');
         if (count) { count--; return; } else count++;
-        addGraphVisualizer(canvasRef, startRef, vertices, edges, pq);
-        addPQVisualizer(pqRef, startRef, pq);
+
+        addGraphVisualizer(canvasRef, selectModeRef, startPromptRef, endPromptRef, startVisRef, vertices, edges, pq);
+        addPQVisualizer(pqRef, selectModeRef, pq);
     }, [])
 
-    return { canvasRef, pqRef, startRef };
+    return { canvasRef, pqRef, selectModeRef, startPromptRef, endPromptRef, startVisRef };
 }
