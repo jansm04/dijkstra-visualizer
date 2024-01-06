@@ -8,13 +8,13 @@ class Edge {
     ay: number;
     bx: number;
     by: number;
-    weight: number | null;
+    weight: number;
     va: Vertex;
     vb: Vertex;
     isCursorVisible: boolean;
     
     constructor(va: Vertex, vb: Vertex) {
-        this.weight = null;
+        this.weight = 0;
         this.va = va;
         this.vb = vb;
 
