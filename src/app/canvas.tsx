@@ -10,7 +10,7 @@ export const Canvas = () => {
         pqRef, 
         selectModeRef, 
         startPromptRef, 
-        endPromptRef,
+        // endPromptRef,
         startVisRef 
     } = useDraw();
 
@@ -47,7 +47,7 @@ export const Canvas = () => {
                             <button 
                                 ref={selectModeRef} 
                                 className="py-2 px-6 mt-5 float-left text-gray-300 italic border border-white text-center text-[14px] rounded hover:bg-slate-800">
-                                    Select Start/End Vertices
+                                    Select Start Vertex
                             </button>
                             <span 
                                 ref={startPromptRef} 
@@ -55,12 +55,12 @@ export const Canvas = () => {
                                 hidden={true}>
                                     Select a vertex to <span className="text-[green]">start</span> with.
                             </span>
-                            <span 
+                            {/* <span 
                                 ref={endPromptRef} 
                                 className="p-2 ml-8 my-5 float-left text-gray-300 text-[14px]" 
                                 hidden={true}>
                                     Select a vertex to <span className="text-[red]">end</span> with.
-                            </span>
+                            </span> */}
                             <button 
                                 ref={startVisRef} 
                                 className="py-2 px-6 mt-5 ml-4 float-left text-gray-300 italic border border-[green] text-center text-[14px] rounded hover:bg-slate-800" 

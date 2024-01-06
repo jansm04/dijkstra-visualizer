@@ -6,20 +6,20 @@ import { RefObject } from "react";
 import PriorityQueue from "@/app/elements/priority_queue";
 
 export const addGraphVisualizer = (
-        canvasRef: RefObject<HTMLCanvasElement>,
-        selectModeRef: RefObject<HTMLButtonElement>,
-        startPromptRef: RefObject<HTMLParagraphElement>,
-        endPromptRef: RefObject<HTMLParagraphElement>,
-        startVisRef: RefObject<HTMLButtonElement>,
-        vertices: Array<Vertex>,
-        edges: Array<Edge>,
-        pq: PriorityQueue
-    ) => {
+    canvasRef: RefObject<HTMLCanvasElement>,
+    selectModeRef: RefObject<HTMLButtonElement>,
+    startPromptRef: RefObject<HTMLParagraphElement>,
+    // endPromptRef: RefObject<HTMLParagraphElement>,
+    startVisRef: RefObject<HTMLButtonElement>,
+    vertices: Array<Vertex>,
+    edges: Array<Edge>,
+    pq: PriorityQueue
+) => {
 
     var tempEdge: TempEdge | null;
     var selectedObject: Vertex | Edge | null = null;
     var startingVertex: Vertex | null = null;
-    var endingVertex: Vertex | null = null;
+    // var endingVertex: Vertex | null = null;
 
     var heldObject: Vertex | null = null;
     var originalPosition: {x: number, y: number};
@@ -54,13 +54,15 @@ export const addGraphVisualizer = (
                 if (!startingVertex) {
                     startingVertex = selectedObject;
                     if (startPromptRef.current) startPromptRef.current.hidden = true;
-                    if (endPromptRef.current) endPromptRef.current.hidden = false;
-                }
-                else if (!endingVertex) { 
-                    endingVertex = selectedObject;
-                    if (endPromptRef.current) endPromptRef.current.hidden = true;
                     if (startVisRef.current) startVisRef.current.hidden = false;
-                } else return;
+                    // if (endPromptRef.current) endPromptRef.current.hidden = false;
+                }
+                // else if (!endingVertex) { 
+                //     endingVertex = selectedObject;
+                //     if (endPromptRef.current) endPromptRef.current.hidden = true;
+                //     if (startVisRef.current) startVisRef.current.hidden = false;
+                // } 
+                else return;
                 selectedObject.isCursorVisible = false;
                 drawGraphInSelectionMode();
             }
@@ -177,11 +179,12 @@ export const addGraphVisualizer = (
         clearInterval(timer);
 
         startingVertex = null;
-        endingVertex = null;
+        // endingVertex = null;
         inSelectionMode = true;
-        if (selectModeRef.current) selectModeRef.current.innerHTML = "Reselect Start/End Vertices";
+        if (selectModeRef.current) 
+            selectModeRef.current.innerHTML = "Reselect Start Vertex";
         if (startPromptRef.current) startPromptRef.current.hidden = false;
-        if (endPromptRef.current) endPromptRef.current.hidden = true;
+        // if (endPromptRef.current) endPromptRef.current.hidden = true;
         if (startVisRef.current) startVisRef.current.hidden = true;
         drawGraphInSelectionMode();
     }
@@ -343,8 +346,8 @@ export const addGraphVisualizer = (
         for (let i = 0; i < vertices.length; i++) {
             var strokeStyle = (vertices[i] == startingVertex) ? 
                 colourScheme.start : 
-                (vertices[i] == endingVertex) ? 
-                    colourScheme.end : 
+                // (vertices[i] == endingVertex) ? 
+                //     colourScheme.end : 
                     colourScheme.def;
             vertices[i].draw(ctx, strokeStyle);
         }
