@@ -11,6 +11,10 @@ class PriorityQueue {
         if (this.vertices.length > 0) return this.vertices[0];
     }
 
+    empty() {
+        return this.vertices.length == 0;
+    }
+
     buildHeap(vertices: Array<Vertex>) {
         if (vertices.length == 0) return;
         this.vertices = new Array<Vertex>(...vertices);
