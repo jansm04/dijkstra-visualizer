@@ -1,10 +1,10 @@
 import { useEffect, useRef } from "react";
 import { addGraphVisualizer } from "@/draw/draw_graph";
+import { addAlgorithmVisualizer } from "@/draw/draw_algorithm";
 
 import Vertex from "@/app/elements/vertex";
 import Edge from "@/app/elements/edge";
 import PriorityQueue from "@/app/elements/priority_queue";
-import { addPQVisualizer } from "@/draw/draw_pq";
 
 export const useDraw = () => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -24,9 +24,14 @@ export const useDraw = () => {
         console.log('Entered useEffect');
         if (count) { count--; return; } else count++;
 
-        addGraphVisualizer(canvasRef, selectModeRef, startPromptRef, endPromptRef, startVisRef, vertices, edges, pq);
-        addPQVisualizer(pqRef, startVisRef, pq);
+        addGraphVisualizer(canvasRef, selectModeRef, startPromptRef, startVisRef, vertices, edges, pq);
+
+        function startAlgorithm() {
+            addAlgorithmVisualizer(canvasRef, pqRef, vertices, edges, pq);
+        }
+        
+        startVisRef.current?.addEventListener('click', startAlgorithm);
     }, [])
 
-    return { canvasRef, pqRef, selectModeRef, startPromptRef, endPromptRef, startVisRef };
+    return { canvasRef, pqRef, selectModeRef, startPromptRef, startVisRef };
 }
