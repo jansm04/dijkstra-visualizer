@@ -6,19 +6,19 @@ const offset = 5;
 class Vertex {
     x: number;
     y: number;
-    label: string | null;
+    label: string;
     edges: Array<Edge>;
     dist: number;
-    pred: Vertex | null;
+    pred: string;
     isCursorVisible: boolean;
 
     constructor(x: number, y: number) {
         this.x = x;
         this.y = y;
-        this.label = null;
+        this.label = "";
         this.edges = new Array<Edge>();
         this.dist = Infinity;
-        this.pred = null;
+        this.pred = "";
         this.isCursorVisible = true;
     }
 
