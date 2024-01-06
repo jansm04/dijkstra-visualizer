@@ -62,7 +62,6 @@ export const addGraphVisualizer = (
                     if (startVisRef.current) startVisRef.current.hidden = false;
                 } else return;
                 selectedObject.isCursorVisible = false;
-                clearInterval(timer);
                 drawGraphInSelectionMode();
             }
             return;
@@ -173,6 +172,10 @@ export const addGraphVisualizer = (
     }
 
     function onEnterSelectMode(e: MouseEvent) {
+        if (selectedObject)
+            selectedObject.isCursorVisible = false;
+        clearInterval(timer);
+
         startingVertex = null;
         endingVertex = null;
         inSelectionMode = true;
@@ -207,12 +210,12 @@ export const addGraphVisualizer = (
         if (selectedObject instanceof Vertex) {
             var label = selectedObject.label;
             var letter = key.toUpperCase();
-            if (!label && key.length == 1 && key.match('[a-z]|[A-Z]') && !takenLetters.includes(letter)) {
+            if (label.length == 0 && key.length == 1 && key.match('[a-z]|[A-Z]') && !takenLetters.includes(letter)) {
                 label = letter;
                 takenLetters += letter;
-            } else if (label && key == 'Backspace') {
+            } else if (label.length == 1 && key == 'Backspace') {
                 takenLetters = takenLetters.replaceAll(label, "");
-                label = null;
+                label = "";
             }
             selectedObject.label = label;
         }
@@ -331,7 +334,7 @@ export const addGraphVisualizer = (
     }
 
     function drawGraphInSelectionMode() {
-        var colourScheme = { def: 'gray', start: 'green', end: 'red'};
+        var colourScheme = { def: 'gray', start: 'green', end: 'firebrick'};
         const ctx = resetContext();
         if (!ctx) return;
         for (let i = 0; i < edges.length; i++) {
@@ -347,7 +350,7 @@ export const addGraphVisualizer = (
         }
     }
 
-    if (!canvasRef.current || !selectModeRef.current) return;
+    if (!canvasRef.current || !selectModeRef.current || !startVisRef.current) return;
     // mouse events
     canvasRef.current.addEventListener('dblclick', onDoubleClick);
     canvasRef.current.addEventListener('mousedown', onMouseDown);
@@ -356,5 +359,7 @@ export const addGraphVisualizer = (
     // key events
     canvasRef.current.addEventListener('keydown', onKeyDown, true);
     canvasRef.current.addEventListener('keyup', onKeyUp, true);
+    // buttons
     selectModeRef.current.addEventListener('click', onEnterSelectMode);
+    startVisRef.current.addEventListener('click', onSubmitBuild);
 }
