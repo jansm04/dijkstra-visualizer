@@ -8,7 +8,7 @@ import { addPQVisualizer } from "@/draw/draw_pq";
 
 export const useDraw = () => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
-    const pqRef = useRef<HTMLCanvasElement>(null);
+    const pqRef = useRef<HTMLTableElement>(null);
     const selectModeRef = useRef<HTMLButtonElement>(null);
     const startPromptRef = useRef<HTMLParagraphElement>(null);
     const endPromptRef = useRef<HTMLParagraphElement>(null);
@@ -25,7 +25,7 @@ export const useDraw = () => {
         if (count) { count--; return; } else count++;
 
         addGraphVisualizer(canvasRef, selectModeRef, startPromptRef, endPromptRef, startVisRef, vertices, edges, pq);
-        addPQVisualizer(pqRef, selectModeRef, pq);
+        addPQVisualizer(pqRef, startVisRef, pq);
     }, [])
 
     return { canvasRef, pqRef, selectModeRef, startPromptRef, endPromptRef, startVisRef };

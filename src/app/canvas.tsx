@@ -19,8 +19,26 @@ export const Canvas = () => {
             <Header />
             <div className="flex">
                  <div>
-                    <h1 className="m-2 text-gray-400 text-[16px] text-center font-bold">Priority Queue</h1>
-                    <canvas ref={pqRef} height={500} width={200} className="my-4 mx-12 border border-gray-400 outline-none max-w-[400px]" tabIndex={0}></canvas>
+                    <h1 className="my-2 mr-12 text-gray-400 text-[16px] text-center font-bold">Priority Queue</h1>
+                    {/* <canvas ref={pqRef} height={500} width={200} className="my-4 mx-12 border border-gray-400 outline-none max-w-[400px]" tabIndex={0}></canvas> */}
+                    <table ref={pqRef} className="w-[240px] my-4 mr-12 border border-gray-300 max-w-[400px]">
+                        <colgroup>
+                            <col className="border border-gray-300"/>
+                            <col className="border border-gray-300"/>
+                            <col className="border border-gray-300"/>
+                        </colgroup>
+                        <tbody>
+                        
+
+                        <tr className="h-8 text-[13px]">
+                            <th>Vertex</th>
+                            <th>Dist.</th>
+                            <th>Pred.</th>
+                        </tr>
+                        </tbody>
+                        
+                        
+                    </table>
                  </div>
                  <div>
                     <canvas ref={canvasRef} height={600} width={800} className="border outline-none border-white bg-slate-950 rounded-md max-w-[800px]" tabIndex={0}></canvas>
