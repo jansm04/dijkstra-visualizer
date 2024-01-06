@@ -44,7 +44,6 @@ export const addGraphVisualizer = (
     }
 
     function onMouseDown(e: MouseEvent) {
-        setTimeout(() => null, 1);
         var point = computePointInCanvas(e);
         if (!point) return;
 
@@ -202,7 +201,7 @@ export const addGraphVisualizer = (
                 if (!weight) weight = parseInt(key, 10);
                 else weight = weight * 10 + parseInt(key, 10);
             } else if (weight && key == 'Backspace') {
-                if (weight < 10) weight = null;
+                if (weight < 10) weight = 0;
                 else weight = Math.floor(weight / 10);
             } 
             selectedObject.weight = weight;
