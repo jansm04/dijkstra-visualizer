@@ -60,7 +60,7 @@ class PriorityQueue {
         var distB = this.vertices[idxB].dist;
         if (distA == null || distB == null) 
             return false;
-        return distA < distB;
+        return distA <= distB;
     }
 
     swap(idxA: number, idxB: number) {
