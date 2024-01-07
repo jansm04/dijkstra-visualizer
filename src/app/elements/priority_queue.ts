@@ -19,10 +19,10 @@ class PriorityQueue {
         if (vertices.length == 0) return;
         this.vertices = new Array<Vertex>(...vertices);
         var n = Math.floor(this.vertices.length / 2);
-        for (let idx = n; idx >= 0; idx--) {
+        for (let idx = 0; idx < this.vertices.length; idx++)
             this.vertices[idx].idx = idx;
+        for (let idx = n; idx >= 0; idx--)
             this.heapifyDown(idx);
-        }
     }
 
     enqueue(vertex: Vertex) {
