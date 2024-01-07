@@ -31,12 +31,13 @@ export const addAlgorithmVisualizer = (
     var colourScheme = { 
         unvisisted: 'gray', // unvisited vertices or edge
         used: 'green', // used edge or visited vertex
-        current: 'yellow', // current vertex
+        currentVertex: 'yellow', 
+        currentEdge: 'yellow',
         finished: 'lightgreen' // final colour
     };
 
-    function updatePQ() {
-        updatePQVisualizer(pqRef, pq, visited);
+    function updatePQ(current: Vertex | null, highlight: Vertex | null) {
+        updatePQVisualizer(pqRef, pq, visited, current, highlight);
     }
 
     function drawState() {
@@ -46,14 +47,14 @@ export const addAlgorithmVisualizer = (
         var strokeStyle: string;
         for (let i = 0; i < edges.length; i++) {
             if (isFinished && usedEdges.includes(edges[i])) strokeStyle = colourScheme.finished;
-            else if (edges[i] == currEdge) strokeStyle = colourScheme.current;
+            else if (edges[i] == currEdge) strokeStyle = colourScheme.currentEdge;
             else if (usedEdges.includes(edges[i])) strokeStyle = colourScheme.used;
             else strokeStyle = colourScheme.unvisisted;
             edges[i].draw(ctx, strokeStyle);
         }
         for (let i = 0; i < vertices.length; i++) {
             if (isFinished) strokeStyle = colourScheme.finished;
-            else if (vertices[i] == currVertex) strokeStyle = colourScheme.current;
+            else if (vertices[i] == currVertex) strokeStyle = colourScheme.currentVertex;
             else if (visited.includes(vertices[i])) strokeStyle = colourScheme.used;
             else strokeStyle = colourScheme.unvisisted;
             vertices[i].draw(ctx, strokeStyle);
@@ -74,24 +75,29 @@ export const addAlgorithmVisualizer = (
 
     // DIJKSTRAS ALGORITHM
     async function dijkstras() {
+        var start = currVertex = pq.front();
+        drawState();
+
         while (!pq.empty()) {
             currEdge = null;
             currVertex = pq.front();
+            if (currVertex != start) { 
+                await sleep(); drawState(); updatePQ(null, null);
+            }
             pq.dequeue();
-            await sleep(); drawState();
             if (currVertex) {
                 visited.push(currVertex);
-                await sleep(); updatePQ();   
+                await sleep(); updatePQ(null, null);
                 for (let i = 0; i < currVertex.edges.length; i++) {
                     currEdge = currVertex.edges[i];
                     var neighbor: Vertex = currEdge.va == currVertex ? currEdge.vb : currEdge.va;
                     if (!visited.includes(neighbor)) {
-                        await sleep(); drawState();
+                        await sleep(); drawState(); updatePQ(null, neighbor);
                         if (currVertex.dist + currEdge.weight < neighbor.dist) {
                             neighbor.dist = currVertex.dist + currEdge.weight;
                             addUsedEdge(neighbor, currEdge);  
                             pq.heapifyUp(neighbor.idx);
-                            await sleep(); updatePQ();   
+                            await sleep(); updatePQ(null, neighbor);   
                         } 
                     }        
                 }
@@ -100,7 +106,7 @@ export const addAlgorithmVisualizer = (
         currVertex = null;
         currEdge = null;
         await sleep(); drawState();
-        await sleep(); updatePQ();
+        await sleep(); updatePQ(null, null);
         isFinished = true;
         if (visPromptRef.current) visPromptRef.current.innerHTML = "Visualization Complete.";
         if (editRef.current) editRef.current.hidden = false;
