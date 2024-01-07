@@ -10,6 +10,7 @@ export const addAlgorithmVisualizer = (
     canvasRef: RefObject<HTMLCanvasElement>,
     pqRef: RefObject<HTMLTableElement>,
     visPromptRef: RefObject<HTMLParagraphElement>,
+    editRef: RefObject<HTMLButtonElement>,
     vertices: Array<Vertex>,
     edges: Array<Edge>,
     pq: PriorityQueue
@@ -24,6 +25,9 @@ export const addAlgorithmVisualizer = (
     // speed
     const ms: number = 3000;
 
+    const ctx = canvasRef.current?.getContext("2d");
+    const rect = canvasRef.current?.getBoundingClientRect();
+
     var colourScheme = { 
         unvisisted: 'gray', // unvisited vertices or edge
         used: 'green', // used edge or visited vertex
@@ -36,8 +40,6 @@ export const addAlgorithmVisualizer = (
     }
 
     function drawState() {
-        const ctx = canvasRef.current?.getContext("2d");
-        const rect = canvasRef.current?.getBoundingClientRect();
         if (!ctx || !rect) return;
         ctx.clearRect(0, 0, rect.width, rect.height);
         ctx.lineWidth = 2;
@@ -101,9 +103,29 @@ export const addAlgorithmVisualizer = (
         await sleep(); updatePQ();
         isFinished = true;
         if (visPromptRef.current) visPromptRef.current.innerHTML = "Visualization Complete.";
+        if (editRef.current) editRef.current.hidden = false;
         drawState();
+    }
+
+    function reset() {
+        var table = pqRef.current;
+        if (!table) return;
+        var n = table.rows.length;
+        for (let i = 1; i < n; i++)
+            table.deleteRow(1);
+
+        n = visited.length;
+        for (let i = 0; i < n; i++)
+            visited[i].dist = Infinity;
+        visited.splice(0, n);
+        
+        if (!ctx || !rect) return;
+        ctx.clearRect(0, 0, rect.width, rect.height);
+        addPQVisualizer(pqRef, pq);
     }
 
     addPQVisualizer(pqRef, pq);
     dijkstras();
+
+    editRef.current?.addEventListener('click', reset);
 }

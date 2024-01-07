@@ -29,7 +29,7 @@ export const useDraw = () => {
         addGraphVisualizer(canvasRef, selectModeRef, startPromptRef, startVisRef, visPromptRef, vertices, edges, pq);
         
         startVisRef.current?.addEventListener('click', () => {
-            addAlgorithmVisualizer(canvasRef, pqRef, visPromptRef, vertices, edges, pq);
+            addAlgorithmVisualizer(canvasRef, pqRef, visPromptRef, editRef, vertices, edges, pq);
         });
         
         resetRef.current?.addEventListener('click', () => {
