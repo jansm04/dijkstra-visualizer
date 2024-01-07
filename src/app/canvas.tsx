@@ -42,7 +42,7 @@ export const Canvas = () => {
                             </button>
                             <span 
                                 ref={startPromptRef} 
-                                className="p-2 ml-8 my-5 float-left text-gray-300 text-[14px]" 
+                                className="p-2 ml-8 mt-5 float-left text-gray-300 text-[14px]" 
                                 hidden={true}>
                                     Select a vertex to <span className="text-[green]">start</span> with.
                             </span>
@@ -55,7 +55,18 @@ export const Canvas = () => {
                         </div>
                     </div>    
                 </div>
-                <Instructions resetRef={resetRef} editRef={editRef} />
+                <div>
+                    <Instructions />
+                    <div className="grid mx-8 text-gray-300 text-[14px]">
+                        <button ref={resetRef} className="py-2 px-4 w-[100px] italic text-center border border-[blue] rounded hover:bg-slate-800">
+                            Reset
+                        </button>
+                        <button ref={editRef} className="mt-3 py-2 px-4 w-[100px] italic text-center border border-[yellow] rounded hover:bg-slate-800" hidden={true}>
+                            Edit
+                        </button>
+                    </div>
+                </div>
+                
             </div>
             <Footer />
         </div>
