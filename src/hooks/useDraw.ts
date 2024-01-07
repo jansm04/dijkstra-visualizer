@@ -11,7 +11,6 @@ export const useDraw = () => {
     const pqRef = useRef<HTMLTableElement>(null);
     const selectModeRef = useRef<HTMLButtonElement>(null);
     const startPromptRef = useRef<HTMLParagraphElement>(null);
-    const endPromptRef = useRef<HTMLParagraphElement>(null);
     const startVisRef = useRef<HTMLButtonElement>(null);
 
     var count = 0;
