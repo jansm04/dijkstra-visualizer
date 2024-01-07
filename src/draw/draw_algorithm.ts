@@ -9,6 +9,7 @@ import { RefObject } from "react"
 export const addAlgorithmVisualizer = (
     canvasRef: RefObject<HTMLCanvasElement>,
     pqRef: RefObject<HTMLTableElement>,
+    visPromptRef: RefObject<HTMLParagraphElement>,
     vertices: Array<Vertex>,
     edges: Array<Edge>,
     pq: PriorityQueue
@@ -98,6 +99,7 @@ export const addAlgorithmVisualizer = (
         await sleep(); drawState();
         await sleep(); updatePQ();
         isFinished = true;
+        if (visPromptRef.current) visPromptRef.current.innerHTML = "Visualization Complete.";
         drawState();
     }
 

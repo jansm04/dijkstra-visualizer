@@ -12,6 +12,7 @@ export const useDraw = () => {
     const selectModeRef = useRef<HTMLButtonElement>(null);
     const startPromptRef = useRef<HTMLParagraphElement>(null);
     const startVisRef = useRef<HTMLButtonElement>(null);
+    const visPromptRef = useRef<HTMLParagraphElement>(null);
     const resetRef = useRef<HTMLButtonElement>(null);
     const editRef = useRef<HTMLButtonElement>(null);
 
@@ -25,10 +26,10 @@ export const useDraw = () => {
         console.log('Entered useEffect');
         if (count) { count--; return; } else count++;
 
-        addGraphVisualizer(canvasRef, selectModeRef, startPromptRef, startVisRef, vertices, edges, pq);
+        addGraphVisualizer(canvasRef, selectModeRef, startPromptRef, startVisRef, visPromptRef, vertices, edges, pq);
         
         startVisRef.current?.addEventListener('click', () => {
-            addAlgorithmVisualizer(canvasRef, pqRef, vertices, edges, pq);
+            addAlgorithmVisualizer(canvasRef, pqRef, visPromptRef, vertices, edges, pq);
         });
         
         resetRef.current?.addEventListener('click', () => {
@@ -36,5 +37,5 @@ export const useDraw = () => {
         });
     }, [])
 
-    return { canvasRef, pqRef, selectModeRef, startPromptRef, startVisRef, resetRef, editRef };
+    return { canvasRef, pqRef, selectModeRef, startPromptRef, startVisRef, visPromptRef, resetRef, editRef };
 }

@@ -12,6 +12,7 @@ export const Canvas = () => {
         selectModeRef, 
         startPromptRef, 
         startVisRef,
+        visPromptRef,
         resetRef,
         editRef 
     } = useDraw();
@@ -52,16 +53,22 @@ export const Canvas = () => {
                                 hidden={true}>
                                     Visualize Dijkstra's Algorithm
                             </button>
+                            <span 
+                                ref={visPromptRef} 
+                                className="p-2 mt-5 float-left text-gray-300 text-[14px]" 
+                                hidden={true}>
+                                    Visualizing Dijkstra's Algorithm...
+                            </span>
                         </div>
                     </div>    
                 </div>
                 <div>
                     <Instructions />
                     <div className="grid mx-8 text-gray-300 text-[14px]">
-                        <button ref={resetRef} className="py-2 px-4 w-[100px] italic text-center border border-[blue] rounded hover:bg-slate-800">
+                        <button ref={resetRef} className="py-2 px-4 w-[100px] italic text-center border border-sky-700 rounded hover:bg-slate-800">
                             Reset
                         </button>
-                        <button ref={editRef} className="mt-3 py-2 px-4 w-[100px] italic text-center border border-[yellow] rounded hover:bg-slate-800" hidden={true}>
+                        <button ref={editRef} className="mt-3 py-2 px-4 w-[100px] italic text-center border border-yellow-700 rounded hover:bg-slate-800" hidden={true}>
                             Edit
                         </button>
                     </div>

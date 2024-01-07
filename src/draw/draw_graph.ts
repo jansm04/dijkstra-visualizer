@@ -10,6 +10,7 @@ export const addGraphVisualizer = (
     selectModeRef: RefObject<HTMLButtonElement>,
     startPromptRef: RefObject<HTMLParagraphElement>,
     startVisRef: RefObject<HTMLButtonElement>,
+    visPromptRef: RefObject<HTMLParagraphElement>,
     vertices: Array<Vertex>,
     edges: Array<Edge>,
     pq: PriorityQueue
@@ -182,6 +183,10 @@ export const addGraphVisualizer = (
         if (startingVertex instanceof Vertex)
             startingVertex.dist = 0;
         pq.buildHeap(vertices);
+        if (selectModeRef.current) selectModeRef.current.hidden = true;
+        if (startPromptRef.current) startPromptRef.current.hidden = true;
+        if (startVisRef.current) startVisRef.current.hidden = true;
+        if (visPromptRef.current) visPromptRef.current.hidden = false;
     }
 
     function setEdgeWeight(key: string) {
