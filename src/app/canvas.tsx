@@ -11,6 +11,7 @@ export const Canvas = () => {
         pqRef, 
         selectModeRef, 
         startPromptRef, 
+        retryPromptRef,
         startVisRef,
         visPromptRef,
         resetRef,
@@ -46,6 +47,12 @@ export const Canvas = () => {
                                 className="p-2 ml-8 mt-5 float-left text-gray-300 text-[14px]" 
                                 hidden={true}>
                                     Select a vertex to <span className="text-[green]">start</span> with.
+                            </span>
+                            <span 
+                                ref={retryPromptRef} 
+                                className="p-2 ml-8 mt-5 float-left text-gray-300 text-[14px]" 
+                                hidden={true}>
+                                    Please make sure all vertices have a label and all edges have a weight.
                             </span>
                             <button 
                                 ref={startVisRef} 

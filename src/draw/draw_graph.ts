@@ -9,6 +9,7 @@ export const addGraphVisualizer = (
     canvasRef: RefObject<HTMLCanvasElement>,
     selectModeRef: RefObject<HTMLButtonElement>,
     startPromptRef: RefObject<HTMLParagraphElement>,
+    retryPromptRef: RefObject<HTMLParagraphElement>,
     startVisRef: RefObject<HTMLButtonElement>,
     visPromptRef: RefObject<HTMLParagraphElement>,
     editRef: RefObject<HTMLButtonElement>,
@@ -167,6 +168,11 @@ export const addGraphVisualizer = (
     }
 
     function onEnterSelectMode(e: MouseEvent) {
+        if (!isValid()) {
+            if (retryPromptRef.current) retryPromptRef.current.hidden = false;
+            return;
+        }
+
         if (selectedObject)
             selectedObject.isCursorVisible = false;
         clearInterval(timer);
@@ -176,6 +182,7 @@ export const addGraphVisualizer = (
         if (selectModeRef.current) 
             selectModeRef.current.innerHTML = "Reselect Start Vertex";
         if (startPromptRef.current) startPromptRef.current.hidden = false;
+        if (retryPromptRef.current) retryPromptRef.current.hidden = true;
         if (startVisRef.current) startVisRef.current.hidden = true;
         if (editRef.current) editRef.current.hidden = false;
         drawGraphInSelectionMode();
@@ -208,6 +215,16 @@ export const addGraphVisualizer = (
         }
         if (editRef.current) editRef.current.hidden = true;
         drawGraph();
+    }
+
+    function isValid() {
+        for (let i = 0; i < edges.length; i++)
+            if (edges[i].weight == 0)
+                return false;
+        for (let i = 0; i < vertices.length; i++)
+            if (vertices[i].label == "")
+                return false;
+        return true;
     }
 
     function setEdgeWeight(key: string) {
