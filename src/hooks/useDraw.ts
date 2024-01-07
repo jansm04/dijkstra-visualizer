@@ -26,8 +26,8 @@ export const useDraw = () => {
         console.log('Entered useEffect');
         if (count) { count--; return; } else count++;
 
-        addGraphVisualizer(canvasRef, selectModeRef, startPromptRef, startVisRef, visPromptRef, vertices, edges, pq);
-        
+        addGraphVisualizer(canvasRef, selectModeRef, startPromptRef, startVisRef, visPromptRef, editRef, vertices, edges, pq);
+
         startVisRef.current?.addEventListener('click', () => {
             addAlgorithmVisualizer(canvasRef, pqRef, visPromptRef, editRef, vertices, edges, pq);
         });

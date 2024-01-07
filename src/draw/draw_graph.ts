@@ -11,6 +11,7 @@ export const addGraphVisualizer = (
     startPromptRef: RefObject<HTMLParagraphElement>,
     startVisRef: RefObject<HTMLButtonElement>,
     visPromptRef: RefObject<HTMLParagraphElement>,
+    editRef: RefObject<HTMLButtonElement>,
     vertices: Array<Vertex>,
     edges: Array<Edge>,
     pq: PriorityQueue
@@ -176,6 +177,7 @@ export const addGraphVisualizer = (
             selectModeRef.current.innerHTML = "Reselect Start Vertex";
         if (startPromptRef.current) startPromptRef.current.hidden = false;
         if (startVisRef.current) startVisRef.current.hidden = true;
+        if (editRef.current) editRef.current.hidden = false;
         drawGraphInSelectionMode();
     }
 
@@ -187,6 +189,25 @@ export const addGraphVisualizer = (
         if (startPromptRef.current) startPromptRef.current.hidden = true;
         if (startVisRef.current) startVisRef.current.hidden = true;
         if (visPromptRef.current) visPromptRef.current.hidden = false;
+        if (editRef.current) editRef.current.hidden = true;
+    }
+
+    function enterEditMode() {
+        selectedObject = null;
+        inSelectionMode = false;
+        
+        if (selectModeRef.current) {
+            selectModeRef.current.innerHTML = "Select Start Vertex";
+            selectModeRef.current.hidden = false;
+        }
+        if (startPromptRef.current) startPromptRef.current.hidden = true;
+        if (startVisRef.current) startVisRef.current.hidden = true;
+        if (visPromptRef.current) {
+            visPromptRef.current.innerHTML = "Visualizing Dijkstra's Algorithm...";
+            visPromptRef.current.hidden = true;
+        }
+        if (editRef.current) editRef.current.hidden = true;
+        drawGraph();
     }
 
     function setEdgeWeight(key: string) {
@@ -343,7 +364,7 @@ export const addGraphVisualizer = (
         }
     }
 
-    if (!canvasRef.current || !selectModeRef.current || !startVisRef.current) return;
+    if (!canvasRef.current || !selectModeRef.current || !startVisRef.current || !editRef.current) return;
     // mouse events
     canvasRef.current.addEventListener('dblclick', onDoubleClick);
     canvasRef.current.addEventListener('mousedown', onMouseDown);
@@ -355,4 +376,5 @@ export const addGraphVisualizer = (
     // buttons
     selectModeRef.current.addEventListener('click', onEnterSelectMode);
     startVisRef.current.addEventListener('click', onSubmitBuild);
+    editRef.current.addEventListener('click', enterEditMode);
 }

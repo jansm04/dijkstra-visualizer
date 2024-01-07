@@ -118,10 +118,6 @@ export const addAlgorithmVisualizer = (
         for (let i = 0; i < n; i++)
             visited[i].dist = Infinity;
         visited.splice(0, n);
-        
-        if (!ctx || !rect) return;
-        ctx.clearRect(0, 0, rect.width, rect.height);
-        addPQVisualizer(pqRef, pq);
     }
 
     addPQVisualizer(pqRef, pq);
