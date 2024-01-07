@@ -1,7 +1,7 @@
 
 const Instructions = () => {
     return (
-        <div className="ml-12 mt-12 text-gray-400 max-w-[250px] text-[14px]">
+        <div className="mx-8 mt-12 text-gray-400 max-w-[240px] text-[14px]">
             <h1 className="mb-8">Use the canvas to build your graph.</h1>
             <div className="mb-2">
                 <p className="float-left text-gray-300 mr-2 font-bold">To add a vertex:</p>
