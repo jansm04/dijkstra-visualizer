@@ -3,25 +3,28 @@ import Vertex from "@/app/elements/vertex";
 
 import { RefObject } from "react";
 
-const regular = "h-12 text-center border border-gray-300 text-[14px]";
-const min = "h-12 text-center border border-yellow-500 text-[14px]"
+var rowStyle = "h-10 text-center border text-[14px]";
+var cellStyle = "border border-gray-500";
 
 export const addPQVisualizer = (
     pqRef: RefObject<HTMLTableElement>,
-    pq: PriorityQueue,
-    visited: Array<Vertex>
+    pq: PriorityQueue
 ) => {
 
     if (!pqRef.current) return;
     for (let i = 0; i < pq.vertices.length; i++) {
         var row = pqRef.current.insertRow();
-        row.className = regular;
-        row.insertCell().textContent = pq.vertices[i].label;
+        row.className = rowStyle;
+        var c0 = row.insertCell();
+        c0.textContent = pq.vertices[i].label;
+        c0.className = cellStyle;
+
+        var c1 = row.insertCell();
         if (pq.vertices[i].dist == Infinity)
-            row.insertCell().textContent = "Inf";
+            c1.textContent = "Inf";
         else 
-            row.insertCell().textContent = pq.vertices[i].dist.toString();
-        row.insertCell().textContent = pq.vertices[i].pred;
+            c1.textContent = pq.vertices[i].dist.toString();
+        c1.className = cellStyle;
     }
 }
 
@@ -35,26 +38,28 @@ export const updatePQVisualizer = (
     visited.forEach((vertex) => {
         if (!pqRef.current) return;
         var row = pqRef.current.rows[idx];
-        row.className = regular + " text-gray-400";
+        row.className = rowStyle + " text-gray-400";
         row.cells[0].textContent = vertex.label;
+        row.cells[0].className = cellStyle;
         if (vertex.dist == Infinity)
             row.cells[1].textContent = "Inf";
         else 
             row.cells[1].textContent = vertex.dist.toString();
-        row.cells[2].textContent = vertex.pred;
+        row.cells[1].className = cellStyle;
         idx++;
     })
 
     pq.vertices.forEach((vertex) => {
         if (!pqRef.current) return;
         var row = pqRef.current.rows[idx];
-        row.className = vertex == pq.front() ? min : regular;
+        row.className = rowStyle;
         row.cells[0].textContent = vertex.label;
+        row.cells[0].className = cellStyle;
         if (vertex.dist == Infinity)
             row.cells[1].textContent = "Inf";
         else 
             row.cells[1].textContent = vertex.dist.toString();
-        row.cells[2].textContent = vertex.pred;
+        row.cells[1].className = cellStyle;
         idx++;
     })
 
