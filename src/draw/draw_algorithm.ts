@@ -79,6 +79,7 @@ export const addAlgorithmVisualizer = (
             await sleep(); drawState();
             if (currVertex) {
                 visited.push(currVertex);
+                await sleep(); updatePQ();   
                 for (let i = 0; i < currVertex.edges.length; i++) {
                     currEdge = currVertex.edges[i];
                     var neighbor: Vertex = currEdge.va == currVertex ? currEdge.vb : currEdge.va;
