@@ -20,19 +20,23 @@ class PriorityQueue {
         this.vertices = new Array<Vertex>(...vertices);
         var n = Math.floor(this.vertices.length / 2);
         for (let idx = n; idx >= 0; idx--) {
+            this.vertices[idx].idx = idx;
             this.heapifyDown(idx);
         }
     }
 
     enqueue(vertex: Vertex) {
         this.vertices.push(vertex);
-        this.heapifyUp(this.vertices.length - 1);
+        var idx = this.vertices.length - 1;
+        vertex.idx = idx;
+        this.heapifyUp(idx);
     }
 
     dequeue() {
         if (this.vertices.length == 0) return;
         this.swap(0, this.vertices.length - 1);
-        this.vertices.pop();
+        var vertex = this.vertices.pop();
+        if (vertex) vertex.idx = -1;
         this.heapifyDown(0);
     }
 
@@ -68,6 +72,8 @@ class PriorityQueue {
     }
 
     swap(idxA: number, idxB: number) {
+        this.vertices[idxA].idx = idxB;
+        this.vertices[idxB].idx = idxA;
         var temp = this.vertices[idxA];
         this.vertices[idxA] = this.vertices[idxB];
         this.vertices[idxB] = temp;

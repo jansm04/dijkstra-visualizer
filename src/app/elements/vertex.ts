@@ -10,6 +10,7 @@ class Vertex {
     edges: Array<Edge>;
     dist: number;
     isCursorVisible: boolean;
+    idx: number;
 
     constructor(x: number, y: number) {
         this.x = x;
@@ -18,6 +19,7 @@ class Vertex {
         this.edges = new Array<Edge>();
         this.dist = Infinity;
         this.isCursorVisible = true;
+        this.idx = -1;
     }
 
     drawCursor(ctx: CanvasRenderingContext2D) {

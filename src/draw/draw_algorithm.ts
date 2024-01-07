@@ -82,13 +82,13 @@ export const addAlgorithmVisualizer = (
                     currEdge = currVertex.edges[i];
                     var neighbor: Vertex = currEdge.va == currVertex ? currEdge.vb : currEdge.va;
                     if (!visited.includes(neighbor)) {
+                        await sleep(); drawState();
                         if (currVertex.dist + currEdge.weight < neighbor.dist) {
                             neighbor.dist = currVertex.dist + currEdge.weight;
-                            addUsedEdge(neighbor, currEdge);     
-                        }
-                        pq.buildHeap(pq.vertices);
-                        await sleep(); drawState(); 
-                        await sleep(); updatePQ();
+                            addUsedEdge(neighbor, currEdge);  
+                            pq.heapifyUp(neighbor.idx);
+                            await sleep(); updatePQ();   
+                        } 
                     }        
                 }
             }
