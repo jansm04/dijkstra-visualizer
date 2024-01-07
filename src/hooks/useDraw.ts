@@ -12,6 +12,8 @@ export const useDraw = () => {
     const selectModeRef = useRef<HTMLButtonElement>(null);
     const startPromptRef = useRef<HTMLParagraphElement>(null);
     const startVisRef = useRef<HTMLButtonElement>(null);
+    const resetRef = useRef<HTMLButtonElement>(null);
+    const editRef = useRef<HTMLButtonElement>(null);
 
     var count = 0;
 
@@ -32,5 +34,5 @@ export const useDraw = () => {
         startVisRef.current?.addEventListener('click', startAlgorithm);
     }, [])
 
-    return { canvasRef, pqRef, selectModeRef, startPromptRef, startVisRef };
+    return { canvasRef, pqRef, selectModeRef, startPromptRef, startVisRef, resetRef, editRef };
 }

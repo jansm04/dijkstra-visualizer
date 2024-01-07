@@ -11,7 +11,9 @@ export const Canvas = () => {
         pqRef, 
         selectModeRef, 
         startPromptRef, 
-        startVisRef 
+        startVisRef,
+        resetRef,
+        editRef 
     } = useDraw();
 
     return (
@@ -53,7 +55,7 @@ export const Canvas = () => {
                         </div>
                     </div>    
                 </div>
-                <Instructions />
+                <Instructions resetRef={resetRef} editRef={editRef} />
             </div>
             <Footer />
         </div>
