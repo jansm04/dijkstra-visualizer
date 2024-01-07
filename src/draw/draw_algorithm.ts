@@ -18,12 +18,16 @@ export const addAlgorithmVisualizer = (
     var usedEdges = new Array<Edge>();
     var currVertex: Vertex | undefined | null;
     var currEdge: Edge | undefined | null;
-    const ms: number = 5000;
+    var isFinished = false;
+
+    // speed
+    const ms: number = 3000;
 
     var colourScheme = { 
         unvisisted: 'gray', // unvisited vertices or edge
         used: 'green', // used edge or visited vertex
-        current: 'yellow' // current vertex
+        current: 'yellow', // current vertex
+        finished: 'lightgreen' // final colour
     };
 
     function updatePQ() {
@@ -38,20 +42,20 @@ export const addAlgorithmVisualizer = (
         ctx.lineWidth = 2;
         var strokeStyle: string;
         for (let i = 0; i < edges.length; i++) {
-            if (edges[i] == currEdge) strokeStyle = colourScheme.current;
+            if (isFinished && usedEdges.includes(edges[i])) strokeStyle = colourScheme.finished;
+            else if (edges[i] == currEdge) strokeStyle = colourScheme.current;
             else if (usedEdges.includes(edges[i])) strokeStyle = colourScheme.used;
             else strokeStyle = colourScheme.unvisisted;
             edges[i].draw(ctx, strokeStyle);
         }
         for (let i = 0; i < vertices.length; i++) {
-            if (vertices[i] == currVertex) strokeStyle = colourScheme.current;
+            if (isFinished) strokeStyle = colourScheme.finished;
+            else if (vertices[i] == currVertex) strokeStyle = colourScheme.current;
             else if (visited.includes(vertices[i])) strokeStyle = colourScheme.used;
             else strokeStyle = colourScheme.unvisisted;
             vertices[i].draw(ctx, strokeStyle);
         }
     }
-
-    
 
     function sleep() {
         return new Promise(resolve => setTimeout(resolve, ms));
@@ -77,17 +81,15 @@ export const addAlgorithmVisualizer = (
                 for (let i = 0; i < currVertex.edges.length; i++) {
                     currEdge = currVertex.edges[i];
                     var neighbor: Vertex = currEdge.va == currVertex ? currEdge.vb : currEdge.va;
-                    await sleep();
                     if (!visited.includes(neighbor)) {
-                        drawState();
                         if (currVertex.dist + currEdge.weight < neighbor.dist) {
                             neighbor.dist = currVertex.dist + currEdge.weight;
-                            pq.buildHeap(pq.vertices);
-                            addUsedEdge(neighbor, currEdge);
-                            await sleep(); drawState();
-                            await sleep(); updatePQ();
+                            addUsedEdge(neighbor, currEdge);     
                         }
-                    }
+                        pq.buildHeap(pq.vertices);
+                        await sleep(); drawState(); 
+                        await sleep(); updatePQ();
+                    }        
                 }
             }
         }
@@ -95,12 +97,10 @@ export const addAlgorithmVisualizer = (
         currEdge = null;
         await sleep(); drawState();
         await sleep(); updatePQ();
-    
-        // results
-        for (let i = 0; i < visited.length; i++) 
-            console.log(visited[i].label, visited[i].dist);
+        isFinished = true;
+        drawState();
     }
 
-    addPQVisualizer(pqRef, pq, visited)
+    addPQVisualizer(pqRef, pq);
     dijkstras();
 }
