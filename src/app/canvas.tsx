@@ -25,10 +25,10 @@ export const Canvas = () => {
                     <h1 className="my-2 text-gray-400 text-[16px] text-center font-bold">Priority Queue</h1>
                     <table ref={pqRef} className="w-[240px] my-4 mx-8">
                         <tbody>
-                        <tr className="h-10 text-[14px]">
-                            <th className="border border-gray-500">Vertex</th>
-                            <th className="border border-gray-500">Distance</th>
-                        </tr>
+                            <tr className="h-10 text-[14px]">
+                                <th className="border border-gray-500">Vertex</th>
+                                <th className="border border-gray-500">Distance</th>
+                            </tr>
                         </tbody>
                     </table>
                  </div>

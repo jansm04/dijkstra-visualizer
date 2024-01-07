@@ -3,7 +3,10 @@ import Vertex from "@/app/elements/vertex";
 
 import { RefObject } from "react";
 
-var rowStyle = "h-10 text-center border text-[14px]";
+var rowStyleUnvisited = "h-10 text-center border text-[14px] bg-none";
+var rowStyleVisited = "h-10 text-center border text-gray-400 text-[14px] bg-none";
+var rowStyleHighlighted = "h-10 relative text-center text-[14px] bg-[#fffb002c]";
+var rowStyleCurrent = "h-10 relative text-center text-[14px] bg-sky-950"
 var cellStyle = "border border-gray-500";
 
 export const addPQVisualizer = (
@@ -14,7 +17,7 @@ export const addPQVisualizer = (
     if (!pqRef.current) return;
     for (let i = 0; i < pq.vertices.length; i++) {
         var row = pqRef.current.insertRow();
-        row.className = rowStyle;
+        row.className = rowStyleUnvisited;
         var c0 = row.insertCell();
         c0.textContent = pq.vertices[i].label;
         c0.className = cellStyle;
@@ -31,35 +34,33 @@ export const addPQVisualizer = (
 export const updatePQVisualizer = (
     pqRef: RefObject<HTMLTableElement>,
     pq: PriorityQueue,
-    visited: Array<Vertex>
+    visited: Array<Vertex>,
+    current: Vertex | null,
+    highlight: Vertex | null
 ) => {
 
     let idx = 1;
     visited.forEach((vertex) => {
         if (!pqRef.current) return;
         var row = pqRef.current.rows[idx];
-        row.className = rowStyle + " text-gray-400";
+        row.className = vertex == current ? rowStyleCurrent : rowStyleVisited;
         row.cells[0].textContent = vertex.label;
-        row.cells[0].className = cellStyle;
         if (vertex.dist == Infinity)
             row.cells[1].textContent = "Inf";
         else 
             row.cells[1].textContent = vertex.dist.toString();
-        row.cells[1].className = cellStyle;
         idx++;
     })
 
     pq.vertices.forEach((vertex) => {
         if (!pqRef.current) return;
         var row = pqRef.current.rows[idx];
-        row.className = rowStyle;
+        row.className = vertex == highlight ? rowStyleHighlighted :  rowStyleUnvisited;
         row.cells[0].textContent = vertex.label;
-        row.cells[0].className = cellStyle;
         if (vertex.dist == Infinity)
             row.cells[1].textContent = "Inf";
         else 
             row.cells[1].textContent = vertex.dist.toString();
-        row.cells[1].className = cellStyle;
         idx++;
     })
 
