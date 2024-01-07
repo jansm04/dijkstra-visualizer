@@ -26,12 +26,14 @@ export const useDraw = () => {
         if (count) { count--; return; } else count++;
 
         addGraphVisualizer(canvasRef, selectModeRef, startPromptRef, startVisRef, vertices, edges, pq);
-
-        function startAlgorithm() {
-            addAlgorithmVisualizer(canvasRef, pqRef, vertices, edges, pq);
-        }
         
-        startVisRef.current?.addEventListener('click', startAlgorithm);
+        startVisRef.current?.addEventListener('click', () => {
+            addAlgorithmVisualizer(canvasRef, pqRef, vertices, edges, pq);
+        });
+        
+        resetRef.current?.addEventListener('click', () => {
+            location.reload();
+        });
     }, [])
 
     return { canvasRef, pqRef, selectModeRef, startPromptRef, startVisRef, resetRef, editRef };
