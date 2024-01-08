@@ -2,7 +2,7 @@ import { Canvas } from './canvas'
 
 export default function Home() {
   return (
-    <main className='h-screen w-screen flex justify-center'>
+    <main className='m-2 h-screen w-screen flex justify-center'>
       <Canvas />
     </main>
   )
