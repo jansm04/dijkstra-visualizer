@@ -10,6 +10,7 @@ export const addGraphVisualizer = (
     selectModeRef: RefObject<HTMLButtonElement>,
     startPromptRef: RefObject<HTMLParagraphElement>,
     retryPromptRef: RefObject<HTMLParagraphElement>,
+    emptyPromptRef: RefObject<HTMLParagraphElement>,
     startVisRef: RefObject<HTMLButtonElement>,
     visPromptRef: RefObject<HTMLParagraphElement>,
     editRef: RefObject<HTMLButtonElement>,
@@ -32,6 +33,8 @@ export const addGraphVisualizer = (
 
     const onDoubleClick = (e: MouseEvent) => {
         if (inSelectionMode) return;
+        if (isEmpty() && emptyPromptRef.current && emptyPromptRef.current.hidden == false)
+            emptyPromptRef.current.hidden = true;
         const point = computePointInCanvas(e);
         if (!point) return;
         selectedObject = selectObject(point.x, point.y);
@@ -172,9 +175,11 @@ export const addGraphVisualizer = (
             if (retryPromptRef.current) retryPromptRef.current.hidden = false;
             return;
         }
-
-        if (selectedObject)
-            selectedObject.isCursorVisible = false;
+        if (isEmpty()) {
+            if (emptyPromptRef.current) emptyPromptRef.current.hidden = false;
+            return;
+        }
+        if (selectedObject) selectedObject.isCursorVisible = false;
         clearInterval(timer);
 
         startingVertex = null;
@@ -183,6 +188,7 @@ export const addGraphVisualizer = (
             selectModeRef.current.innerHTML = "Reselect Start Vertex";
         if (startPromptRef.current) startPromptRef.current.hidden = false;
         if (retryPromptRef.current) retryPromptRef.current.hidden = true;
+        if (emptyPromptRef.current) emptyPromptRef.current.hidden = true;
         if (startVisRef.current) startVisRef.current.hidden = true;
         if (editRef.current) editRef.current.hidden = false;
         drawGraphInSelectionMode();
@@ -225,6 +231,10 @@ export const addGraphVisualizer = (
             if (vertices[i].label == "")
                 return false;
         return true;
+    }
+
+    function isEmpty() {
+        return vertices.length == 0;
     }
 
     function setEdgeWeight(key: string) {

@@ -13,6 +13,7 @@ export const Canvas = () => {
         selectModeRef, 
         startPromptRef, 
         retryPromptRef,
+        emptyPromptRef,
         startVisRef,
         visPromptRef,
         resetRef,
@@ -54,6 +55,12 @@ export const Canvas = () => {
                                 className="p-1 ml-8 mt-5 float-left text-gray-700 text-[13px]" 
                                 hidden={true}>
                                     Please make sure all vertices have a label and all edges have a weight.
+                            </span>
+                            <span 
+                                ref={emptyPromptRef} 
+                                className="p-1 ml-8 mt-5 float-left text-gray-700 text-[13px]" 
+                                hidden={true}>
+                                    Please add a few vertices first.
                             </span>
                             <button 
                                 ref={startVisRef} 
