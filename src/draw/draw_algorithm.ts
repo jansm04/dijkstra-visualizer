@@ -23,7 +23,7 @@ export const addAlgorithmVisualizer = (
     var isFinished = false;
 
     // speed
-    const ms: number = 3000;
+    const ms: number = 1000;
 
     const ctx = canvasRef.current?.getContext("2d");
     const rect = canvasRef.current?.getBoundingClientRect();
