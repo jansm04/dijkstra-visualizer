@@ -23,8 +23,8 @@ export const Canvas = () => {
         <div>
             <Header />
             <div className="flex">
-                 <div className="w-[200px] my-4 mx-8">
-                    <h1 className="my-2 text-gray-400 text-[15px] text-center font-bold">Priority Queue</h1>
+                 <div className="w-[200px] mx-8">
+                    <h1 className="mb-2 text-gray-400 text-[15px] text-center font-bold">Priority Queue</h1>
                     <table ref={pqRef} className="w-full">
                         <tbody>
                             <tr className="h-10 text-[14px]">

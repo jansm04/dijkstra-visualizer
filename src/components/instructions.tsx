@@ -1,6 +1,6 @@
 const Instructions = () => {
     return (
-        <div className="mx-8 mt-12 text-gray-400 w-[200px] text-[13px]">
+        <div className="mx-8 text-gray-400 w-[200px] text-[13px]">
             <h1 className="mb-8">Use the canvas to build your graph.</h1>
             <div className="mb-2">
                 <p className="float-left text-gray-300 mr-2 font-bold">To add a vertex:</p>
