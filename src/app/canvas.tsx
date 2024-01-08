@@ -3,7 +3,6 @@ import { useDraw } from "@/hooks/useDraw"
 import Header from '@/components/header'
 import Footer from "@/components/footer"
 import Instructions from "@/components/instructions"
-import { Slider } from '@mui/base/Slider'
 
 
 export const Canvas = () => {
@@ -81,13 +80,6 @@ export const Canvas = () => {
                             Edit
                         </button>
                     </div>
-                    <div>
-                        {/* <Slider 
-                            aria-label="Speed"
-                            defaultValue={1}
-                            marks={marks}>
-                        </Slider> */}
-                    </div>
                 </div>
                 
             </div>
@@ -96,26 +88,3 @@ export const Canvas = () => {
             
     )
 }
-
-const marks = [
-    {
-        value: 0.25,
-        label: '0.25x',
-      },
-      {
-        value: 0.5,
-        label: '0.5x',
-      },
-      {
-        value: 1,
-        label: '1x',
-      },
-      {
-        value: 2,
-        label: '2x',
-      },
-      {
-        value: 4,
-        label: '4x',
-      },
-]
