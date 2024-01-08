@@ -3,11 +3,38 @@ import Vertex from "@/app/elements/vertex";
 
 import { RefObject } from "react";
 
-var rowStyleUnvisited = "h-10 text-center border text-[13px] bg-none";
-var rowStyleVisited = "h-10 text-center border text-gray-400 text-[13px] bg-none";
-var rowStyleHighlighted = "h-10 relative text-center text-[13px] bg-[#fffb002c]";
-var rowStyleCurrent = "h-10 relative text-center text-[13px] bg-sky-950";
-var cellStyle = "border border-gray-500";
+const styleRow = (row: HTMLTableRowElement) => {
+    row.style.height = '40px';
+    row.style.textAlign = 'center';
+    row.style.borderWidth = '1px';
+    row.style.fontSize = '14px';
+}
+
+const styleVisitedRow = (row: HTMLTableRowElement) => {
+    styleRow(row);
+    row.style.color = 'gray';
+    row.style.fontWeight = '400';
+    row.style.background = 'none';
+}
+
+const styleUnvisitedRow = (row: HTMLTableRowElement) => {
+    styleRow(row);
+    row.style.color = 'black';
+    row.style.fontWeight = '700';
+    row.style.background = 'none';
+}
+
+const styleHighlightRow = (row: HTMLTableRowElement) => {
+    styleRow(row);
+    row.style.color = 'black';
+    row.style.fontWeight = '700';
+    row.style.background = 'moccasin';
+}
+
+const styleCell = (cell: HTMLTableCellElement) => {
+    cell.style.borderWidth = '1px';
+    cell.style.borderColor = 'gray';
+}
 
 export const addPQVisualizer = (
     pqRef: RefObject<HTMLTableElement>,
@@ -17,17 +44,17 @@ export const addPQVisualizer = (
     if (!pqRef.current) return;
     for (let i = 0; i < pq.vertices.length; i++) {
         var row = pqRef.current.insertRow();
-        row.className = rowStyleUnvisited;
+        styleUnvisitedRow(row);
         var c0 = row.insertCell();
         c0.textContent = pq.vertices[i].label;
-        c0.className = cellStyle;
+        styleCell(c0);
 
         var c1 = row.insertCell();
         if (pq.vertices[i].dist == Infinity)
             c1.textContent = "Inf";
         else 
             c1.textContent = pq.vertices[i].dist.toString();
-        c1.className = cellStyle;
+        styleCell(c1);
     }
 }
 
@@ -36,14 +63,16 @@ export const updatePQVisualizer = (
     pq: PriorityQueue,
     visited: Array<Vertex>,
     current: Vertex | null,
-    highlight: Vertex | null
+    highlight: Vertex | null,
+    isFinished: boolean
 ) => {
 
     let idx = 1;
     visited.forEach((vertex) => {
         if (!pqRef.current) return;
         var row = pqRef.current.rows[idx];
-        row.className = vertex == current ? rowStyleCurrent : rowStyleVisited;
+        if (isFinished) styleUnvisitedRow(row);
+        else styleVisitedRow(row);
         row.cells[0].textContent = vertex.label;
         if (vertex.dist == Infinity)
             row.cells[1].textContent = "Inf";
@@ -55,7 +84,8 @@ export const updatePQVisualizer = (
     pq.vertices.forEach((vertex) => {
         if (!pqRef.current) return;
         var row = pqRef.current.rows[idx];
-        row.className = vertex == highlight ? rowStyleHighlighted : rowStyleUnvisited;
+        if (vertex == highlight) styleHighlightRow(row);
+        else styleUnvisitedRow(row);
         row.cells[0].textContent = vertex.label;
         if (vertex.dist == Infinity)
             row.cells[1].textContent = "Inf";

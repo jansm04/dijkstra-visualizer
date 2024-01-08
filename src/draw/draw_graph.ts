@@ -351,7 +351,7 @@ export const addGraphVisualizer = (
     }
 
     function drawGraph() {
-        var colourScheme = { def: 'white', selected: 'aqua'};
+        var colourScheme = { def: 'gray', selected: 'blue'};
         const ctx = resetContext();
         if (!ctx) return;
         if (tempEdge && !tempEdge.vertex.containsPoint(tempEdge.px, tempEdge.py)) { 
@@ -369,7 +369,7 @@ export const addGraphVisualizer = (
     }
 
     function drawGraphInSelectionMode() {
-        var colourScheme = { def: 'gray', start: 'green', end: 'firebrick'};
+        var colourScheme = { def: 'lightgray', start: 'green'};
         const ctx = resetContext();
         if (!ctx) return;
         for (let i = 0; i < edges.length; i++) {
