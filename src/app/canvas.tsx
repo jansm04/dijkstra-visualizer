@@ -58,13 +58,13 @@ export const Canvas = () => {
                                 ref={startVisRef} 
                                 className="py-2 px-6 mt-5 ml-4 float-left text-gray-300 italic border border-[green] text-center text-[14px] rounded hover:bg-slate-800" 
                                 hidden={true}>
-                                    Visualize Dijkstra's Algorithm
+                                    Visualize Dijkstra&apos;s Algorithm
                             </button>
                             <span 
                                 ref={visPromptRef} 
                                 className="p-2 mt-5 float-left text-gray-300 text-[14px]" 
                                 hidden={true}>
-                                    Visualizing Dijkstra's Algorithm...
+                                    Visualizing Dijkstra&apos;s Algorithm...
                             </span>
                         </div>
                     </div>    

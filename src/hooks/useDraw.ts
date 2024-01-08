@@ -19,11 +19,11 @@ export const useDraw = () => {
 
     var count = 0;
 
-    var vertices = new Array<Vertex>();
-    var edges = new Array<Edge>();
-    var pq = new PriorityQueue();
-
     useEffect(() => {
+        var vertices = new Array<Vertex>();
+        var edges = new Array<Edge>();
+        var pq = new PriorityQueue();
+    
         console.log('Entered useEffect');
         if (count) { count--; return; } else count++;
 
@@ -36,7 +36,7 @@ export const useDraw = () => {
         resetRef.current?.addEventListener('click', () => {
             location.reload();
         });
-    }, [])
+    }, [count]);
 
     return { canvasRef, pqRef, selectModeRef, startPromptRef, retryPromptRef, startVisRef, visPromptRef, resetRef, editRef };
 }
