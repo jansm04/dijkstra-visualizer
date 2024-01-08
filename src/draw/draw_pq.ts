@@ -6,7 +6,7 @@ import { RefObject } from "react";
 var rowStyleUnvisited = "h-10 text-center border text-[14px] bg-none";
 var rowStyleVisited = "h-10 text-center border text-gray-400 text-[14px] bg-none";
 var rowStyleHighlighted = "h-10 relative text-center text-[14px] bg-[#fffb002c]";
-var rowStyleCurrent = "h-10 relative text-center text-[14px] bg-sky-950"
+var rowStyleCurrent = "h-10 relative text-center text-[14px] bg-sky-950";
 var cellStyle = "border border-gray-500";
 
 export const addPQVisualizer = (
@@ -55,7 +55,7 @@ export const updatePQVisualizer = (
     pq.vertices.forEach((vertex) => {
         if (!pqRef.current) return;
         var row = pqRef.current.rows[idx];
-        row.className = vertex == highlight ? rowStyleHighlighted :  rowStyleUnvisited;
+        row.className = vertex == highlight ? rowStyleHighlighted : rowStyleUnvisited;
         row.cells[0].textContent = vertex.label;
         if (vertex.dist == Infinity)
             row.cells[1].textContent = "Inf";
