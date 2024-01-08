@@ -1,6 +1,6 @@
 const Instructions = () => {
     return (
-        <div className="mx-8 mt-12 text-gray-400 w-[240px] text-[14px]">
+        <div className="mx-8 mt-12 text-gray-400 w-[200px] text-[13px]">
             <h1 className="mb-8">Use the canvas to build your graph.</h1>
             <div className="mb-2">
                 <p className="float-left text-gray-300 mr-2 font-bold">To add a vertex:</p>
@@ -21,7 +21,7 @@ const Instructions = () => {
             <div className="mb-2 mt-8">
                 <p>A vertex label will only accept a unique character from the alphabet.</p>
             </div>
-            <div className="mb-20">
+            <div className="mb-10">
                 <p>An edge weight will only accept a valid integer.</p>
             </div>
         </div>

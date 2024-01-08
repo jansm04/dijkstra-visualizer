@@ -3,10 +3,10 @@ import Vertex from "@/app/elements/vertex";
 
 import { RefObject } from "react";
 
-var rowStyleUnvisited = "h-10 text-center border text-[14px] bg-none";
-var rowStyleVisited = "h-10 text-center border text-gray-400 text-[14px] bg-none";
-var rowStyleHighlighted = "h-10 relative text-center text-[14px] bg-[#fffb002c]";
-var rowStyleCurrent = "h-10 relative text-center text-[14px] bg-sky-950";
+var rowStyleUnvisited = "h-10 text-center border text-[13px] bg-none";
+var rowStyleVisited = "h-10 text-center border text-gray-400 text-[13px] bg-none";
+var rowStyleHighlighted = "h-10 relative text-center text-[13px] bg-[#fffb002c]";
+var rowStyleCurrent = "h-10 relative text-center text-[13px] bg-sky-950";
 var cellStyle = "border border-gray-500";
 
 export const addPQVisualizer = (
