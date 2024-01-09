@@ -4,7 +4,7 @@ import Vertex from "@/app/elements/vertex";
 import { RefObject } from "react";
 
 const styleRow = (row: HTMLTableRowElement) => {
-    row.style.height = '40px';
+    row.style.height = '30px';
     row.style.textAlign = 'center';
     row.style.borderWidth = '1px';
     row.style.fontSize = '14px';

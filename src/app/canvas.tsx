@@ -28,7 +28,7 @@ export const Canvas = () => {
                     <h1 className="mb-2 text-gray-700 text-[15px] text-center font-bold">Priority Queue</h1>
                     <table ref={pqRef} className="w-full">
                         <tbody>
-                            <tr className="h-10 text-[14px]">
+                            <tr className="h-[30px] text-[14px]">
                                 <th className="border border-[gray]">Vertex</th>
                                 <th className="border border-[gray]">Distance</th>
                             </tr>
@@ -79,11 +79,11 @@ export const Canvas = () => {
                 </div>
                 <div>
                     <Instructions />
-                    <div className="grid mx-8 text-gray-700 text-[13px]">
-                        <button ref={resetRef} className="py-1 px-4 w-[100px] italic border border-gray-800 text-center text-[13px] rounded hover:border-sky-800">
+                    <div className="inline mx-8 text-gray-700 text-[13px]">
+                        <button ref={resetRef} className="py-1 px-4 w-[90px] italic border border-gray-800 text-center text-[13px] rounded hover:border-sky-800">
                             Reset
                         </button>
-                        <button ref={editRef} className="mt-3 py-1 px-4 w-[100px] italic border border-gray-800 text-center text-[13px] rounded hover:border-sky-800" hidden={true}>
+                        <button ref={editRef} className="ml-2 py-1 px-4 w-[90px] italic border border-gray-800 text-center text-[13px] rounded hover:border-sky-800" hidden={true}>
                             Edit
                         </button>
                     </div>
