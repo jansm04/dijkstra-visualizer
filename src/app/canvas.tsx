@@ -36,7 +36,7 @@ export const Canvas = () => {
                     </table>
                  </div>
                  <div>
-                    <canvas ref={canvasRef} height={500} width={650} className="block border border-gray-700 outline-none bg-white rounded-lg select-none" tabIndex={0}></canvas>
+                    <canvas ref={canvasRef} height={500} width={650} className="block border border-gray-700 outline-none bg-white rounded-lg" tabIndex={0}></canvas>
                     <div className="text-center">
                         <div className="inline-block">
                             <button 
