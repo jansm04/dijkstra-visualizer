@@ -1,15 +1,15 @@
+// elements
 import Vertex from "@/app/elements/vertex";
 import Edge from "@/app/elements/edge";
 import TempEdge from "@/app/elements/temp_edge";
 
-import PriorityQueue from "@/app/elements/priority_queue";
+// interfaces
 import Refs from "@/interfaces/refs";
+import Graph from "@/interfaces/graph";
 
 export const addGraphVisualizer = (
     refs: Refs,
-    vertices: Array<Vertex>,
-    edges: Array<Edge>,
-    pq: PriorityQueue
+    graph: Graph
 ) => {
 
     var tempEdge: TempEdge | null;
@@ -30,10 +30,10 @@ export const addGraphVisualizer = (
         const point = computePointInCanvas(e);
         if (!point) return;
         selectedObject = selectObject(point.x, point.y);
-        if (!selectedObject && vertices.length < 26) {
+        if (!selectedObject && graph.vertices.length < 26) {
             var vertex: Vertex = new Vertex(point.x, point.y);
             selectedObject = vertex;
-            vertices.push(vertex);
+            graph.vertices.push(vertex);
         }
         drawGraph();
         pulseCursor();
@@ -110,12 +110,12 @@ export const addGraphVisualizer = (
         if (selectedObject instanceof Vertex && tempEdge && selectedObject != tempEdge.vertex) {
             var edge = new Edge(tempEdge.vertex, selectedObject);
             selectNewEdge(edge);
-            edges.push(edge);
+            graph.edges.push(edge);
         }
         if (heldObject && isMoving) {
             var isValid = true;
-            for (let i = 0; i < vertices.length; i++) {
-                if (vertices[i] != heldObject && vertices[i].containsPoint(point.x, point.y)) {
+            for (let i = 0; i < graph.vertices.length; i++) {
+                if (graph.vertices[i] != heldObject && graph.vertices[i].containsPoint(point.x, point.y)) {
                     heldObject.x = originalPosition.x;
                     heldObject.y = originalPosition.y;
                     isValid = false;
@@ -191,7 +191,7 @@ export const addGraphVisualizer = (
     function onSubmitBuild(e: MouseEvent) {
         if (startingVertex instanceof Vertex)
             startingVertex.dist = 0;
-        pq.buildHeap(vertices);
+        graph.pq.buildHeap(graph.vertices);
 
         if (refs.selectModeRef.current) refs.selectModeRef.current.hidden = true;
         if (refs.startPromptRef.current) refs.startPromptRef.current.hidden = true;
@@ -219,17 +219,17 @@ export const addGraphVisualizer = (
     }
 
     function isValid() {
-        for (let i = 0; i < edges.length; i++)
-            if (edges[i].weight == 0)
+        for (let i = 0; i < graph.edges.length; i++)
+            if (graph.edges[i].weight == 0)
                 return false;
-        for (let i = 0; i < vertices.length; i++)
-            if (vertices[i].label == "")
+        for (let i = 0; i < graph.vertices.length; i++)
+            if (graph.vertices[i].label == "")
                 return false;
         return true;
     }
 
     function isEmpty() {
-        return vertices.length == 0;
+        return graph.vertices.length == 0;
     }
 
     function setEdgeWeight(key: string) {
@@ -262,23 +262,23 @@ export const addGraphVisualizer = (
     }
 
     function deleteVertexFromCanvas(vertex: Vertex) {
-        var idx = vertices.indexOf(vertex);
+        var idx = graph.vertices.indexOf(vertex);
         var n = vertex.edges.length;
         for (let i = 0; i < n; i++)
             deleteEdgeFromCanvas(vertex.edges[0]);
         selectedObject = null;
         if (vertex.label)
             takenLetters = takenLetters.replaceAll(vertex.label, "");
-        vertices.splice(idx, 1);
+        graph.vertices.splice(idx, 1);
     }
 
     function deleteEdgeFromCanvas(edge: Edge) {
-        var idx = edges.indexOf(edge);
+        var idx = graph.edges.indexOf(edge);
         edge.va.removeEdge(edge);
         edge.vb.removeEdge(edge);
         if (selectedObject instanceof Edge) 
             selectedObject = null;
-        edges.splice(idx, 1);
+        graph.edges.splice(idx, 1);
     }
 
     function computePointInCanvas(e: MouseEvent) {
@@ -321,17 +321,17 @@ export const addGraphVisualizer = (
 
     function selectObject(x: number, y: number) {
         if (selectedObject) selectedObject.isCursorVisible = false;
-        for (let i = 0; i < vertices.length; i++) {
-            if (vertices[i].containsPoint(x, y)) {
-                vertices[i].isCursorVisible = true;
-                return vertices[i];
+        for (let i = 0; i < graph.vertices.length; i++) {
+            if (graph.vertices[i].containsPoint(x, y)) {
+                graph.vertices[i].isCursorVisible = true;
+                return graph.vertices[i];
             }
         }
         if (tempEdge) return null;
-        for (let i = 0; i < edges.length; i++) {
-            if (edges[i].containsPoint(x, y)) {
-                edges[i].isCursorVisible = true;
-                return edges[i];
+        for (let i = 0; i < graph.edges.length; i++) {
+            if (graph.edges[i].containsPoint(x, y)) {
+                graph.edges[i].isCursorVisible = true;
+                return graph.edges[i];
             } 
         }
         return null;
@@ -363,13 +363,17 @@ export const addGraphVisualizer = (
             ctx.strokeStyle = colourScheme.selected;
             tempEdge.draw(ctx);
         } 
-        for (let i = 0; i < edges.length; i++) {
-            var strokeStyle = (edges[i] == selectedObject) ? colourScheme.selected : colourScheme.def;
-            edges[i].draw(ctx, strokeStyle);
+        for (let i = 0; i < graph.edges.length; i++) {
+            var strokeStyle = (graph.edges[i] == selectedObject) ? 
+                colourScheme.selected : 
+                colourScheme.def;
+            graph.edges[i].draw(ctx, strokeStyle);
         }
-        for (let i = 0; i < vertices.length; i++) {
-            var strokeStyle = (vertices[i] == selectedObject) ? colourScheme.selected : colourScheme.def;
-            vertices[i].draw(ctx, strokeStyle);
+        for (let i = 0; i < graph.vertices.length; i++) {
+            var strokeStyle = (graph.vertices[i] == selectedObject) ? 
+                colourScheme.selected : 
+                colourScheme.def;
+            graph.vertices[i].draw(ctx, strokeStyle);
         }
     }
 
@@ -377,12 +381,14 @@ export const addGraphVisualizer = (
         var colourScheme = { def: 'lightgray', start: 'green'};
         const ctx = resetContext();
         if (!ctx) return;
-        for (let i = 0; i < edges.length; i++) {
-            edges[i].draw(ctx, colourScheme.def);
+        for (let i = 0; i < graph.edges.length; i++) {
+            graph.edges[i].draw(ctx, colourScheme.def);
         }
-        for (let i = 0; i < vertices.length; i++) {
-            var strokeStyle = (vertices[i] == startingVertex) ? colourScheme.start : colourScheme.def;
-            vertices[i].draw(ctx, strokeStyle);
+        for (let i = 0; i < graph.vertices.length; i++) {
+            var strokeStyle = (graph.vertices[i] == startingVertex) ? 
+                colourScheme.start : 
+                colourScheme.def;
+            graph.vertices[i].draw(ctx, strokeStyle);
         }
     }
 

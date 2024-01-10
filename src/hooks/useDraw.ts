@@ -7,6 +7,7 @@ import Edge from "@/app/elements/edge";
 import PriorityQueue from "@/app/elements/priority_queue";
 
 import Refs from "@/interfaces/refs";
+import Graph from "@/interfaces/graph";
 
 export const useDraw = () => {
 
@@ -25,27 +26,21 @@ export const useDraw = () => {
         emptyPromptRef: useRef<HTMLParagraphElement>(null),
         visPromptRef: useRef<HTMLParagraphElement>(null)
     }
-    
-    var count = 0;
 
     useEffect(() => {
-        var vertices = new Array<Vertex>();
-        var edges = new Array<Edge>();
-        var pq = new PriorityQueue();
-    
-        console.log('Entered useEffect');
-        if (count) { count--; return; } else count++;
-
-        addGraphVisualizer(refs, vertices, edges, pq);
-
+        var graph: Graph = {
+            vertices: new Array<Vertex>(),
+            edges: new Array<Edge>(),
+            pq: new PriorityQueue()
+        }
+        addGraphVisualizer(refs, graph);
         refs.startVisRef.current?.addEventListener('click', () => {
-            addAlgorithmVisualizer(refs, vertices, edges, pq);
+            addAlgorithmVisualizer(refs, graph);
         });
-        
         refs.resetRef.current?.addEventListener('click', () => {
             location.reload();
         });
-    }, [count]);
+    });
 
     return { refs };
 }
