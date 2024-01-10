@@ -2,18 +2,11 @@ import Vertex from "@/app/elements/vertex";
 import Edge from "@/app/elements/edge";
 import TempEdge from "@/app/elements/temp_edge";
 
-import { RefObject } from "react";
 import PriorityQueue from "@/app/elements/priority_queue";
+import Refs from "@/interfaces/refs";
 
 export const addGraphVisualizer = (
-    canvasRef: RefObject<HTMLCanvasElement>,
-    selectModeRef: RefObject<HTMLButtonElement>,
-    startPromptRef: RefObject<HTMLParagraphElement>,
-    retryPromptRef: RefObject<HTMLParagraphElement>,
-    emptyPromptRef: RefObject<HTMLParagraphElement>,
-    startVisRef: RefObject<HTMLButtonElement>,
-    visPromptRef: RefObject<HTMLParagraphElement>,
-    editRef: RefObject<HTMLButtonElement>,
+    refs: Refs,
     vertices: Array<Vertex>,
     edges: Array<Edge>,
     pq: PriorityQueue
@@ -22,7 +15,6 @@ export const addGraphVisualizer = (
     var tempEdge: TempEdge | null;
     var selectedObject: Vertex | Edge | null = null;
     var startingVertex: Vertex | null = null;
-
     var heldObject: Vertex | null = null;
     var originalPosition: {x: number, y: number};
     var isShiftPressed = false
@@ -31,10 +23,10 @@ export const addGraphVisualizer = (
     var timer: NodeJS.Timeout;
     var takenLetters = "";
 
-    const onDoubleClick = (e: MouseEvent) => {
+    function onDoubleClick(e: MouseEvent) {
         if (inSelectionMode) return;
-        if (isEmpty() && emptyPromptRef.current && emptyPromptRef.current.hidden == false)
-            emptyPromptRef.current.hidden = true;
+        if (isEmpty() && refs.emptyPromptRef.current && refs.emptyPromptRef.current.hidden == false)
+            refs.emptyPromptRef.current.hidden = true;
         const point = computePointInCanvas(e);
         if (!point) return;
         selectedObject = selectObject(point.x, point.y);
@@ -56,8 +48,8 @@ export const addGraphVisualizer = (
             if (selectedObject instanceof Vertex) {
                 if (!startingVertex) {
                     startingVertex = selectedObject;
-                    if (startPromptRef.current) startPromptRef.current.hidden = true;
-                    if (startVisRef.current) startVisRef.current.hidden = false;
+                    if (refs.startPromptRef.current) refs.startPromptRef.current.hidden = true;
+                    if (refs.startVisRef.current) refs.startVisRef.current.hidden = false;
                 }
                 else return;
                 selectedObject.isCursorVisible = false;
@@ -172,11 +164,11 @@ export const addGraphVisualizer = (
 
     function onEnterSelectMode(e: MouseEvent) {
         if (!isValid()) {
-            if (retryPromptRef.current) retryPromptRef.current.hidden = false;
+            if (refs.retryPromptRef.current) refs.retryPromptRef.current.hidden = false;
             return;
         }
         if (isEmpty()) {
-            if (emptyPromptRef.current) emptyPromptRef.current.hidden = false;
+            if (refs.emptyPromptRef.current) refs.emptyPromptRef.current.hidden = false;
             return;
         }
         if (selectedObject) selectedObject.isCursorVisible = false;
@@ -184,13 +176,15 @@ export const addGraphVisualizer = (
 
         startingVertex = null;
         inSelectionMode = true;
-        if (selectModeRef.current) 
-            selectModeRef.current.innerHTML = "Reselect Start Vertex";
-        if (startPromptRef.current) startPromptRef.current.hidden = false;
-        if (retryPromptRef.current) retryPromptRef.current.hidden = true;
-        if (emptyPromptRef.current) emptyPromptRef.current.hidden = true;
-        if (startVisRef.current) startVisRef.current.hidden = true;
-        if (editRef.current) editRef.current.hidden = false;
+        if (refs.selectModeRef.current) 
+            refs.selectModeRef.current.innerHTML = "Reselect Start Vertex";
+
+        if (refs.startPromptRef.current) refs.startPromptRef.current.hidden = false;
+        if (refs.retryPromptRef.current) refs.retryPromptRef.current.hidden = true;
+        if (refs.emptyPromptRef.current) refs.emptyPromptRef.current.hidden = true;
+        if (refs.startVisRef.current) refs.startVisRef.current.hidden = true;
+        if (refs.editRef.current) refs.editRef.current.hidden = false;
+
         drawGraphInSelectionMode();
     }
 
@@ -198,28 +192,29 @@ export const addGraphVisualizer = (
         if (startingVertex instanceof Vertex)
             startingVertex.dist = 0;
         pq.buildHeap(vertices);
-        if (selectModeRef.current) selectModeRef.current.hidden = true;
-        if (startPromptRef.current) startPromptRef.current.hidden = true;
-        if (startVisRef.current) startVisRef.current.hidden = true;
-        if (visPromptRef.current) visPromptRef.current.hidden = false;
-        if (editRef.current) editRef.current.hidden = true;
+
+        if (refs.selectModeRef.current) refs.selectModeRef.current.hidden = true;
+        if (refs.startPromptRef.current) refs.startPromptRef.current.hidden = true;
+        if (refs.startVisRef.current) refs.startVisRef.current.hidden = true;
+        if (refs.visPromptRef.current) refs.visPromptRef.current.hidden = false;
+        if (refs.editRef.current) refs.editRef.current.hidden = true;
     }
 
     function enterEditMode() {
         selectedObject = null;
         inSelectionMode = false;
         
-        if (selectModeRef.current) {
-            selectModeRef.current.innerHTML = "Select Start Vertex";
-            selectModeRef.current.hidden = false;
+        if (refs.selectModeRef.current) {
+            refs.selectModeRef.current.innerHTML = "Select Start Vertex";
+            refs.selectModeRef.current.hidden = false;
         }
-        if (startPromptRef.current) startPromptRef.current.hidden = true;
-        if (startVisRef.current) startVisRef.current.hidden = true;
-        if (visPromptRef.current) {
-            visPromptRef.current.innerHTML = "Visualizing Dijkstra's Algorithm...";
-            visPromptRef.current.hidden = true;
+        if (refs.startPromptRef.current) refs.startPromptRef.current.hidden = true;
+        if (refs.startVisRef.current) refs.startVisRef.current.hidden = true;
+        if (refs.visPromptRef.current) {
+            refs.visPromptRef.current.innerHTML = "Visualizing Dijkstra's Algorithm...";
+            refs.visPromptRef.current.hidden = true;
         }
-        if (editRef.current) editRef.current.hidden = true;
+        if (refs.editRef.current) refs.editRef.current.hidden = true;
         drawGraph();
     }
 
@@ -287,7 +282,7 @@ export const addGraphVisualizer = (
     }
 
     function computePointInCanvas(e: MouseEvent) {
-        const canvas = canvasRef.current;
+        const canvas = refs.canvasRef.current;
         if (!canvas) return;
         const rect = canvas.getBoundingClientRect();
         const x = e.clientX - rect.left;
@@ -352,8 +347,8 @@ export const addGraphVisualizer = (
     }
 
     function resetContext() {
-        var ctx = canvasRef.current?.getContext("2d");
-        var rect = canvasRef.current?.getBoundingClientRect();
+        var ctx = refs.canvasRef.current?.getContext("2d");
+        var rect = refs.canvasRef.current?.getBoundingClientRect();
         if (!ctx || !rect) return;
         ctx.clearRect(0, 0, rect.width, rect.height);
         ctx.lineWidth = 2;
@@ -391,17 +386,16 @@ export const addGraphVisualizer = (
         }
     }
 
-    if (!canvasRef.current || !selectModeRef.current || !startVisRef.current || !editRef.current) return;
     // mouse events
-    canvasRef.current.addEventListener('dblclick', onDoubleClick);
-    canvasRef.current.addEventListener('mousedown', onMouseDown);
-    canvasRef.current.addEventListener('mousemove', onMouseMove);
-    canvasRef.current.addEventListener('mouseup', onMouseUp);
+    refs.canvasRef.current?.addEventListener('dblclick', onDoubleClick);
+    refs.canvasRef.current?.addEventListener('mousedown', onMouseDown);
+    refs.canvasRef.current?.addEventListener('mousemove', onMouseMove);
+    refs.canvasRef.current?.addEventListener('mouseup', onMouseUp);
     // key events
-    canvasRef.current.addEventListener('keydown', onKeyDown, true);
-    canvasRef.current.addEventListener('keyup', onKeyUp, true);
+    refs.canvasRef.current?.addEventListener('keydown', onKeyDown, true);
+    refs.canvasRef.current?.addEventListener('keyup', onKeyUp, true);
     // buttons
-    selectModeRef.current.addEventListener('click', onEnterSelectMode);
-    startVisRef.current.addEventListener('click', onSubmitBuild);
-    editRef.current.addEventListener('click', enterEditMode);
+    refs.selectModeRef.current?.addEventListener('click', onEnterSelectMode);
+    refs.startVisRef.current?.addEventListener('click', onSubmitBuild);
+    refs.editRef.current?.addEventListener('click', enterEditMode);
 }

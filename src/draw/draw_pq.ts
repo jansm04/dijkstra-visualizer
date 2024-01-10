@@ -62,7 +62,6 @@ export const updatePQVisualizer = (
     pqRef: RefObject<HTMLTableElement>,
     pq: PriorityQueue,
     visited: Array<Vertex>,
-    current: Vertex | null,
     highlight: Vertex | null,
     isFinished: boolean
 ) => {

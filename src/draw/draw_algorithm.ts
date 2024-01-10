@@ -4,13 +4,10 @@ import PriorityQueue from "@/app/elements/priority_queue";
 
 import { addPQVisualizer, updatePQVisualizer } from "@/draw/draw_pq";
 
-import { RefObject } from "react"
+import Refs from "@/interfaces/refs";
 
 export const addAlgorithmVisualizer = (
-    canvasRef: RefObject<HTMLCanvasElement>,
-    pqRef: RefObject<HTMLTableElement>,
-    visPromptRef: RefObject<HTMLParagraphElement>,
-    editRef: RefObject<HTMLButtonElement>,
+    refs: Refs,
     vertices: Array<Vertex>,
     edges: Array<Edge>,
     pq: PriorityQueue
@@ -26,8 +23,8 @@ export const addAlgorithmVisualizer = (
     // speed
     const ms: number = 1000;
 
-    const ctx = canvasRef.current?.getContext("2d");
-    const rect = canvasRef.current?.getBoundingClientRect();
+    const ctx = refs.canvasRef.current?.getContext("2d");
+    const rect = refs.canvasRef.current?.getBoundingClientRect();
 
     var colourScheme = { 
         unvisisted: 'lightgray', // unvisited vertices or edge
@@ -38,8 +35,8 @@ export const addAlgorithmVisualizer = (
         finished2: 'green'
     };
 
-    function updatePQ(current: Vertex | null, highlight: Vertex | null, isFinished: boolean) {
-        updatePQVisualizer(pqRef, pq, visited, current, highlight, isFinished);
+    function updatePQ(highlight: Vertex | null, isFinished: boolean) {
+        updatePQVisualizer(refs.pqRef, pq, visited, highlight, isFinished);
     }
 
     function drawState() {
@@ -86,22 +83,22 @@ export const addAlgorithmVisualizer = (
             currEdge = null;
             currVertex = pq.front();
             if (currVertex != start) { 
-                await sleep(ms); drawState(); updatePQ(null, null, false);
+                await sleep(ms); drawState(); updatePQ(null, false);
             }
             pq.dequeue();
             if (currVertex) {
                 visited.push(currVertex);
-                await sleep(ms); updatePQ(null, null, false);
+                await sleep(ms); updatePQ(null, false);
                 for (let i = 0; i < currVertex.edges.length; i++) {
                     currEdge = currVertex.edges[i];
                     var neighbor: Vertex = currEdge.va == currVertex ? currEdge.vb : currEdge.va;
                     if (!visited.includes(neighbor)) {
-                        await sleep(ms); drawState(); updatePQ(null, neighbor, false);
+                        await sleep(ms); drawState(); updatePQ(neighbor, false);
                         if (currVertex.dist + currEdge.weight < neighbor.dist) {
                             neighbor.dist = currVertex.dist + currEdge.weight;
                             addUsedEdge(neighbor, currEdge);  
                             pq.heapifyUp(neighbor.idx);
-                            await sleep(ms); updatePQ(null, neighbor, false);   
+                            await sleep(ms); updatePQ(neighbor, false);   
                         } 
                     }        
                 }
@@ -110,17 +107,17 @@ export const addAlgorithmVisualizer = (
         currVertex = null;
         currEdge = null;
         await sleep(ms); drawState();
-        await sleep(ms); updatePQ(null, null, true);
+        await sleep(ms); updatePQ(null, true);
         isFinished = true;
-        if (visPromptRef.current) visPromptRef.current.innerHTML = "Visualization Complete.";
-        if (editRef.current) editRef.current.hidden = false;
+        if (refs.visPromptRef.current) refs.visPromptRef.current.innerHTML = "Visualization Complete.";
+        if (refs.editRef.current) refs.editRef.current.hidden = false;
         drawState();
         count--;
         await sleep(200); drawState();
     }
 
     function reset() {
-        var table = pqRef.current;
+        var table = refs.pqRef.current;
         if (!table) return;
         var n = table.rows.length;
         for (let i = 1; i < n; i++)
@@ -132,8 +129,8 @@ export const addAlgorithmVisualizer = (
         visited.splice(0, n);
     }
 
-    addPQVisualizer(pqRef, pq);
+    addPQVisualizer(refs.pqRef, pq);
     dijkstras();
 
-    editRef.current?.addEventListener('click', reset);
+    refs.editRef.current?.addEventListener('click', reset);
 }
