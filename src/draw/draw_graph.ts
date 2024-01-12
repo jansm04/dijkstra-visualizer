@@ -381,7 +381,7 @@ export const addGraphVisualizer = (
     }
 
     function drawGraphInSelectionMode() {
-        var colourScheme = { def: 'lightgray', start: 'green'};
+        var colourScheme = { def: 'lightgray', start: 'teal'};
         const ctx = resetContext();
         if (!ctx) return;
         for (let i = 0; i < graph.edges.length; i++) {
