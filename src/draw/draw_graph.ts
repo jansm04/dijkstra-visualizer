@@ -20,11 +20,12 @@ export const addGraphVisualizer = (
     var isShiftPressed = false
     var isMoving = false;
     var inSelectionMode = false;
+    var inVisMode = false;
     var timer: NodeJS.Timeout;
     var takenLetters = "";
 
     function onDoubleClick(e: MouseEvent) {
-        if (inSelectionMode) return;
+        if (inSelectionMode || inVisMode) return;
         if (isEmpty() && refs.emptyPromptRef.current && refs.emptyPromptRef.current.hidden == false)
             refs.emptyPromptRef.current.hidden = true;
         const point = computePointInCanvas(e);
@@ -40,6 +41,7 @@ export const addGraphVisualizer = (
     }
 
     function onMouseDown(e: MouseEvent) {
+        if (inVisMode) return;
         var point = computePointInCanvas(e);
         if (!point) return;
 
@@ -68,7 +70,7 @@ export const addGraphVisualizer = (
     }
 
     function onMouseMove(e: MouseEvent) {
-        if (inSelectionMode) return;
+        if (inSelectionMode  || inVisMode) return;
         if (tempEdge) {
             var point = computePointInCanvas(e);
             if (!point) return;
@@ -102,7 +104,7 @@ export const addGraphVisualizer = (
     }
 
     function onMouseUp(e: MouseEvent) {
-        if (inSelectionMode) return;
+        if (inSelectionMode || inVisMode) return;
         const point = computePointInCanvas(e);
         if (!point) return;
 
@@ -135,7 +137,7 @@ export const addGraphVisualizer = (
     }
 
     function onKeyDown(e: KeyboardEvent) {
-        if (inSelectionMode) return;
+        if (inSelectionMode || inVisMode) return;
         if (e.key == 'Shift')
             isShiftPressed = true;
         else {
@@ -156,7 +158,7 @@ export const addGraphVisualizer = (
     }
 
     function onKeyUp(e: KeyboardEvent) {
-        if (inSelectionMode) return;
+        if (inSelectionMode || inVisMode) return;
         if (e.key == 'Shift') {
             isShiftPressed = false;
         }
@@ -189,6 +191,8 @@ export const addGraphVisualizer = (
     }
 
     function onSubmitBuild(e: MouseEvent) {
+        inSelectionMode = false;
+        inVisMode = true;
         if (startingVertex instanceof Vertex)
             startingVertex.dist = 0;
         graph.pq.buildHeap(graph.vertices);
@@ -202,8 +206,7 @@ export const addGraphVisualizer = (
 
     function enterEditMode() {
         selectedObject = null;
-        inSelectionMode = false;
-        
+        inVisMode = false;
         if (refs.selectModeRef.current) {
             refs.selectModeRef.current.innerHTML = "Select Start Vertex";
             refs.selectModeRef.current.hidden = false;
