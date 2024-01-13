@@ -24,7 +24,9 @@ export const useDraw = () => {
         startPromptRef: useRef<HTMLParagraphElement>(null),
         retryPromptRef: useRef<HTMLParagraphElement>(null),
         emptyPromptRef: useRef<HTMLParagraphElement>(null),
-        visPromptRef: useRef<HTMLParagraphElement>(null)
+        visPromptRef: useRef<HTMLParagraphElement>(null),
+        // slider
+        sliderRef: useRef<HTMLSpanElement>(null)
     }
 
     useEffect(() => {

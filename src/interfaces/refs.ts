@@ -14,6 +14,8 @@ interface Refs {
     retryPromptRef: RefObject<HTMLParagraphElement>,
     emptyPromptRef: RefObject<HTMLParagraphElement>,
     visPromptRef: RefObject<HTMLParagraphElement>
+    // slider
+    sliderRef: RefObject<HTMLSpanElement>
 }
 
 export default Refs;
