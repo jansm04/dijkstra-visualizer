@@ -206,6 +206,7 @@ export const addGraphVisualizer = (
 
     function enterEditMode() {
         selectedObject = null;
+        inSelectionMode = false;
         inVisMode = false;
         if (refs.selectModeRef.current) {
             refs.selectModeRef.current.innerHTML = "Select Start Vertex";
