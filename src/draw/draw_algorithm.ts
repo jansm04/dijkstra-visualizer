@@ -16,8 +16,6 @@ export const addAlgorithmVisualizer = (
 
     const ctx = refs.canvasRef.current?.getContext("2d");
     const rect = refs.canvasRef.current?.getBoundingClientRect();
-    const slideRect = refs.sliderRef.current?.getBoundingClientRect();
-    const thumb = refs.thumbRef.current;
 
     const colourScheme = { 
         unvisisted: 'lightgray', // unvisited vertices or edge
@@ -141,6 +139,8 @@ export const addAlgorithmVisualizer = (
     }
 
     function getPercentage() {
+        const slideRect = refs.sliderRef.current?.getBoundingClientRect();
+        const thumb = refs.thumbRef.current;
         if (slideRect && thumb && thumb.style.left) {
             var thumbX = Number.parseInt(thumb.style.left);
             var percentage = thumbX / slideRect.width;
@@ -151,6 +151,8 @@ export const addAlgorithmVisualizer = (
     }
 
     function changeSpeed(e: MouseEvent) {
+        const slideRect = refs.sliderRef.current?.getBoundingClientRect();
+        const thumb = refs.thumbRef.current;
         if (isSliderSelected && slideRect && thumb) {
             var thumbX = e.clientX - slideRect.left;
             if (thumbX < 0) thumbX = 0;
