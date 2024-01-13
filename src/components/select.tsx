@@ -15,7 +15,7 @@ const Select = ({
                 </button>
                 <span 
                     ref={refs.startPromptRef} 
-                    className="p-1 ml-8 mt-5 float-left text-gray-700 text-[13px]" 
+                    className="p-1 mt-5 float-left text-gray-700 text-[13px]" 
                     hidden={true}>
                         Select a vertex to <span className="text-[green]">start</span> with.
                 </span>

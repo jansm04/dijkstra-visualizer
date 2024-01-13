@@ -50,6 +50,7 @@ export const addGraphVisualizer = (
             if (selectedObject instanceof Vertex) {
                 if (!startingVertex) {
                     startingVertex = selectedObject;
+                    if (refs.selectModeRef.current) refs.selectModeRef.current.hidden = false;
                     if (refs.startPromptRef.current) refs.startPromptRef.current.hidden = true;
                     if (refs.startVisRef.current) refs.startVisRef.current.hidden = false;
                 }
@@ -178,9 +179,10 @@ export const addGraphVisualizer = (
 
         startingVertex = null;
         inSelectionMode = true;
-        if (refs.selectModeRef.current) 
+        if (refs.selectModeRef.current) {
             refs.selectModeRef.current.innerHTML = "Reselect Start Vertex";
-
+            refs.selectModeRef.current.hidden = true;
+        }
         if (refs.startPromptRef.current) refs.startPromptRef.current.hidden = false;
         if (refs.retryPromptRef.current) refs.retryPromptRef.current.hidden = true;
         if (refs.emptyPromptRef.current) refs.emptyPromptRef.current.hidden = true;
