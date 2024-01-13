@@ -47,15 +47,13 @@ export const addGraphVisualizer = (
 
         selectedObject = selectObject(point.x, point.y);
         if (inSelectionMode) {
-            if (selectedObject instanceof Vertex) {
-                if (!startingVertex) {
-                    startingVertex = selectedObject;
-                    if (refs.selectModeRef.current) refs.selectModeRef.current.hidden = false;
-                    if (refs.startPromptRef.current) refs.startPromptRef.current.hidden = true;
-                    if (refs.startVisRef.current) refs.startVisRef.current.hidden = false;
-                }
-                else return;
+            if (selectedObject)
                 selectedObject.isCursorVisible = false;
+            if (selectedObject instanceof Vertex && !startingVertex) {
+                startingVertex = selectedObject;
+                if (refs.selectModeRef.current) refs.selectModeRef.current.hidden = false;
+                if (refs.startPromptRef.current) refs.startPromptRef.current.hidden = true;
+                if (refs.startVisRef.current) refs.startVisRef.current.hidden = false;
                 drawGraphInSelectionMode();
             }
             return;
