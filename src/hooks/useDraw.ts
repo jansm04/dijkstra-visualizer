@@ -8,6 +8,7 @@ import PriorityQueue from "@/app/elements/priority_queue";
 
 import Refs from "@/interfaces/refs";
 import Graph from "@/interfaces/graph";
+import { addSlider } from "@/draw/draw_slider";
 
 export const useDraw = () => {
 
@@ -26,7 +27,8 @@ export const useDraw = () => {
         emptyPromptRef: useRef<HTMLParagraphElement>(null),
         visPromptRef: useRef<HTMLParagraphElement>(null),
         // slider
-        sliderRef: useRef<HTMLSpanElement>(null)
+        sliderRef: useRef<HTMLDivElement>(null),
+        thumbRef: useRef<HTMLDivElement>(null)
     }
 
     useEffect(() => {
@@ -36,12 +38,13 @@ export const useDraw = () => {
             pq: new PriorityQueue()
         }
         addGraphVisualizer(refs, graph);
+        addSlider(refs);
         refs.startVisRef.current?.addEventListener('click', () => {
             addAlgorithmVisualizer(refs, graph);
         });
         refs.resetRef.current?.addEventListener('click', () => {
             location.reload();
-        });
+        });        
     });
 
     return { refs };
