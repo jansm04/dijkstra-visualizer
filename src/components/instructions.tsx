@@ -1,7 +1,7 @@
 const Instructions = () => {
     return (
         <div className="mx-8 text-gray-500 w-[200px] text-[13px]">
-            <h1 className="mb-8">Use the canvas to build your graph.</h1>
+            <h1 className="mb-4">Use the canvas to build your graph.</h1>
             <div className="mb-2">
                 <p className="float-left text-gray-700 mr-2 font-bold">To add a vertex:</p>
                 <p> double-click</p>
@@ -18,7 +18,7 @@ const Instructions = () => {
                 <p className="float-left text-gray-700 mr-2 font-bold">To delete an element: </p>
                 <p>press the delete key (fn + delete on mac)</p>
             </div>
-            <div className="mb-2 mt-8">
+            <div className="mb-2 mt-4">
                 <p>A vertex label will only accept a unique character from the alphabet.</p>
             </div>
             <div className="mb-10">
