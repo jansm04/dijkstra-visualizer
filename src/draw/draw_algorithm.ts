@@ -151,7 +151,10 @@ export const addAlgorithmVisualizer = (
 
     function changeSpeed(e: MouseEvent) {
         if (slideRect && thumb) {
-            thumb.style.left = `${e.clientX - slideRect.left}px`;
+            var thumbX = e.clientX - slideRect.left;
+            if (thumbX < 0) thumbX = 0;
+            if (thumbX > slideRect.width) thumbX = slideRect.width;
+            thumb.style.left = `${thumbX}px`;
             var newSpeed = getPercentage();
             ms = newSpeed;
         }    
@@ -161,5 +164,5 @@ export const addAlgorithmVisualizer = (
     dijkstras();
 
     refs.editRef.current?.addEventListener('click', reset);
-    refs.sliderRef.current?.addEventListener('mouseup', changeSpeed);
+    document.addEventListener('mouseup', changeSpeed);
 }
