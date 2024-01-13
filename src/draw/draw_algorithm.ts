@@ -30,6 +30,7 @@ export const addAlgorithmVisualizer = (
     var currVertex: Vertex | undefined | null;
     var currEdge: Edge | undefined | null;
     var isFinished = false;
+    var isSliderSelected = false;
     var count = 1;
 
     // speed
@@ -150,13 +151,14 @@ export const addAlgorithmVisualizer = (
     }
 
     function changeSpeed(e: MouseEvent) {
-        if (slideRect && thumb) {
+        if (isSliderSelected && slideRect && thumb) {
             var thumbX = e.clientX - slideRect.left;
             if (thumbX < 0) thumbX = 0;
             if (thumbX > slideRect.width) thumbX = slideRect.width;
             thumb.style.left = `${thumbX}px`;
             var newSpeed = getPercentage();
             ms = newSpeed;
+            isSliderSelected = false;
         }    
     }
 
@@ -164,5 +166,6 @@ export const addAlgorithmVisualizer = (
     dijkstras();
 
     refs.editRef.current?.addEventListener('click', reset);
+    refs.sliderRef.current?.addEventListener('mousedown', () => isSliderSelected = true);
     document.addEventListener('mouseup', changeSpeed);
 }
