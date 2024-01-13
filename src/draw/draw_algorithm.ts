@@ -14,6 +14,17 @@ export const addAlgorithmVisualizer = (
     graph: Graph
 ) => {
 
+    const ctx = refs.canvasRef.current?.getContext("2d");
+    const rect = refs.canvasRef.current?.getBoundingClientRect();
+    const slideRect = refs.sliderRef.current?.getBoundingClientRect();
+    const thumb = refs.thumbRef.current;
+
+    const colourScheme = { 
+        unvisisted: 'lightgray', // unvisited vertices or edge
+        used: 'teal', // used edge or visited vertex
+        current: 'gold' // current edge or vertex
+    };
+
     var visited = new Array<Vertex>();
     var usedEdges = new Array<Edge>();
     var currVertex: Vertex | undefined | null;
@@ -22,16 +33,7 @@ export const addAlgorithmVisualizer = (
     var count = 1;
 
     // speed
-    const ms: number = 1000;
-
-    const ctx = refs.canvasRef.current?.getContext("2d");
-    const rect = refs.canvasRef.current?.getBoundingClientRect();
-
-    const colourScheme = { 
-        unvisisted: 'lightgray', // unvisited vertices or edge
-        used: 'teal', // used edge or visited vertex
-        current: 'gold' // current edge or vertex
-    };
+    var ms: number = getPercentage();
 
     function updatePQ(highlight: Vertex | null, isFinished: boolean) {
         updatePQVisualizer(refs.pqRef, graph.pq, visited, highlight, isFinished);
@@ -137,8 +139,27 @@ export const addAlgorithmVisualizer = (
         visited.splice(0, n);
     }
 
+    function getPercentage() {
+        if (slideRect && thumb && thumb.style.left) {
+            var thumbX = Number.parseInt(thumb.style.left);
+            var percentage = thumbX / slideRect.width;
+            var factor = 0.25 * 2 ** (4 * percentage);
+            return 1000 / factor;
+        }
+        return 1000;
+    }
+
+    function changeSpeed(e: MouseEvent) {
+        if (slideRect && thumb) {
+            thumb.style.left = `${e.clientX - slideRect.left}px`;
+            var newSpeed = getPercentage();
+            ms = newSpeed;
+        }    
+    }
+
     addPQVisualizer(refs.pqRef, graph.pq);
     dijkstras();
 
     refs.editRef.current?.addEventListener('click', reset);
+    refs.sliderRef.current?.addEventListener('mouseup', changeSpeed);
 }
