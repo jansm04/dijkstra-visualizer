@@ -9,6 +9,7 @@ import Select from "./select"
 import Instructions from "./instructions"
 import Options from "./options"
 import Slider from "./slider"
+import Pause from "./pause"
 import Footer from "./footer"
 
 export const Main = () => {
@@ -28,6 +29,7 @@ export const Main = () => {
                     <Instructions />
                     <Options refs={refs} />
                     <Slider refs={refs} />
+                    <Pause refs={refs} />
                 </div>
             </div>
             <Footer />
