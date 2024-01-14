@@ -10,6 +10,7 @@ interface Refs {
     resetRef: RefObject<HTMLButtonElement>,
     editRef: RefObject<HTMLButtonElement>,
     restartRef: RefObject<HTMLButtonElement>,
+    pauseRef: RefObject<HTMLButtonElement>,
     // prompts
     startPromptRef: RefObject<HTMLParagraphElement>,
     retryPromptRef: RefObject<HTMLParagraphElement>,
