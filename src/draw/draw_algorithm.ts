@@ -215,8 +215,12 @@ export const addAlgorithmVisualizer = (
     }
 
     function pauseOrPlay() {
+        var pause = refs.pauseRef.current;
+        if (!pause) return;
+
         if (isPaused) {
             isPaused = false;
+            pause.innerHTML = "Pause";
             reset();
             if (startVertex instanceof Vertex)
                 startVertex.dist = 0;
@@ -228,6 +232,7 @@ export const addAlgorithmVisualizer = (
             dijkstras();
         } else {
             isPaused = true;
+            pause.innerHTML = "Resume";
         }
     }
 
