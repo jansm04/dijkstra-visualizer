@@ -31,7 +31,10 @@ export const addAlgorithmVisualizer = (
     var isFinished = false;
     var isSliderSelected = false;
     var isPaused = false;
-    var pos = 0;
+
+    var currPos = 0;
+    var lastPos = 0;
+
     var count = 1;
 
     var stop = 0;
@@ -90,62 +93,25 @@ export const addAlgorithmVisualizer = (
         usedEdges.push(edge);
     }
 
-    async function resumeAlgorithm() {
-        while (!graph.pq.empty()) {
-            currEdge = null;
-            currVertex = graph.pq.front();
-            if (currVertex != startVertex) { 
-                if (pos > stop) pos--;
-                if (pos == stop) await sleep(ms); drawState(); updatePQ(null, false);
-            }
-            graph.pq.dequeue();
-            if (currVertex) {
-                visited.push(currVertex);
-                if (pos > stop) pos--;
-                if (pos == stop) await sleep(ms); updatePQ(null, false);
-
-                // loop through all edges
-                for (let i = 0; i < currVertex.edges.length; i++) {
-
-                    currEdge = currVertex.edges[i];
-                    var neighbor: Vertex = currEdge.va == currVertex ? currEdge.vb : currEdge.va;
-
-                    if (!visited.includes(neighbor)) {
-                        if (pos > stop) pos--;
-                        if (pos == stop) await sleep(ms); drawState(); updatePQ(neighbor, false);
-
-                        if (currVertex.dist + currEdge.weight < neighbor.dist) {
-                            neighbor.dist = currVertex.dist + currEdge.weight;
-                            addUsedEdge(neighbor, currEdge);  
-                            graph.pq.heapifyUp(neighbor.idx);
-
-                            if (pos > stop) pos--;
-                            if (pos == stop) await sleep(ms); updatePQ(neighbor, false);   
-                        } 
-                    }        
-                }
-            }
-        }
-        finish();
-    }
-
     async function dijkstras() {
         startVertex = currVertex = graph.pq.front();
-        drawState();
         while (!graph.pq.empty()) {
             currEdge = null;
             currVertex = graph.pq.front();
-            
+
             if (currVertex != startVertex) { 
-                pos++;
-                await sleep(ms); drawState(); updatePQ(null, false);
+                currPos++;
+                if (lastPos > stop) lastPos--;
+                if (lastPos == stop) await sleep(ms); drawState(); updatePQ(null, false);
                 if (isPaused) return;
             }
             graph.pq.dequeue();
             if (currVertex) {
                 visited.push(currVertex);
-                pos++;
-                await sleep(ms); updatePQ(null, false);
+
+                currPos++;
+                if (lastPos > stop) lastPos--;
+                if (lastPos == stop) await sleep(ms); updatePQ(null, false);
                 if (isPaused) return;
 
                 // loop through all edges
@@ -155,8 +121,10 @@ export const addAlgorithmVisualizer = (
                     var neighbor: Vertex = currEdge.va == currVertex ? currEdge.vb : currEdge.va;
 
                     if (!visited.includes(neighbor)) {
-                        pos++;
-                        await sleep(ms); drawState(); updatePQ(neighbor, false);
+
+                        currPos++;
+                        if (lastPos > stop) lastPos--;
+                        if (lastPos == stop) await sleep(ms); drawState(); updatePQ(neighbor, false);
                         if (isPaused) return;
 
                         if (currVertex.dist + currEdge.weight < neighbor.dist) {
@@ -164,9 +132,10 @@ export const addAlgorithmVisualizer = (
                             addUsedEdge(neighbor, currEdge);  
                             graph.pq.heapifyUp(neighbor.idx);
 
-                            pos++;
-                            await sleep(ms); updatePQ(neighbor, false);  
-                            if (isPaused) return; 
+                            currPos++;
+                            if (lastPos > stop) lastPos--;
+                            if (lastPos == stop) await sleep(ms); updatePQ(neighbor, false);   
+                            if (isPaused) return;
                         } 
                     }        
                 }
@@ -199,9 +168,10 @@ export const addAlgorithmVisualizer = (
         for (let i = 1; i < n; i++)
             table.deleteRow(1);
 
-        n = visited.length;
-        for (let i = 0; i < n; i++)
-            visited[i].dist = Infinity;
+        n = graph.vertices.length;
+        for (let i = 0; i < n; i++) {
+            graph.vertices[i].dist = Infinity;
+        }
         visited.splice(0, n);
     }
 
@@ -235,15 +205,14 @@ export const addAlgorithmVisualizer = (
         if (isPaused) {
             isPaused = false;
             reset();
-            for (let i = 0; i < graph.vertices.length; i++) {
-                graph.vertices[i].dist = Infinity;
-            }
             if (startVertex instanceof Vertex)
                 startVertex.dist = 0;
             graph.pq.buildHeap(graph.vertices);
+            lastPos = currPos;
+            currPos = 0;
             
             addPQVisualizer(refs.pqRef, graph.pq);
-            resumeAlgorithm();
+            dijkstras();
         } else {
             isPaused = true;
         }
