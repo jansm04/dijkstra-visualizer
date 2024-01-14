@@ -206,8 +206,7 @@ export const addGraphVisualizer = (
 
     function enterEditMode() {
         selectedObject = null;
-        inSelectionMode = false;
-        inVisMode = false;
+        inSelectionMode = inVisMode = false;
         if (refs.selectModeRef.current) {
             refs.selectModeRef.current.innerHTML = "Select Start Vertex";
             refs.selectModeRef.current.hidden = false;
@@ -220,6 +219,20 @@ export const addGraphVisualizer = (
         }
         if (refs.editRef.current) refs.editRef.current.hidden = true;
         drawGraph();
+    }
+
+    function restart() {
+        selectedObject = startingVertex = null;
+        inSelectionMode = true;
+        inVisMode = false;
+        if (refs.startPromptRef.current) refs.startPromptRef.current.hidden = false;
+        if (refs.visPromptRef.current) {
+            refs.visPromptRef.current.innerHTML = "Visualizing Dijkstra's Algorithm...";
+            refs.visPromptRef.current.hidden = true;
+        }
+        if (refs.restartRef.current) refs.restartRef.current.hidden = true;
+        if (refs.editRef.current) refs.editRef.current.hidden = false;
+        drawGraphInSelectionMode();
     }
 
     function isValid() {
@@ -408,4 +421,5 @@ export const addGraphVisualizer = (
     refs.selectModeRef.current?.addEventListener('click', onEnterSelectMode);
     refs.startVisRef.current?.addEventListener('click', onSubmitBuild);
     refs.editRef.current?.addEventListener('click', enterEditMode);
+    refs.restartRef.current?.addEventListener('click', restart);
 }

@@ -119,6 +119,7 @@ export const addAlgorithmVisualizer = (
         await sleep(ms); updatePQ(null, true);
         isFinished = true;
         if (refs.visPromptRef.current) refs.visPromptRef.current.innerHTML = "Visualization Complete.";
+        if (refs.restartRef.current) refs.restartRef.current.hidden = false;
         if (refs.editRef.current) refs.editRef.current.hidden = false;
         drawState();
         count--;
@@ -167,6 +168,7 @@ export const addAlgorithmVisualizer = (
     addPQVisualizer(refs.pqRef, graph.pq);
     dijkstras();
 
+    refs.restartRef.current?.addEventListener('click', reset);
     refs.editRef.current?.addEventListener('click', reset);
     refs.sliderRef.current?.addEventListener('mousedown', () => isSliderSelected = true);
     document.addEventListener('mouseup', changeSpeed);
