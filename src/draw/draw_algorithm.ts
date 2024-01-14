@@ -36,7 +36,6 @@ export const addAlgorithmVisualizer = (
     var lastPos = 0;
 
     var count = 1;
-
     var stop = 0;
 
     // speed
@@ -169,10 +168,13 @@ export const addAlgorithmVisualizer = (
             table.deleteRow(1);
 
         n = graph.vertices.length;
-        for (let i = 0; i < n; i++) {
+        for (let i = 0; i < n; i++) 
             graph.vertices[i].dist = Infinity;
-        }
-        visited.splice(0, n);
+
+        n = visited.length;
+        visited.slice(0, n);
+    
+        removeListeners();
     }
 
     function getPercentage() {
@@ -216,6 +218,14 @@ export const addAlgorithmVisualizer = (
         } else {
             isPaused = true;
         }
+    }
+
+    function removeListeners() {
+        refs.restartRef.current?.removeEventListener('click', reset);
+        refs.editRef.current?.removeEventListener('click', reset);
+        refs.sliderRef.current?.removeEventListener('mousedown', () => isSliderSelected = true);
+        refs.pauseRef.current?.removeEventListener('click', pauseOrPlay);
+        document.removeEventListener('mouseup', changeSpeed);
     }
 
     addPQVisualizer(refs.pqRef, graph.pq);
