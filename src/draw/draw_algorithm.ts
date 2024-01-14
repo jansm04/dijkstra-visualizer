@@ -34,6 +34,8 @@ export const addAlgorithmVisualizer = (
     var pos = 0;
     var count = 1;
 
+    var stop = 0;
+
     // speed
     var ms: number = getPercentage();
 
@@ -92,33 +94,33 @@ export const addAlgorithmVisualizer = (
         while (!graph.pq.empty()) {
             currEdge = null;
             currVertex = graph.pq.front();
-            if (pos > 0) pos--;
             if (currVertex != startVertex) { 
-                if (pos == 0) await sleep(ms); drawState(); updatePQ(null, false);
+                if (pos > stop) pos--;
+                if (pos == stop) await sleep(ms); drawState(); updatePQ(null, false);
             }
             graph.pq.dequeue();
             if (currVertex) {
                 visited.push(currVertex);
-                if (pos > 0) pos--;
-                if (pos == 0) await sleep(ms); updatePQ(null, false);
+                if (pos > stop) pos--;
+                if (pos == stop) await sleep(ms); updatePQ(null, false);
 
                 // loop through all edges
                 for (let i = 0; i < currVertex.edges.length; i++) {
 
                     currEdge = currVertex.edges[i];
                     var neighbor: Vertex = currEdge.va == currVertex ? currEdge.vb : currEdge.va;
-                    if (pos > 0) pos--;
 
                     if (!visited.includes(neighbor)) {
-                        if (pos == 0) await sleep(ms); drawState(); updatePQ(neighbor, false);
+                        if (pos > stop) pos--;
+                        if (pos == stop) await sleep(ms); drawState(); updatePQ(neighbor, false);
 
                         if (currVertex.dist + currEdge.weight < neighbor.dist) {
                             neighbor.dist = currVertex.dist + currEdge.weight;
                             addUsedEdge(neighbor, currEdge);  
                             graph.pq.heapifyUp(neighbor.idx);
 
-                            if (pos > 0) pos--;
-                            if (pos == 0) await sleep(ms); updatePQ(neighbor, false);   
+                            if (pos > stop) pos--;
+                            if (pos == stop) await sleep(ms); updatePQ(neighbor, false);   
                         } 
                     }        
                 }
@@ -133,28 +135,29 @@ export const addAlgorithmVisualizer = (
         while (!graph.pq.empty()) {
             currEdge = null;
             currVertex = graph.pq.front();
-            pos++;
-            if (isPaused) return;
+            
             if (currVertex != startVertex) { 
+                pos++;
                 await sleep(ms); drawState(); updatePQ(null, false);
+                if (isPaused) return;
             }
             graph.pq.dequeue();
             if (currVertex) {
                 visited.push(currVertex);
                 pos++;
-                if (isPaused) return;
                 await sleep(ms); updatePQ(null, false);
+                if (isPaused) return;
 
                 // loop through all edges
                 for (let i = 0; i < currVertex.edges.length; i++) {
 
                     currEdge = currVertex.edges[i];
                     var neighbor: Vertex = currEdge.va == currVertex ? currEdge.vb : currEdge.va;
-                    pos++;
-                    if (isPaused) return;
 
                     if (!visited.includes(neighbor)) {
+                        pos++;
                         await sleep(ms); drawState(); updatePQ(neighbor, false);
+                        if (isPaused) return;
 
                         if (currVertex.dist + currEdge.weight < neighbor.dist) {
                             neighbor.dist = currVertex.dist + currEdge.weight;
@@ -162,8 +165,8 @@ export const addAlgorithmVisualizer = (
                             graph.pq.heapifyUp(neighbor.idx);
 
                             pos++;
-                            if (isPaused) return;
-                            await sleep(ms); updatePQ(neighbor, false);   
+                            await sleep(ms); updatePQ(neighbor, false);  
+                            if (isPaused) return; 
                         } 
                     }        
                 }
@@ -232,9 +235,13 @@ export const addAlgorithmVisualizer = (
         if (isPaused) {
             isPaused = false;
             reset();
+            for (let i = 0; i < graph.vertices.length; i++) {
+                graph.vertices[i].dist = Infinity;
+            }
             if (startVertex instanceof Vertex)
                 startVertex.dist = 0;
             graph.pq.buildHeap(graph.vertices);
+            
             addPQVisualizer(refs.pqRef, graph.pq);
             resumeAlgorithm();
         } else {
