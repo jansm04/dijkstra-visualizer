@@ -190,7 +190,7 @@ export const addGraphVisualizer = (
         drawGraphInSelectionMode();
     }
 
-    function onSubmitBuild(e: MouseEvent) {
+    function onSubmitVisualize(e: MouseEvent) {
         inSelectionMode = false;
         inVisMode = true;
         if (startingVertex instanceof Vertex)
@@ -202,6 +202,7 @@ export const addGraphVisualizer = (
         if (refs.startVisRef.current) refs.startVisRef.current.hidden = true;
         if (refs.visPromptRef.current) refs.visPromptRef.current.hidden = false;
         if (refs.editRef.current) refs.editRef.current.hidden = true;
+        if (refs.pauseRef.current) refs.pauseRef.current.hidden = false;
     }
 
     function enterEditMode() {
@@ -218,6 +219,8 @@ export const addGraphVisualizer = (
             refs.visPromptRef.current.hidden = true;
         }
         if (refs.editRef.current) refs.editRef.current.hidden = true;
+        if (refs.restartRef.current) refs.restartRef.current.hidden = true;
+        if (refs.pauseRef.current) refs.pauseRef.current.hidden = true;
         drawGraph();
     }
 
@@ -232,6 +235,7 @@ export const addGraphVisualizer = (
         }
         if (refs.restartRef.current) refs.restartRef.current.hidden = true;
         if (refs.editRef.current) refs.editRef.current.hidden = false;
+        if (refs.pauseRef.current) refs.pauseRef.current.hidden = true;
         drawGraphInSelectionMode();
     }
 
@@ -419,7 +423,7 @@ export const addGraphVisualizer = (
     refs.canvasRef.current?.addEventListener('keyup', onKeyUp, true);
     // buttons
     refs.selectModeRef.current?.addEventListener('click', onEnterSelectMode);
-    refs.startVisRef.current?.addEventListener('click', onSubmitBuild);
+    refs.startVisRef.current?.addEventListener('click', onSubmitVisualize);
     refs.editRef.current?.addEventListener('click', enterEditMode);
     refs.restartRef.current?.addEventListener('click', restart);
 }

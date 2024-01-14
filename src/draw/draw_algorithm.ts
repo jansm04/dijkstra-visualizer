@@ -164,6 +164,8 @@ export const addAlgorithmVisualizer = (
             refs.restartRef.current.hidden = false;
         if (refs.editRef.current) 
             refs.editRef.current.hidden = false;
+        if (refs.pauseRef.current)
+            refs.pauseRef.current.hidden = true;
         drawState();
         count--;
         await sleep(200); drawState();
