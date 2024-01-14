@@ -43,6 +43,12 @@ const Select = ({
                     hidden={true}>
                         Visualizing Dijkstra&apos;s Algorithm...
                 </span>
+                <button
+                    ref={refs.restartRef} 
+                    className="py-1 px-6 mt-5 ml-4 float-left text-gray-700 italic border border-gray-800 text-center text-[13px] rounded hover:bg-amber-400" 
+                    hidden={true}>
+                        Restart Visualization
+                </button>
             </div>
         </div>    
     )
