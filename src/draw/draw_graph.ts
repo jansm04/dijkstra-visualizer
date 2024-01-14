@@ -360,7 +360,7 @@ export const addGraphVisualizer = (
     }
 
     function drawGraph() {
-        var colourScheme = { def: 'gray', selected: 'blue'};
+        var colourScheme = { def: 'gray', selected: 'royalblue'};
         const ctx = resetContext();
         if (!ctx) return;
         if (tempEdge && !tempEdge.vertex.containsPoint(tempEdge.px, tempEdge.py)) { 
@@ -382,7 +382,7 @@ export const addGraphVisualizer = (
     }
 
     function drawGraphInSelectionMode() {
-        var colourScheme = { def: 'lightgray', start: 'teal'};
+        var colourScheme = { def: 'lightgray', start: 'navy'};
         const ctx = resetContext();
         if (!ctx) return;
         for (let i = 0; i < graph.edges.length; i++) {

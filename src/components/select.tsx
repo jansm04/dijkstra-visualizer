@@ -10,7 +10,7 @@ const Select = ({
             <div className="inline-block">
                 <button 
                     ref={refs.selectModeRef} 
-                    className="py-1 px-6 mt-5 float-left text-gray-700 italic border border-gray-800 text-center text-[13px] rounded hover:border-sky-800">
+                    className="py-1 px-6 mt-5 float-left text-gray-700 italic border border-gray-800 text-center text-[13px] rounded hover:bg-amber-400">
                         Select Start Vertex
                 </button>
                 <span 
@@ -33,7 +33,7 @@ const Select = ({
                 </span>
                 <button 
                     ref={refs.startVisRef} 
-                    className="py-1 px-6 mt-5 ml-4 float-left text-gray-700 italic border border-gray-800 text-center text-[13px] rounded hover:border-sky-800" 
+                    className="py-1 px-6 mt-5 ml-4 float-left text-gray-700 italic border border-gray-800 text-center text-[13px] rounded hover:bg-amber-400" 
                     hidden={true}>
                         Visualize Dijkstra&apos;s Algorithm
                 </button>

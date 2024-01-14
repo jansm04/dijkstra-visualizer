@@ -28,7 +28,7 @@ const styleHighlightRow = (row: HTMLTableRowElement) => {
     styleRow(row);
     row.style.color = 'black';
     row.style.fontWeight = '700';
-    row.style.background = 'moccasin';
+    row.style.background = '#fcd34d';
 }
 
 const styleCell = (cell: HTMLTableCellElement) => {

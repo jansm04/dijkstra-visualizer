@@ -19,7 +19,7 @@ export const addAlgorithmVisualizer = (
 
     const colourScheme = { 
         unvisisted: 'lightgray', // unvisited vertices or edge
-        used: 'teal', // used edge or visited vertex
+        used: 'navy', // used edge or visited vertex
         current: 'gold' // current edge or vertex
     };
 
