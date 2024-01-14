@@ -38,10 +38,12 @@ export const addAlgorithmVisualizer = (
     var ms: number = getPercentage();
 
     function updatePQ(highlight: Vertex | null, isFinished: boolean) {
+        if (isPaused) return;
         updatePQVisualizer(refs.pqRef, graph.pq, visited, highlight, isFinished);
     }
 
     function drawState() {
+        if (isPaused) return;
         if (!ctx || !rect) return;
         ctx.clearRect(0, 0, rect.width, rect.height);
         ctx.lineWidth = 2;
@@ -90,33 +92,33 @@ export const addAlgorithmVisualizer = (
         while (!graph.pq.empty()) {
             currEdge = null;
             currVertex = graph.pq.front();
-            if (pos > 1) pos--;
+            if (pos > 0) pos--;
             if (currVertex != startVertex) { 
-                if (pos == 1) await sleep(ms); drawState(); updatePQ(null, false);
+                if (pos == 0) await sleep(ms); drawState(); updatePQ(null, false);
             }
             graph.pq.dequeue();
             if (currVertex) {
                 visited.push(currVertex);
-                if (pos > 1) pos--;
-                if (pos == 1) await sleep(ms); updatePQ(null, false);
+                if (pos > 0) pos--;
+                if (pos == 0) await sleep(ms); updatePQ(null, false);
 
                 // loop through all edges
                 for (let i = 0; i < currVertex.edges.length; i++) {
 
                     currEdge = currVertex.edges[i];
                     var neighbor: Vertex = currEdge.va == currVertex ? currEdge.vb : currEdge.va;
-                    if (pos > 1) pos--;
+                    if (pos > 0) pos--;
 
                     if (!visited.includes(neighbor)) {
-                        if (pos == 1) await sleep(ms); drawState(); updatePQ(neighbor, false);
+                        if (pos == 0) await sleep(ms); drawState(); updatePQ(neighbor, false);
 
                         if (currVertex.dist + currEdge.weight < neighbor.dist) {
                             neighbor.dist = currVertex.dist + currEdge.weight;
                             addUsedEdge(neighbor, currEdge);  
                             graph.pq.heapifyUp(neighbor.idx);
 
-                            if (pos > 1) pos--;
-                            if (pos == 1) await sleep(ms); updatePQ(neighbor, false);   
+                            if (pos > 0) pos--;
+                            if (pos == 0) await sleep(ms); updatePQ(neighbor, false);   
                         } 
                     }        
                 }
@@ -165,7 +167,6 @@ export const addAlgorithmVisualizer = (
                         } 
                     }        
                 }
-                console.log("paused?", isPaused);
             }
         }
         finish();
