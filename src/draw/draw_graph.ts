@@ -163,82 +163,6 @@ export const addGraphVisualizer = (
         }
     }
 
-    function onEnterSelectMode(e: MouseEvent) {
-        if (!isValid()) {
-            if (refs.retryPromptRef.current) refs.retryPromptRef.current.hidden = false;
-            return;
-        }
-        if (isEmpty()) {
-            if (refs.emptyPromptRef.current) refs.emptyPromptRef.current.hidden = false;
-            return;
-        }
-        if (selectedObject) selectedObject.isCursorVisible = false;
-        clearInterval(timer);
-
-        startingVertex = null;
-        inSelectionMode = true;
-        if (refs.selectModeRef.current) {
-            refs.selectModeRef.current.innerHTML = "Reselect Start Vertex";
-            refs.selectModeRef.current.hidden = true;
-        }
-        if (refs.startPromptRef.current) refs.startPromptRef.current.hidden = false;
-        if (refs.retryPromptRef.current) refs.retryPromptRef.current.hidden = true;
-        if (refs.emptyPromptRef.current) refs.emptyPromptRef.current.hidden = true;
-        if (refs.startVisRef.current) refs.startVisRef.current.hidden = true;
-        if (refs.editRef.current) refs.editRef.current.hidden = false;
-
-        drawGraphInSelectionMode();
-    }
-
-    function onSubmitVisualize(e: MouseEvent) {
-        inSelectionMode = false;
-        inVisMode = true;
-        if (startingVertex instanceof Vertex)
-            startingVertex.dist = 0;
-        graph.pq.buildHeap(graph.vertices);
-
-        if (refs.selectModeRef.current) refs.selectModeRef.current.hidden = true;
-        if (refs.startPromptRef.current) refs.startPromptRef.current.hidden = true;
-        if (refs.startVisRef.current) refs.startVisRef.current.hidden = true;
-        if (refs.visPromptRef.current) refs.visPromptRef.current.hidden = false;
-        if (refs.editRef.current) refs.editRef.current.hidden = true;
-        if (refs.pauseRef.current) refs.pauseRef.current.hidden = false;
-    }
-
-    function enterEditMode() {
-        selectedObject = null;
-        inSelectionMode = inVisMode = false;
-        if (refs.selectModeRef.current) {
-            refs.selectModeRef.current.innerHTML = "Select Start Vertex";
-            refs.selectModeRef.current.hidden = false;
-        }
-        if (refs.startPromptRef.current) refs.startPromptRef.current.hidden = true;
-        if (refs.startVisRef.current) refs.startVisRef.current.hidden = true;
-        if (refs.visPromptRef.current) {
-            refs.visPromptRef.current.innerHTML = "Visualizing Dijkstra's Algorithm...";
-            refs.visPromptRef.current.hidden = true;
-        }
-        if (refs.editRef.current) refs.editRef.current.hidden = true;
-        if (refs.restartRef.current) refs.restartRef.current.hidden = true;
-        if (refs.pauseRef.current) refs.pauseRef.current.hidden = true;
-        drawGraph();
-    }
-
-    function restart() {
-        selectedObject = startingVertex = null;
-        inSelectionMode = true;
-        inVisMode = false;
-        if (refs.startPromptRef.current) refs.startPromptRef.current.hidden = false;
-        if (refs.visPromptRef.current) {
-            refs.visPromptRef.current.innerHTML = "Visualizing Dijkstra's Algorithm...";
-            refs.visPromptRef.current.hidden = true;
-        }
-        if (refs.restartRef.current) refs.restartRef.current.hidden = true;
-        if (refs.editRef.current) refs.editRef.current.hidden = false;
-        if (refs.pauseRef.current) refs.pauseRef.current.hidden = true;
-        drawGraphInSelectionMode();
-    }
-
     function isValid() {
         for (let i = 0; i < graph.edges.length; i++)
             if (graph.edges[i].weight == 0)
@@ -411,6 +335,82 @@ export const addGraphVisualizer = (
                 colourScheme.def;
             graph.vertices[i].draw(ctx, strokeStyle);
         }
+    }
+
+    function onEnterSelectMode(e: MouseEvent) {
+        if (!isValid()) {
+            if (refs.retryPromptRef.current) refs.retryPromptRef.current.hidden = false;
+            return;
+        }
+        if (isEmpty()) {
+            if (refs.emptyPromptRef.current) refs.emptyPromptRef.current.hidden = false;
+            return;
+        }
+        if (selectedObject) selectedObject.isCursorVisible = false;
+        clearInterval(timer);
+
+        startingVertex = null;
+        inSelectionMode = true;
+        if (refs.selectModeRef.current) {
+            refs.selectModeRef.current.innerHTML = "Reselect Start Vertex";
+            refs.selectModeRef.current.hidden = true;
+        }
+        if (refs.startPromptRef.current) refs.startPromptRef.current.hidden = false;
+        if (refs.retryPromptRef.current) refs.retryPromptRef.current.hidden = true;
+        if (refs.emptyPromptRef.current) refs.emptyPromptRef.current.hidden = true;
+        if (refs.startVisRef.current) refs.startVisRef.current.hidden = true;
+        if (refs.editRef.current) refs.editRef.current.hidden = false;
+
+        drawGraphInSelectionMode();
+    }
+
+    function onSubmitVisualize(e: MouseEvent) {
+        inSelectionMode = false;
+        inVisMode = true;
+        if (startingVertex instanceof Vertex)
+            startingVertex.dist = 0;
+        graph.pq.buildHeap(graph.vertices);
+
+        if (refs.selectModeRef.current) refs.selectModeRef.current.hidden = true;
+        if (refs.startPromptRef.current) refs.startPromptRef.current.hidden = true;
+        if (refs.startVisRef.current) refs.startVisRef.current.hidden = true;
+        if (refs.visPromptRef.current) refs.visPromptRef.current.hidden = false;
+        if (refs.editRef.current) refs.editRef.current.hidden = true;
+        if (refs.pauseRef.current) refs.pauseRef.current.hidden = false;
+    }
+
+    function enterEditMode() {
+        selectedObject = null;
+        inSelectionMode = inVisMode = false;
+        if (refs.selectModeRef.current) {
+            refs.selectModeRef.current.innerHTML = "Select Start Vertex";
+            refs.selectModeRef.current.hidden = false;
+        }
+        if (refs.startPromptRef.current) refs.startPromptRef.current.hidden = true;
+        if (refs.startVisRef.current) refs.startVisRef.current.hidden = true;
+        if (refs.visPromptRef.current) {
+            refs.visPromptRef.current.innerHTML = "Visualizing Dijkstra's Algorithm...";
+            refs.visPromptRef.current.hidden = true;
+        }
+        if (refs.editRef.current) refs.editRef.current.hidden = true;
+        if (refs.restartRef.current) refs.restartRef.current.hidden = true;
+        if (refs.pauseRef.current) refs.pauseRef.current.hidden = true;
+        drawGraph();
+    }
+
+    function restart() {
+        selectedObject = startingVertex = null;
+        inSelectionMode = true;
+        inVisMode = false;
+        if (refs.startPromptRef.current) refs.startPromptRef.current.hidden = false;
+        if (refs.visPromptRef.current) {
+            refs.visPromptRef.current.innerHTML = "Visualizing Dijkstra's Algorithm...";
+            refs.visPromptRef.current.hidden = true;
+        }
+        if (refs.restartRef.current) refs.restartRef.current.hidden = true;
+        if (refs.editRef.current) refs.editRef.current.hidden = false;
+        if (refs.pauseRef.current) refs.pauseRef.current.hidden = true;
+        drawGraphInSelectionMode();
     }
 
     // mouse events
