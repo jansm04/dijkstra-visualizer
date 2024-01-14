@@ -218,11 +218,13 @@ export const addAlgorithmVisualizer = (
 
     function pauseOrPlay() {
         var pause = refs.pauseRef.current;
-        if (!pause) return;
+        var prompt = refs.visPromptRef.current;
+        if (!pause || !prompt) return;
 
         if (isPaused) {
             isPaused = false;
             pause.innerHTML = "Pause";
+            prompt.innerHTML = "Visualizing Dijkstra&apos;s Algorithm...";
             reset();
             if (startVertex instanceof Vertex)
                 startVertex.dist = 0;
@@ -235,6 +237,7 @@ export const addAlgorithmVisualizer = (
         } else {
             isPaused = true;
             pause.innerHTML = "Resume";
+            prompt.innerHTML = "Visualization Paused.";
         }
     }
 
