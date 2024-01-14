@@ -7,7 +7,7 @@ const Footer = () => {
                 {<Link href='https://github.com/jansm04/dav' target="_blank">
                     <div className="text-sky-700 inline"> @jansm04 </div>
                 </Link>} 
-            in January 2024
+            in 2024
         </div>
     )
 }
