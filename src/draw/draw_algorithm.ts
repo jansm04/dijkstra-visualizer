@@ -146,8 +146,17 @@ export const addAlgorithmVisualizer = (
     async function finish() {
         currVertex = null;
         currEdge = null;
-        await sleep(ms); drawState();
-        await sleep(ms); updatePQ(null, true);
+
+        currPos++;
+        if (lastPos > stop) lastPos--;
+        if (lastPos == stop) await sleep(ms); drawState();  
+        if (isPaused) return;
+
+        currPos++;
+        if (lastPos > stop) lastPos--;
+        if (lastPos == stop) await sleep(ms); updatePQ(null, true);  
+        if (isPaused) return;
+
         isFinished = true;
         if (refs.visPromptRef.current) 
             refs.visPromptRef.current.innerHTML = "Visualization Complete.";
@@ -171,9 +180,11 @@ export const addAlgorithmVisualizer = (
         for (let i = 0; i < n; i++) 
             graph.vertices[i].dist = Infinity;
 
-        n = visited.length;
-        visited.slice(0, n);
-    
+        visited.splice(0, visited.length);
+    }
+
+    function removeAlgorithmVisualizer() {
+        reset();
         removeListeners();
     }
 
@@ -221,8 +232,8 @@ export const addAlgorithmVisualizer = (
     }
 
     function removeListeners() {
-        refs.restartRef.current?.removeEventListener('click', reset);
-        refs.editRef.current?.removeEventListener('click', reset);
+        refs.restartRef.current?.removeEventListener('click', removeAlgorithmVisualizer);
+        refs.editRef.current?.removeEventListener('click', removeAlgorithmVisualizer);
         refs.sliderRef.current?.removeEventListener('mousedown', () => isSliderSelected = true);
         refs.pauseRef.current?.removeEventListener('click', pauseOrPlay);
         document.removeEventListener('mouseup', changeSpeed);
@@ -231,8 +242,8 @@ export const addAlgorithmVisualizer = (
     addPQVisualizer(refs.pqRef, graph.pq);
     dijkstras();
 
-    refs.restartRef.current?.addEventListener('click', reset);
-    refs.editRef.current?.addEventListener('click', reset);
+    refs.restartRef.current?.addEventListener('click', removeAlgorithmVisualizer);
+    refs.editRef.current?.addEventListener('click', removeAlgorithmVisualizer);
     refs.sliderRef.current?.addEventListener('mousedown', () => isSliderSelected = true);
     refs.pauseRef.current?.addEventListener('click', pauseOrPlay);
     document.addEventListener('mouseup', changeSpeed);
