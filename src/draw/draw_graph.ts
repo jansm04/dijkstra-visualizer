@@ -301,7 +301,7 @@ export const addGraphVisualizer = (
     }
 
     function drawGraph() {
-        var colourScheme = { def: 'gray', selected: 'royalblue'};
+        var colourScheme = { def: 'gray', selected: 'blue'};
         const ctx = resetContext();
         if (!ctx) return;
         if (tempEdge && !tempEdge.vertex.containsPoint(tempEdge.px, tempEdge.py)) { 
