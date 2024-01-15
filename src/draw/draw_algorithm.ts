@@ -18,9 +18,9 @@ export const addAlgorithmVisualizer = (
     const rect = refs.canvasRef.current?.getBoundingClientRect();
 
     const colourScheme = { 
-        unvisisted: 'lightgray', // unvisited vertices or edge
-        used: 'navy', // used edge or visited vertex
-        current: 'gold' // current edge or vertex
+        unvisisted: 'lightgray',
+        used: '#075985', // sky-800
+        current: 'gold' 
     };
 
     var visited = new Array<Vertex>();
