@@ -45,7 +45,7 @@ const Select = ({
                 </span>
                 <button
                     ref={refs.restartRef} 
-                    className="py-1 px-6 mt-5 ml-4 float-left text-gray-700 italic border border-gray-800 text-center text-[13px] rounded hover:bg-amber-400" 
+                    className="py-1 px-6 mt-5 ml-4 float-left text-gray-100 italic border border-gray-800 bg-sky-800 text-center text-[13px] rounded hover:bg-sky-700" 
                     hidden={true}>
                         Restart Visualization
                 </button>
