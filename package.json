@@ -13,6 +13,7 @@
     "@emotion/styled": "^11.11.0",
     "@mui/base": "^5.0.0-beta.30",
     "@mui/material": "^5.15.4",
+    "@vercel/analytics": "^1.1.1",
     "mui": "^0.0.1",
     "next": "14.0.4",
     "react": "^18",
