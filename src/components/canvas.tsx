@@ -10,7 +10,7 @@ const Canvas = ({
             ref={canvasRef} 
             height={500} 
             width={650} 
-            className="block border border-gray-700 outline-none bg-white rounded-lg select-none" 
+            className="block outline-none bg-white rounded-md select-none" 
             tabIndex={0}>
         </canvas>
     )
