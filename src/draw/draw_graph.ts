@@ -25,6 +25,7 @@ export const addGraphVisualizer = (
     var takenLetters = "";
 
     function onDoubleClick(e: MouseEvent) {
+        e.preventDefault();
         if (inSelectionMode || inVisMode) return;
         if (isEmpty() && refs.emptyPromptRef.current && refs.emptyPromptRef.current.hidden == false)
             refs.emptyPromptRef.current.hidden = true;
