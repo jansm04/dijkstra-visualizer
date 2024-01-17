@@ -103,7 +103,12 @@ export const addAlgorithmVisualizer = (
             if (currVertex != startVertex) { 
                 currPos++;
                 if (lastPos > stop) lastPos--;
-                if (lastPos == stop) await sleep(ms); isSleeping= false; drawState(); updatePQ(null, false);
+                if (lastPos == stop) { 
+                    await sleep(ms); 
+                    isSleeping= false; 
+                }
+                drawState(); 
+                updatePQ(null, false);
                 if (isPaused) return;
             }
             graph.pq.dequeue();
@@ -112,7 +117,11 @@ export const addAlgorithmVisualizer = (
 
                 currPos++;
                 if (lastPos > stop) lastPos--;
-                if (lastPos == stop) await sleep(ms); isSleeping= false; updatePQ(null, false);
+                if (lastPos == stop) { 
+                    await sleep(ms); 
+                    isSleeping= false; 
+                }
+                updatePQ(null, false);
                 if (isPaused) return;
 
                 // loop through all edges
@@ -125,7 +134,12 @@ export const addAlgorithmVisualizer = (
 
                         currPos++;
                         if (lastPos > stop) lastPos--;
-                        if (lastPos == stop) await sleep(ms); isSleeping= false; drawState(); updatePQ(neighbor, false);
+                        if (lastPos == stop) { 
+                            await sleep(ms); 
+                            isSleeping= false; 
+                        }
+                        drawState(); 
+                        updatePQ(neighbor, false);
                         if (isPaused) return;
 
                         if (currVertex.dist + currEdge.weight < neighbor.dist) {
@@ -135,7 +149,11 @@ export const addAlgorithmVisualizer = (
 
                             currPos++;
                             if (lastPos > stop) lastPos--;
-                            if (lastPos == stop) await sleep(ms); isSleeping= false; updatePQ(neighbor, false);   
+                            if (lastPos == stop) { 
+                                await sleep(ms); 
+                                isSleeping= false; 
+                            }
+                            updatePQ(neighbor, false);
                             if (isPaused) return;
                         } 
                     }        
@@ -151,12 +169,20 @@ export const addAlgorithmVisualizer = (
 
         currPos++;
         if (lastPos > stop) lastPos--;
-        if (lastPos == stop) await sleep(ms); isSleeping= false; drawState();  
+        if (lastPos == stop) {
+            await sleep(ms); 
+            isSleeping= false; 
+        }
+        drawState();  
         if (isPaused) return;
 
         currPos++;
         if (lastPos > stop) lastPos--;
-        if (lastPos == stop) await sleep(ms); isSleeping= false; updatePQ(null, true);  
+        if (lastPos == stop) { 
+            await sleep(ms); 
+            isSleeping= false; 
+        }
+        updatePQ(null, true);  
         if (isPaused) return;
 
         isFinished = true;
@@ -226,7 +252,10 @@ export const addAlgorithmVisualizer = (
         if (isPaused) {
             pause.innerHTML = "Pause";
             prompt.innerHTML = "Visualizing Dijkstra&apos;s Algorithm...";
-            while (isSleeping) await sleep(ms); isSleeping = false;
+            if (isSleeping) {
+                await sleep(ms); 
+                isSleeping = false;
+            }
             isPaused = false;
             reset();
             if (startVertex instanceof Vertex)
