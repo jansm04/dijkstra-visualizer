@@ -31,6 +31,7 @@ export const addAlgorithmVisualizer = (
     var isFinished = false;
     var isSliderSelected = false;
     var isPaused = false;
+    var wasPaused = false;
     var isSleeping = false;
 
     var currPos = 0;
@@ -82,7 +83,7 @@ export const addAlgorithmVisualizer = (
     }
 
     function sleep(ms: number) {
-        isSleeping= true;
+        isSleeping = true;
         return new Promise(resolve => setTimeout(resolve, ms));
     }
 
@@ -105,7 +106,11 @@ export const addAlgorithmVisualizer = (
                 if (lastPos > stop) lastPos--;
                 if (lastPos == stop) { 
                     await sleep(ms); 
-                    isSleeping= false; 
+                    isSleeping = false; 
+                    if (wasPaused) {
+                        wasPaused = false;
+                        return;
+                    }
                 }
                 drawState(); 
                 updatePQ(null, false);
@@ -119,7 +124,11 @@ export const addAlgorithmVisualizer = (
                 if (lastPos > stop) lastPos--;
                 if (lastPos == stop) { 
                     await sleep(ms); 
-                    isSleeping= false; 
+                    isSleeping = false; 
+                    if (wasPaused) {
+                        wasPaused = false;
+                        return;
+                    }
                 }
                 updatePQ(null, false);
                 if (isPaused) return;
@@ -136,7 +145,11 @@ export const addAlgorithmVisualizer = (
                         if (lastPos > stop) lastPos--;
                         if (lastPos == stop) { 
                             await sleep(ms); 
-                            isSleeping= false; 
+                            isSleeping = false; 
+                            if (wasPaused) {
+                                wasPaused = false;
+                                return;
+                            }
                         }
                         drawState(); 
                         updatePQ(neighbor, false);
@@ -151,7 +164,11 @@ export const addAlgorithmVisualizer = (
                             if (lastPos > stop) lastPos--;
                             if (lastPos == stop) { 
                                 await sleep(ms); 
-                                isSleeping= false; 
+                                isSleeping = false;
+                                if (wasPaused) {
+                                    wasPaused = false;
+                                    return;
+                                } 
                             }
                             updatePQ(neighbor, false);
                             if (isPaused) return;
@@ -250,13 +267,13 @@ export const addAlgorithmVisualizer = (
         if (!pause || !prompt) return;
 
         if (isPaused) {
+            isPaused = false;
+            if (isSleeping) {
+                wasPaused = true;
+                setTimeout(() => wasPaused = false, ms);
+            }
             pause.innerHTML = "Pause";
             prompt.innerHTML = "Visualizing Dijkstra&apos;s Algorithm...";
-            if (isSleeping) {
-                await sleep(ms); 
-                isSleeping = false;
-            }
-            isPaused = false;
             reset();
             if (startVertex instanceof Vertex)
                 startVertex.dist = 0;
