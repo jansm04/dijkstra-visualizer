@@ -29,7 +29,7 @@ export const Main = () => {
                     <Instructions />
                     <Options refs={refs} />
                     <Slider refs={refs} />
-                    <Pause refs={refs} />
+                    <Pause pauseRef={refs.pauseRef} />
                 </div>
             </div>
             <Footer />
