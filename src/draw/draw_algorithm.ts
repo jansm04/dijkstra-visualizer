@@ -189,6 +189,10 @@ export const addAlgorithmVisualizer = (
         if (lastPos == stop) {
             await sleep(ms); 
             isSleeping= false; 
+            if (wasPaused) {
+                wasPaused = false;
+                return;
+            } 
         }
         drawState();  
         if (isPaused) return;
@@ -198,6 +202,10 @@ export const addAlgorithmVisualizer = (
         if (lastPos == stop) { 
             await sleep(ms); 
             isSleeping= false; 
+            if (wasPaused) {
+                wasPaused = false;
+                return;
+            } 
         }
         updatePQ(null, true);  
         if (isPaused) return;
