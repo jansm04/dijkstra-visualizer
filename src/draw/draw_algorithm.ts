@@ -28,21 +28,15 @@ export const addAlgorithmVisualizer = (
     var currVertex: Vertex | undefined | null;
     var currEdge: Edge | undefined | null;
     var startVertex: Vertex | undefined;
+
     var isFinished = false;
     var isSliderSelected = false;
-
+    var isSleeping = false;
     var isPaused = false;
     var pauseCount = 0;
-
-    // var wasPaused = false;
-    var isSleeping = false;
-    // var wasBlocked = false;
-
     var currPos = 0;
     var lastPos = 0;
-
     var count = 1;
-    var stop = 0;
 
     // speed
     var ms: number = getPercentage();
@@ -99,77 +93,54 @@ export const addAlgorithmVisualizer = (
         usedEdges.push(edge);
     }
 
+    async function checkpoint(
+        draw: () => void, 
+        update: (highlight: Vertex | null, isFinished: boolean) => void , 
+        highlight: Vertex | null, 
+        isFinished: boolean) {
+            currPos++;
+            if (lastPos > 0) lastPos--;
+            if (lastPos == 0) { 
+                await sleep(ms); 
+                isSleeping = false;
+                draw(); 
+                update(highlight, isFinished);
+                if (pauseCount) {
+                    pauseCount--;
+                    return true;
+                }
+            }
+            return false;
+    }
+
     async function dijkstras() {
         startVertex = currVertex = graph.pq.front();
         while (!graph.pq.empty()) {
             currEdge = null;
             currVertex = graph.pq.front();
-
-            currPos++;
-            if (lastPos > stop) lastPos--;
-            if (lastPos == stop) { 
-                await sleep(ms); 
-                isSleeping = false;
-                drawState(); 
-                updatePQ(null, false);
-                if (pauseCount) {
-                    pauseCount--;
-                    return;
-                }
-            }
+            var wasPaused = await checkpoint(drawState, updatePQ, null, false);
+            if (wasPaused) return;
 
             graph.pq.dequeue();
             if (currVertex) {
                 visited.push(currVertex);
-
-                currPos++;
-                if (lastPos > stop) lastPos--;
-                if (lastPos == stop) { 
-                    await sleep(ms); 
-                    isSleeping = false;
-                    updatePQ(null, false);
-                    if (pauseCount) {
-                        pauseCount--;
-                        return;
-                    }
-                }
+                var wasPaused = await checkpoint(() => null, updatePQ, null, false);
+                if (wasPaused) return;
 
                 for (let i = 0; i < currVertex.edges.length; i++) {
-
                     currEdge = currVertex.edges[i];
                     var neighbor: Vertex = currEdge.va == currVertex ? currEdge.vb : currEdge.va;
 
                     if (!visited.includes(neighbor)) {
-
-                        currPos++;
-                        if (lastPos > stop) lastPos--;
-                        if (lastPos == stop) { 
-                            await sleep(ms); 
-                            isSleeping = false;
-                            drawState(); 
-                            updatePQ(neighbor, false);
-                            if (pauseCount) {
-                                pauseCount--;
-                                return;
-                            }
-                        }
-
+                        var wasPaused = await checkpoint(drawState, updatePQ, neighbor, false);
+                        if (wasPaused) return;
                         if (currVertex.dist + currEdge.weight < neighbor.dist) {
                             neighbor.dist = currVertex.dist + currEdge.weight;
                             addUsedEdge(neighbor, currEdge);  
                             graph.pq.heapifyUp(neighbor.idx);
 
-                            currPos++;
-                            if (lastPos > stop) lastPos--;
-                            if (lastPos == stop) { 
-                                await sleep(ms); 
-                                isSleeping = false;
-                                updatePQ(neighbor, false);
-                                if (pauseCount) {
-                                    pauseCount--;
-                                    return;
-                                }
-                            }
+                            var wasPaused = await checkpoint(() => null, updatePQ, neighbor, false);
+                            if (wasPaused) return;
                         } 
                     }        
                 }
@@ -182,29 +153,11 @@ export const addAlgorithmVisualizer = (
         currVertex = null;
         currEdge = null;
 
-        currPos++;
-        if (lastPos > stop) lastPos--;
-        if (lastPos == stop) { 
-            await sleep(ms); 
-            isSleeping = false;
-            drawState(); 
-            if (pauseCount) {
-                pauseCount--;
-                return;
-            }
-        } 
+        var wasPaused = await checkpoint(drawState, () => null, null, false);
+        if (wasPaused) return;
 
-        currPos++;
-        if (lastPos > stop) lastPos--;
-        if (lastPos == stop) { 
-            await sleep(ms); 
-            isSleeping = false;
-            updatePQ(null, true);
-            if (pauseCount) {
-                pauseCount--;
-                return;
-            }
-        }
+        var wasPaused = await checkpoint(() => null, updatePQ, null, true);
+        if (wasPaused) return;
 
         isFinished = true;
         if (refs.visPromptRef.current) 
