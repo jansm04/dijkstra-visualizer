@@ -30,9 +30,13 @@ export const addAlgorithmVisualizer = (
     var startVertex: Vertex | undefined;
     var isFinished = false;
     var isSliderSelected = false;
+
     var isPaused = false;
-    var wasPaused = false;
+    var pauseCount = 0;
+
+    // var wasPaused = false;
     var isSleeping = false;
+    // var wasBlocked = false;
 
     var currPos = 0;
     var lastPos = 0;
@@ -44,12 +48,12 @@ export const addAlgorithmVisualizer = (
     var ms: number = getPercentage();
 
     function updatePQ(highlight: Vertex | null, isFinished: boolean) {
-        if (isPaused) return;
+        if (pauseCount) return;
         updatePQVisualizer(refs.pqRef, graph.pq, visited, highlight, isFinished);
     }
 
     function drawState() {
-        if (isPaused) return;
+        if (pauseCount) return;
         if (!ctx || !rect) return;
         ctx.clearRect(0, 0, rect.width, rect.height);
         ctx.lineWidth = 2;
@@ -101,21 +105,19 @@ export const addAlgorithmVisualizer = (
             currEdge = null;
             currVertex = graph.pq.front();
 
-            if (currVertex != startVertex) { 
-                currPos++;
-                if (lastPos > stop) lastPos--;
-                if (lastPos == stop) { 
-                    await sleep(ms); 
-                    isSleeping = false; 
-                    if (wasPaused) {
-                        wasPaused = false;
-                        return;
-                    }
-                }
+            currPos++;
+            if (lastPos > stop) lastPos--;
+            if (lastPos == stop) { 
+                await sleep(ms); 
+                isSleeping = false;
                 drawState(); 
                 updatePQ(null, false);
-                if (isPaused) return;
+                if (pauseCount) {
+                    pauseCount--;
+                    return;
+                }
             }
+
             graph.pq.dequeue();
             if (currVertex) {
                 visited.push(currVertex);
@@ -124,16 +126,14 @@ export const addAlgorithmVisualizer = (
                 if (lastPos > stop) lastPos--;
                 if (lastPos == stop) { 
                     await sleep(ms); 
-                    isSleeping = false; 
-                    if (wasPaused) {
-                        wasPaused = false;
+                    isSleeping = false;
+                    updatePQ(null, false);
+                    if (pauseCount) {
+                        pauseCount--;
                         return;
                     }
                 }
-                updatePQ(null, false);
-                if (isPaused) return;
 
-                // loop through all edges
                 for (let i = 0; i < currVertex.edges.length; i++) {
 
                     currEdge = currVertex.edges[i];
@@ -145,15 +145,14 @@ export const addAlgorithmVisualizer = (
                         if (lastPos > stop) lastPos--;
                         if (lastPos == stop) { 
                             await sleep(ms); 
-                            isSleeping = false; 
-                            if (wasPaused) {
-                                wasPaused = false;
+                            isSleeping = false;
+                            drawState(); 
+                            updatePQ(neighbor, false);
+                            if (pauseCount) {
+                                pauseCount--;
                                 return;
                             }
                         }
-                        drawState(); 
-                        updatePQ(neighbor, false);
-                        if (isPaused) return;
 
                         if (currVertex.dist + currEdge.weight < neighbor.dist) {
                             neighbor.dist = currVertex.dist + currEdge.weight;
@@ -165,13 +164,12 @@ export const addAlgorithmVisualizer = (
                             if (lastPos == stop) { 
                                 await sleep(ms); 
                                 isSleeping = false;
-                                if (wasPaused) {
-                                    wasPaused = false;
+                                updatePQ(neighbor, false);
+                                if (pauseCount) {
+                                    pauseCount--;
                                     return;
-                                } 
+                                }
                             }
-                            updatePQ(neighbor, false);
-                            if (isPaused) return;
                         } 
                     }        
                 }
@@ -186,29 +184,27 @@ export const addAlgorithmVisualizer = (
 
         currPos++;
         if (lastPos > stop) lastPos--;
-        if (lastPos == stop) {
+        if (lastPos == stop) { 
             await sleep(ms); 
-            isSleeping= false; 
-            if (wasPaused) {
-                wasPaused = false;
+            isSleeping = false;
+            drawState(); 
+            if (pauseCount) {
+                pauseCount--;
                 return;
-            } 
-        }
-        drawState();  
-        if (isPaused) return;
+            }
+        } 
 
         currPos++;
         if (lastPos > stop) lastPos--;
         if (lastPos == stop) { 
             await sleep(ms); 
-            isSleeping= false; 
-            if (wasPaused) {
-                wasPaused = false;
+            isSleeping = false;
+            updatePQ(null, true);
+            if (pauseCount) {
+                pauseCount--;
                 return;
-            } 
+            }
         }
-        updatePQ(null, true);  
-        if (isPaused) return;
 
         isFinished = true;
         if (refs.visPromptRef.current) 
@@ -224,22 +220,28 @@ export const addAlgorithmVisualizer = (
         await sleep(200); isSleeping= false; drawState();
     }
 
-    function reset() {
+    function resetTable() {
         var table = refs.pqRef.current;
         if (!table) return;
         var n = table.rows.length;
         for (let i = 1; i < n; i++)
             table.deleteRow(1);
+    }
 
-        n = graph.vertices.length;
+    function resetVertices() {
+        var n = graph.vertices.length;
         for (let i = 0; i < n; i++) 
             graph.vertices[i].dist = Infinity;
+    }
 
+    function resetVisited() {
         visited.splice(0, visited.length);
     }
 
     function removeAlgorithmVisualizer() {
-        reset();
+        resetTable();
+        resetVertices();
+        resetVisited();
         removeListeners();
     }
 
@@ -276,23 +278,19 @@ export const addAlgorithmVisualizer = (
 
         if (isPaused) {
             isPaused = false;
-            if (isSleeping) {
-                wasPaused = true;
-                setTimeout(() => wasPaused = false, ms);
-            }
             pause.innerHTML = "Pause";
             prompt.innerHTML = "Visualizing Dijkstra&apos;s Algorithm...";
-            reset();
+            resetVertices();
+            resetVisited();
             if (startVertex instanceof Vertex)
                 startVertex.dist = 0;
             graph.pq.buildHeap(graph.vertices);
             lastPos = currPos;
             currPos = 0;
-            
-            addPQVisualizer(refs.pqRef, graph.pq);
             dijkstras();
         } else {
             isPaused = true;
+            pauseCount++;
             pause.innerHTML = "Resume";
             prompt.innerHTML = "Visualization Paused.";
         }
