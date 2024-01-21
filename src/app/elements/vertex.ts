@@ -12,10 +12,10 @@ class Vertex {
     isCursorVisible: boolean;
     idx: number;
 
-    constructor(x: number, y: number) {
+    constructor(x: number, y: number, label: string) {
         this.x = x;
         this.y = y;
-        this.label = "";
+        this.label = label;
         this.edges = new Array<Edge>();
         this.dist = Infinity;
         this.isCursorVisible = true;

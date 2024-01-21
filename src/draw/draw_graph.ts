@@ -33,7 +33,7 @@ export const addGraphVisualizer = (
         if (!point) return;
         selectedObject = selectObject(point.x, point.y);
         if (!selectedObject && graph.vertices.length < 26) {
-            var vertex: Vertex = new Vertex(point.x, point.y);
+            var vertex: Vertex = new Vertex(point.x, point.y, "");
             selectedObject = vertex;
             graph.vertices.push(vertex);
         }
