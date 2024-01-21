@@ -7,6 +7,9 @@ import TempEdge from "@/app/elements/temp_edge";
 import Refs from "@/interfaces/refs";
 import Graph from "@/interfaces/graph";
 
+// builder
+import { buildGraph } from "@/build/build_graph";
+
 export const addGraphVisualizer = (
     refs: Refs,
     graph: Graph
@@ -33,7 +36,7 @@ export const addGraphVisualizer = (
         if (!point) return;
         selectedObject = selectObject(point.x, point.y);
         if (!selectedObject && graph.vertices.length < 26) {
-            var vertex: Vertex = new Vertex(point.x, point.y, "");
+            var vertex: Vertex = new Vertex(point.x, point.y, "", true);
             selectedObject = vertex;
             graph.vertices.push(vertex);
         }
@@ -110,7 +113,7 @@ export const addGraphVisualizer = (
 
         selectedObject = selectObject(point.x, point.y);
         if (selectedObject instanceof Vertex && tempEdge && selectedObject != tempEdge.vertex) {
-            var edge = new Edge(tempEdge.vertex, selectedObject, 0);
+            var edge = new Edge(tempEdge.vertex, selectedObject, 0, true);
             selectNewEdge(edge);
             graph.edges.push(edge);
         }
@@ -301,6 +304,15 @@ export const addGraphVisualizer = (
         return ctx;
     }
 
+    function prebuild() {
+        selectedObject = null;
+        startingVertex = null;
+        var pb = buildGraph();
+        graph.vertices = pb.vertices;
+        graph.edges = pb.edges;
+        drawGraph();
+    }
+
     function drawGraph() {
         var colourScheme = { def: 'gray', selected: '#0284c7'};
         const ctx = resetContext();
@@ -361,6 +373,7 @@ export const addGraphVisualizer = (
         if (refs.emptyPromptRef.current) refs.emptyPromptRef.current.hidden = true;
         if (refs.startVisRef.current) refs.startVisRef.current.hidden = true;
         if (refs.editRef.current) refs.editRef.current.hidden = false;
+        if (refs.buildRef.current) refs.buildRef.current.hidden = true;
 
         drawGraphInSelectionMode();
     }
@@ -394,6 +407,7 @@ export const addGraphVisualizer = (
             refs.visPromptRef.current.hidden = true;
         }
         if (refs.editRef.current) refs.editRef.current.hidden = true;
+        if (refs.buildRef.current) refs.buildRef.current.hidden = false;
         if (refs.restartRef.current) refs.restartRef.current.hidden = true;
         if (refs.pauseRef.current) refs.pauseRef.current.hidden = true;
         drawGraph();
@@ -427,4 +441,5 @@ export const addGraphVisualizer = (
     refs.startVisRef.current?.addEventListener('click', onSubmitVisualize);
     refs.editRef.current?.addEventListener('click', enterEditMode);
     refs.restartRef.current?.addEventListener('click', restart);
+    refs.buildRef.current?.addEventListener('click', prebuild);
 }
