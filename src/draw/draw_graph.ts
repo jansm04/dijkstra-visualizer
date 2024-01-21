@@ -110,7 +110,7 @@ export const addGraphVisualizer = (
 
         selectedObject = selectObject(point.x, point.y);
         if (selectedObject instanceof Vertex && tempEdge && selectedObject != tempEdge.vertex) {
-            var edge = new Edge(tempEdge.vertex, selectedObject);
+            var edge = new Edge(tempEdge.vertex, selectedObject, 0);
             selectNewEdge(edge);
             graph.edges.push(edge);
         }

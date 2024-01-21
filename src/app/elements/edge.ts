@@ -13,8 +13,8 @@ class Edge {
     vb: Vertex;
     isCursorVisible: boolean;
     
-    constructor(va: Vertex, vb: Vertex) {
-        this.weight = 0;
+    constructor(va: Vertex, vb: Vertex, weight: number) {
+        this.weight = weight;
         this.va = va;
         this.vb = vb;
 
