@@ -13,7 +13,7 @@ class Edge {
     vb: Vertex;
     isCursorVisible: boolean;
     
-    constructor(va: Vertex, vb: Vertex, weight: number) {
+    constructor(va: Vertex, vb: Vertex, weight: number, isCursorVisible: boolean) {
         this.weight = weight;
         this.va = va;
         this.vb = vb;
@@ -26,7 +26,7 @@ class Edge {
         this.ay = endpoints.ay;
         this.bx = endpoints.bx;
         this.by = endpoints.by;
-        this.isCursorVisible = true;
+        this.isCursorVisible = isCursorVisible;
     }
 
     drawCursor(ctx: CanvasRenderingContext2D, point: {x: number, y: number}) {

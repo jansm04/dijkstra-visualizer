@@ -12,13 +12,13 @@ class Vertex {
     isCursorVisible: boolean;
     idx: number;
 
-    constructor(x: number, y: number, label: string) {
+    constructor(x: number, y: number, label: string, isCursorVisible: boolean) {
         this.x = x;
         this.y = y;
         this.label = label;
         this.edges = new Array<Edge>();
         this.dist = Infinity;
-        this.isCursorVisible = true;
+        this.isCursorVisible = isCursorVisible;
         this.idx = -1;
     }
 
