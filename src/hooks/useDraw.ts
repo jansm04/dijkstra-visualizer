@@ -21,6 +21,7 @@ export const useDraw = () => {
         startVisRef: useRef<HTMLButtonElement>(null),
         resetRef: useRef<HTMLButtonElement>(null),
         editRef: useRef<HTMLButtonElement>(null),
+        buildRef: useRef<HTMLButtonElement>(null),
         restartRef: useRef<HTMLButtonElement>(null),
         pauseRef: useRef<HTMLButtonElement>(null),
         // prompts

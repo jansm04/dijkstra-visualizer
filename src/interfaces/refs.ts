@@ -9,6 +9,7 @@ interface Refs {
     startVisRef: RefObject<HTMLButtonElement>,
     resetRef: RefObject<HTMLButtonElement>,
     editRef: RefObject<HTMLButtonElement>,
+    buildRef: RefObject<HTMLButtonElement>,
     restartRef: RefObject<HTMLButtonElement>,
     pauseRef: RefObject<HTMLButtonElement>,
     // prompts
