@@ -49,7 +49,7 @@ export const buildGraph = () => {
     edges.push(new Edge(i, l, 3, false));
     edges.push(new Edge(k, h, 4, false));
     edges.push(new Edge(h, j, 11, false));
-    edges.push(new Edge(h, d, 18, false));
+    edges.push(new Edge(h, d, 3, false));
     edges.push(new Edge(e, h, 6, false));
     edges.push(new Edge(e, f, 11, false));
     edges.push(new Edge(f, i, 15, false));
