@@ -36,6 +36,16 @@ const styleCell = (cell: HTMLTableCellElement) => {
     cell.style.borderColor = 'gray';
 }
 
+/* 
+Adds rows to the priority queue table to visualize
+each vertex in the priority queue.  
+
+Each row the vertex's label and its distance
+to the start vertex
+
+If a vertex's distance is Infinity, its label is 
+simply shortened to "Inf"
+*/
 export const addPQVisualizer = (
     pqRef: RefObject<HTMLTableElement>,
     pq: PriorityQueue
@@ -58,6 +68,14 @@ export const addPQVisualizer = (
     }
 }
 
+/* 
+Updates the rows in the priority queue table and
+styles the rows depending on if the vertices have
+been visited or not.
+
+A highlighted row corresponds to a 'current' vertex
+in the graph traversal.
+*/
 export const updatePQVisualizer = (
     pqRef: RefObject<HTMLTableElement>,
     pq: PriorityQueue,
@@ -70,8 +88,11 @@ export const updatePQVisualizer = (
     visited.forEach((vertex) => {
         if (!pqRef.current) return;
         var row = pqRef.current.rows[idx];
-        if (isFinished) styleUnvisitedRow(row);
+
+        // automatically style as 'unvisited' is the visualization is finished
+        if (isFinished) styleUnvisitedRow(row); 
         else styleVisitedRow(row);
+
         row.cells[0].textContent = vertex.label;
         if (vertex.dist == Infinity)
             row.cells[1].textContent = "Inf";
@@ -83,8 +104,11 @@ export const updatePQVisualizer = (
     pq.vertices.forEach((vertex) => {
         if (!pqRef.current) return;
         var row = pqRef.current.rows[idx];
+
+        // if current vertex in traversal
         if (vertex == highlight) styleHighlightRow(row);
         else styleUnvisitedRow(row);
+        
         row.cells[0].textContent = vertex.label;
         if (vertex.dist == Infinity)
             row.cells[1].textContent = "Inf";

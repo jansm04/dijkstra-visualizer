@@ -2,11 +2,18 @@
 import Vertex from "@/app/elements/vertex";
 import Edge from "@/app/elements/edge";
 
+/* 
+Builds a graph and returns it as an array of vertices and edges
+*/
 export const buildGraph = () => {
     
     var vertices = new Array<Vertex>();
     var edges = new Array<Edge>();
 
+    /* 
+    create a bunch of vertices from labels "A" through "L",
+    and store as variables so we can create edges
+    */
     var a = new Vertex(89, 78, "A", false);
     var b = new Vertex(331, 48, "B", false);
     var c = new Vertex(564, 80, "C", false);
@@ -20,6 +27,7 @@ export const buildGraph = () => {
     var k = new Vertex(331, 442, "K", false);
     var l = new Vertex(566, 417, "L", false);
 
+    // add all vertices to array
     vertices.push(a);
     vertices.push(b);
     vertices.push(c);
@@ -33,6 +41,10 @@ export const buildGraph = () => {
     vertices.push(k);
     vertices.push(l);
 
+    /*
+    create edges using vertices above and add 
+    them to edges array
+    */
     edges.push(new Edge(a, b, 14, false));
     edges.push(new Edge(d, a, 9, false));
     edges.push(new Edge(b, c, 13, false));
