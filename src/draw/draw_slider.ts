@@ -6,11 +6,8 @@ export const addSlider = (
     var isThumbMoving = false;
 
     /* 
-    Callback function for mouse down event listener.
-
-    Styles the thumb of the slider so that it's x-position
-    is based on the mouse's x-position. Sets isThumbMoving to
-    true.
+    Callback function for mouse down event listener. Styles the thumb of the slider so that it's x-position is based 
+    on the mouse's x-position. Sets isThumbMoving to true.
     */
     refs.sliderRef.current?.addEventListener('mousedown', (e: MouseEvent) => {
         isThumbMoving = true;
@@ -23,11 +20,8 @@ export const addSlider = (
     })
 
     /* 
-    Callback function for mouse move event listener.
-    
-    Styles the thumb of the slider so that it's x-position
-    is based on the mouse's x-position within the bounds of the
-    slider.
+    Callback function for mouse move event listener. Styles the thumb of the slider so that it's x-position is based 
+    on the mouse's x-position within the bounds of the slider.
     */
     document.addEventListener('mousemove', (e: MouseEvent) => {
         const slideRect = refs.sliderRef.current?.getBoundingClientRect();
@@ -35,8 +29,7 @@ export const addSlider = (
         if (isThumbMoving && slideRect && thumb) {
             var thumbX = e.clientX - slideRect.left;
 
-            // style thumb using distance from mouse event to end of slider
-            // only IF mouse event is within bounds
+            // style thumb using distance from mouse event to end of slider only IF mouse event is within bounds
             if (thumbX >= 0 && thumbX <= slideRect.width)
                 thumb.style.left = `${thumbX}px`;
         }

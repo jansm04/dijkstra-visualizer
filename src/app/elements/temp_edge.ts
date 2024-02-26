@@ -21,10 +21,7 @@ class TempEdge {
         
     }
 
-    /* 
-    Draws the temp edge on the canvas using the vertex as one
-    endpoint and the mouse as another
-    */
+    // Draws the temp edge on the canvas using the vertex as one endpoint and the mouse as another
     draw(ctx: CanvasRenderingContext2D) {
         this.setClosestPoint(this.px, this.py);
         ctx.beginPath();
@@ -33,10 +30,7 @@ class TempEdge {
         ctx.stroke();
     }
 
-    /* 
-    Resets the vertex endpoint based on the new position
-    of the mouse
-    */
+    // Resets the vertex endpoint based on the new position of the mouse
     setClosestPoint(px: number, py: number) {
         var endpoint = this.vertex.computeClosestPoint(px, py);
         this.vx = endpoint.px;

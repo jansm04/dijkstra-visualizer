@@ -38,25 +38,21 @@ export const addAlgorithmVisualizer = (
     var pauseCount = 0; // keep track of pause button clicks
     var currPos = 0; // keep track of step in traversal
     var lastPos = 0; // to remember step at last pause
+
     var count = 1; // for flash to signal completion
 
     var ms: number = getPercentage(); // speed of the animation
 
 
-    /* 
-    Updates the priority queue visualization using the new 
-    state of the priority queue
-    */
+    // Updates the priority queue visualization using the new state of the priority queue
     function updatePQ(highlight: Vertex | null, isFinished: boolean) {
         if (pauseCount) return;
         updatePQVisualizer(refs.pqRef, graph.pq, visited, highlight, isFinished);
     }
 
     /* 
-    Draws the current state of the graph using the 
-    array of visited vertices, the array of used edges,
-    and the current vertex and edge. Returns immediately 
-    if the pause button is clicked 
+    Draws the current state of the graph using the array of visited vertices, the array of used edges,
+    and the current vertex and edge. Returns immediately if the pause button is clicked 
     */
     function drawState() {
         if (pauseCount) return;
@@ -97,10 +93,8 @@ export const addAlgorithmVisualizer = (
     }
 
     /* 
-    Returns a promise that is not resolves until after the given
-    time has passed. Serves as a sleep function that allows the
-    animation to occur and so that the user can alter the speed of 
-    the animation
+    Returns a promise that is not resolves until after the given time has passed. Serves as a sleep function that 
+    allows the animation to occur and so that the user can alter the speed of the animation
     */
     function sleep(ms: number) {
         isSleeping = true;
@@ -108,12 +102,9 @@ export const addAlgorithmVisualizer = (
     }
 
     /* 
-    Adds a new edge to the list of used edges. This function 
-    also takes a vertex that the new edge is connecting to 
-    (opposite from the current vertex). If that vertex already 
-    has a used edge as one of its edges, then the function 
-    removes that edge from the list of used edges before adding 
-    the new edge.
+    Adds a new edge to the list of used edges. This function also takes a vertex that the new edge is connecting to 
+    (opposite from the current vertex). If that vertex already has a used edge as one of its edges, then the function 
+    removes that edge from the list of used edges before adding the new edge.
     */
     function addUsedEdge(vertex: Vertex, edge: Edge) {
 
@@ -129,23 +120,15 @@ export const addAlgorithmVisualizer = (
     }
 
     /* 
-    A checkpoint for each step in the algorithm traversal. 
-    
-    Updates the current position in the traversal
-    Updates the last position in the traversal (if traversing the 
-    pause step)
-    Sleeps for the specified number of milliseconds
-    Draws the new state of the graph
-    Draws the new state of the priority queue
-    Returns true if the pause button was pushed while asleep, false otherwise
+    A checkpoint for each step in the algorithm traversal. Returns true if the pause button was pushed while asleep, false otherwise
     */
     async function checkpoint(
         draw: () => void, 
         update: (highlight: Vertex | null, isFinished: boolean) => void , 
         highlight: Vertex | null, 
         isFinished: boolean) {
-            currPos++;
-            if (lastPos > 0) lastPos--;
+            currPos++; // update the current position in the traversal
+            if (lastPos > 0) lastPos--; // updates the last position in the traversal (if traversing the pause step)
 
             // if not traversing to pause step (if in animation)
             if (lastPos == 0) { 
@@ -153,7 +136,7 @@ export const addAlgorithmVisualizer = (
                 isSleeping = false;
                 draw(); 
                 update(highlight, isFinished);
-                if (pauseCount) {
+                if (pauseCount) { // check if pause button was pushed while sleep function was called
                     pauseCount--;
                     return true;
                 }
@@ -164,16 +147,13 @@ export const addAlgorithmVisualizer = (
     /* 
     --  DIJKSTRAS ALGORITHM --
 
-    Traverses through the graph via the priority queue 
-    and computes the shortest path from the starting vertex
+    Traverses through the graph via the priority queue and computes the shortest path from the starting vertex
     to every other vertex.
 
-    Calls checkpoint function to visualize the state of the 
-    graph at each step in the traversal. If at any point the 
-    checkpoint function returns true, the function returns
+    Calls checkpoint function to visualize the state of the graph at each step in the traversal. If at any point the 
+    checkpoint function returns true, the function returns, with the current position saved for when the resume button is pushed.
 
-    When finished, calls a 'finish' function to draw flash 
-    and update other elements
+    When finished, calls a 'finish' function to draw flash and update other elements
     */
     async function dijkstras() {
 
@@ -230,9 +210,8 @@ export const addAlgorithmVisualizer = (
     }
 
     /* 
-    Finishes the visualization by resetting variables,
-    'flashing' the graph once and updating the prompts 
-    below the canvas
+    Finishes the visualization by resetting variables, 'flashing' the graph once and updating 
+    the prompts below the canvas
     */
     async function finish() {
 
@@ -264,10 +243,8 @@ export const addAlgorithmVisualizer = (
         await sleep(200); isSleeping= false; drawState();
     }
 
-    /* 
-    Resets the priority queue table by deleting 
-    each row one by one
-    */
+    
+    // Resets the priority queue table by deleting each row one by one
     function resetTable() {
         var table = refs.pqRef.current;
         if (!table) return;
@@ -276,29 +253,22 @@ export const addAlgorithmVisualizer = (
             table.deleteRow(1);
     }
 
-    /* 
-    Resets the vertices in the graph by setting
-    the distance of each vertex to infinity
-    */    
+    
+    // Resets the vertices in the graph by setting the distance of each vertex to infinity    
     function resetVertices() {
         var n = graph.vertices.length;
         for (let i = 0; i < n; i++) 
             graph.vertices[i].dist = Infinity;
     }
 
-    /* 
-    Resets the visited vertices in the graph 
-    by setting by emptying the array
-    */ 
+    
+    // Resets the visited vertices in the graph by setting by emptying the array
     function resetVisited() {
         visited.splice(0, visited.length);
     }
 
-    /* 
-    Rests the priority queue table, the vertices
-    and the array of visited vertices. Also removes
-    all event listeners
-    */
+    
+    // Rests the priority queue table, the vertices and the array of visited vertices. Also removes all event listeners
     function removeAlgorithmVisualizer() {
         resetTable();
         resetVertices();
@@ -309,18 +279,12 @@ export const addAlgorithmVisualizer = (
     /* 
     Returns the new speed set by slider.
 
-    The function works by first calculating the 
-    percentage of the slider thumb position in 
-    relation to the length of the slider.
-
-    The function then calculates the speed factor 
-    using the formula: 
+    The function works by first calculating the percentage of the slider thumb position in relation to the length of the slider.
+    The function then calculates the speed factor using the formula: 
 
         factor = 0.25 * 2^(4 * percentage)
 
-    And then returns 1000 / speed factor to 
-    update the new speed. This creates a scale
-    so the slider has the following intervals:
+    And then returns 1000 / speed factor to update the new speed. This creates a scale so the slider has the following intervals,
 
         0.25x
         0.5x
@@ -328,7 +292,7 @@ export const addAlgorithmVisualizer = (
         2x
         4x
 
-    At equal distances in the slider
+    at equal distances in the slider
     */
     function getPercentage() {
         const slideRect = refs.sliderRef.current?.getBoundingClientRect();
@@ -343,8 +307,7 @@ export const addAlgorithmVisualizer = (
     }
 
     /* 
-    Update the speed of the animation using the slider
-    and set the new position of the thumb using the 
+    Update the speed of the animation using the slider and set the new position of the thumb using the 
     position of the mouse
     */
     function changeSpeed(e: MouseEvent) {
@@ -367,13 +330,10 @@ export const addAlgorithmVisualizer = (
     }
 
     /* 
-    If the animation is paused, the function updates the html 
-    accordingly, resets the visited array, and the priority queue. 
-    It then calls dijkstras algorithm from the start and runs 
-    without animation until the position it was last paused at.
+    If the animation is paused, the function updates the html accordingly, resets the visited array, and the priority queue. 
+    It then calls dijkstras algorithm from the start and runs without animation until the position it was last paused at.
 
-    If the animation is running, the function updates the html
-    accordingly and signals that the animation was paused.
+    If the animation is running, the function updates the html accordingly and signals that the animation was paused.
     */
     async function pauseOrPlay() {
         var pause = refs.pauseRef.current;

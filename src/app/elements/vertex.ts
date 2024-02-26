@@ -25,10 +25,8 @@ class Vertex {
     }
 
     /*
-    Draws the cursor of the label. Since the cursor has
-    intervals where it is visible and where it isn't 
-    via the variable isCursorVisible, the function checks 
-    that variable and only draw the cursor when isCursorVisible 
+    Draws the cursor of the label. Since the cursor has intervals where it is visible and where it isn't 
+    via the variable isCursorVisible, the function checks that variable and only draw the cursor when isCursorVisible 
     = true, effectively making the cursor 'pulse'
     */
     drawCursor(ctx: CanvasRenderingContext2D) {
@@ -44,10 +42,8 @@ class Vertex {
     }
 
     /*
-    Draws the label of the vertex, if there is one.
-    Uses an offset for the y because the label starts 
-    at the bottom left corner of the text so the function 
-    needs to add a few pixels to make it center
+    Draws the label of the vertex, if there is one. Uses an offset for the y because the label starts at the bottom 
+    left corner of the text so the function needs to add a few pixels to make it center
     */
     drawLabel(ctx: CanvasRenderingContext2D, colour: string) {
         this.drawCursor(ctx);
@@ -61,9 +57,8 @@ class Vertex {
     }
 
     /*
-    Draws the vertex on the canvas with the vertex's x and y
-    being the center. The drawing of the element includes the
-    circle itself, the label of the vertex and the cursor
+    Draws the vertex on the canvas with the vertex's x and y being the center. The drawing of the element includes 
+    the circle itself, the label of the vertex and the cursor
     */
     draw(ctx: CanvasRenderingContext2D, colour: string) {
         ctx.strokeStyle = colour;
@@ -73,17 +68,12 @@ class Vertex {
         this.drawLabel(ctx, colour);
     }
     
-    /*
-    Adds an edge to the vertex, which also 'adds'
-    an edge to the graph and later lets us traverse it
-    */
+    // Adds an edge to the vertex, which also 'adds' an edge to the graph and later lets us traverse it
     addEdge(edge: Edge) {
         this.edges.push(edge);
     }
 
-    /*
-    Removes an edge from the vertex
-    */
+    // Removes an edge from the vertex
     removeEdge(edge: Edge) {
         for (let i = 0; i < this.edges.length; i++) {
             if (this.edges[i] == edge) {
@@ -94,15 +84,11 @@ class Vertex {
     }
 
     /*
-    Computes the closest point on the circle to 
-    the given {x, y}. 
+    Computes the closest point on the circle to the given {x, y}. 
     
-    The function does this by first
-    computing the x-distance, y-distance, and total
-    distance to the center of the vertex, then adding the
-    ratio of each coordinate distance over the total distance
-    times the vertex radius to the center of the vertex,
-    resulting in a point on the circle itself
+    The function does this by first computing the x-distance, y-distance, and total distance to the center 
+    of the vertex, then adding the ratio of each coordinate distance over the total distance times the vertex 
+    radius to the center of the vertex, resulting in a point on the circle itself
     */
     computeClosestPoint(x: number, y: number) {
         var distX = x - this.x;
@@ -114,9 +100,8 @@ class Vertex {
         return {px, py};
     }
 
-    /* 
-    Returns true if the vertex contains the given x and y coordinates 
-    */
+
+    // Returns true if the vertex contains the given x and y coordinates 
     containsPoint(x: number, y: number) {
         return vertexRadius*vertexRadius > (x - this.x)*(x - this.x) + (y - this.y)*(y - this.y);
     }

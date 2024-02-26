@@ -21,8 +21,7 @@ export const addGraphVisualizer = (
     var heldObject: Vertex | null = null; // vertex being moved
 
     /* 
-    Original position of vertex being moved. Used in 
-    case vertex is dropped on another vertex and must be 
+    Original position of vertex being moved. Used in case vertex is dropped on another vertex and must be 
     placed back in original position
     */
     var originalPosition: {x: number, y: number}; 
@@ -37,19 +36,15 @@ export const addGraphVisualizer = (
 
 
     /* 
-    Callback function for the double click event listener.
-    Returns immediately if the user is selecting a start vertex
+    Callback function for the double click event listener. Returns immediately if the user is selecting a start vertex
     or if the visualization is running. 
 
-    If the empty prompt was previously displayed, the function
-    removes this prompt.
+    If the empty prompt was previously displayed, the function removes this prompt.
 
-    If there is NO object at the point of selection, the function 
-    creates a new vertex, sets it as the selected object and adds 
+    If there is NO object at the point of selection, the function creates a new vertex, sets it as the selected object and adds 
     it to the graph.
 
-    If there IS an object at the point of selection, the function 
-    simply keeps it as the selected object and does not create a new
+    If there IS an object at the point of selection, the function simply keeps it as the selected object and does not create a new
     vertex.
     */
     function onDoubleClick(e: MouseEvent) {
@@ -74,21 +69,15 @@ export const addGraphVisualizer = (
     }
 
     /* 
-    Callback function for mouse down event listener.
-    Returns immediately if the visualization is running.
+    Callback function for mouse down event listener. Returns immediately if the visualization is running.
 
-    If the user is selecting a start vertex, then the
-    function checks that the selected object on mouse down
-    is an instance of a Vertex AND that a start vertex 
-    has not yet been selected - if yes, then the start vertex
+    If the user is selecting a start vertex, then the function checks that the selected object on mouse down
+    is an instance of a Vertex AND that a start vertex has not yet been selected - if yes, then the start vertex
     is set and the prompts are updated accordingly
 
-    If the user is NOT selecting a start vertex, then the
-    function creates a new temp edge IF the shift key is 
-    pressed, or sets the held object if the shift key is NOT 
-    pressed and the selected object is a vertex - this 
-    sets up the mouse move event listener to move a held 
-    object if one exists
+    If the user is NOT selecting a start vertex, then the function creates a new temp edge IF the shift key is 
+    pressed, or sets the held object if the shift key is NOT pressed and the selected object is a vertex - this 
+    sets up the mouse move event listener to move a held object if one exists
     */
     function onMouseDown(e: MouseEvent) {
         if (inVisMode) return;
@@ -129,12 +118,10 @@ export const addGraphVisualizer = (
     }
 
     /* 
-    Callback function for the mouse move event listener.
-    Returns immediately if the user is selecting a start vertex
+    Callback function for the mouse move event listener. Returns immediately if the user is selecting a start vertex
     or if the visualization is running.
 
-    If a temp edge exists, then the function adjusts the unconnected 
-    endpoint of the edge depending on whether or not the selected 
+    If a temp edge exists, then the function adjusts the unconnected endpoint of the edge depending on whether or not the selected 
     object is null or a vertex 
     
         - if it is null then the endpoint is simply updated 
@@ -143,8 +130,7 @@ export const addGraphVisualizer = (
         closest point in the selected vertex's circle but a full edge
         is not yet created -- that occurs on the mouse up event
 
-    If a temp edge does not exist but a held object does, then
-    the function updates the position of the held object based
+    If a temp edge does not exist but a held object does, then the function updates the position of the held object based
     on the mouse's position
     */
     function onMouseMove(e: MouseEvent) {
@@ -194,16 +180,13 @@ export const addGraphVisualizer = (
     }
 
     /* 
-    Callback function for the mouse up event listener.
-    Returns immediately if the user is selecting a start vertex
+    Callback function for the mouse up event listener. Returns immediately if the user is selecting a start vertex
     or if the visualization is running.
     
-    If there is a temp edge connected to two vertices, then 
-    the function creates a new edge and adds it to the graph.
+    If there is a temp edge connected to two vertices, then the function creates a new edge and adds it to the graph.
 
-    If there is a held vertex, the function releases the vertex unless
-    it held over an already existing vertex -- in which case the held
-    vertex is relocated back to its original position.
+    If there is a held vertex, the function releases the vertex unless it held over an already existing vertex -- in 
+    which case the held vertex is relocated back to its original position.
     */
     function onMouseUp(e: MouseEvent) {
         if (inSelectionMode || inVisMode) return;
@@ -247,21 +230,16 @@ export const addGraphVisualizer = (
     }
 
     /* 
-    Callback function for the key down event listener.
-    Returns immediately if the user is selecting a start vertex
+    Callback function for the key down event listener. Returns immediately if the user is selecting a start vertex
     or if the visualization is running.
     
-    If the shift key is pressed, then isShiftPressed is simply set
-    to true.
+    If the shift key is pressed, then isShiftPressed is simply set to true.
 
-    If the delete key is pressed over a selected object, then 
-    that object is deleted from the canvas.
+    If the delete key is pressed over a selected object, then that object is deleted from the canvas.
 
-    If a number is pressed while an edge is selected, then its
-    weight is updated with that number.
+    If a number is pressed while an edge is selected, then its weight is updated with that number.
 
-    If an alphabetic character is pressed while a vertex is
-    selected, then its label is updated with that character
+    If an alphabetic character is pressed while a vertex is selected, then its label is updated with that character
     */
     function onKeyDown(e: KeyboardEvent) {
         if (inSelectionMode || inVisMode) return;
@@ -287,12 +265,10 @@ export const addGraphVisualizer = (
     }
 
     /* 
-    Callback function for the key up event listener.
-    Returns immediately if the user is selecting a start vertex
+    Callback function for the key up event listener. Returns immediately if the user is selecting a start vertex
     or if the visualization is running.
     
-    If the shift key was pressed, isShiftPressed is 
-    simply set to false
+    If the shift key was pressed, isShiftPressed is simply set to false
     */
     function onKeyUp(e: KeyboardEvent) {
         if (inSelectionMode || inVisMode) return;
@@ -301,11 +277,8 @@ export const addGraphVisualizer = (
         }
     }
 
-    /* 
-    Returns true if a graph is valid. A graph is valid
-    if all edges have a positive weight and all vertices
-    have a label
-    */
+    
+    // Returns true if a graph is valid. A graph is valid if all edges have a positive weight and all vertices have a label
     function isValid() {
 
         // check edges
@@ -321,9 +294,7 @@ export const addGraphVisualizer = (
         return true;
     }
 
-    /* 
-    Returns true if a graph has no vertices
-    */   
+    // Returns true if a graph has no vertices  
     function isEmpty() {
         return graph.vertices.length == 0;
     }
@@ -331,8 +302,7 @@ export const addGraphVisualizer = (
     /* 
     Sets the weight of an edge using the key provided.
 
-    If the key is a number, then the digit is added to the
-    weight. 
+    If the key is a number, then the digit is added to the weight. 
     
     If the key is a backspace, then the last digit is deleted.
     */    
@@ -357,8 +327,7 @@ export const addGraphVisualizer = (
     /* 
     Sets the label of an vertex using the key provided.
 
-    If the key is a UNIQUE alphabetic character, then 
-    the character is appended to the end of the string
+    If the key is a UNIQUE alphabetic character, then the character is appended to the end of the string
     
     If the key is a backspace, then the last character is deleted.
     */      
@@ -382,8 +351,7 @@ export const addGraphVisualizer = (
     }
 
     /* 
-    Removes a vertex from the graph and all the edges
-    that are connected to it. Also resets the selected 
+    Removes a vertex from the graph and all the edges that are connected to it. Also resets the selected 
     object to null.
     */
     function deleteVertexFromCanvas(vertex: Vertex) {
@@ -400,10 +368,7 @@ export const addGraphVisualizer = (
         graph.vertices.splice(idx, 1);
     }
 
-    /* 
-    Removes an edge from the graph. Also resets
-    the selected object to null.
-    */
+    // Removes an edge from the graph. Also resets the selected object to null.
     function deleteEdgeFromCanvas(edge: Edge) {
         var idx = graph.edges.indexOf(edge);
         edge.va.removeEdge(edge);
@@ -413,10 +378,8 @@ export const addGraphVisualizer = (
         graph.edges.splice(idx, 1);
     }
 
-    /* 
-    Computes the point in the canvas where the 
-    mouse event occurs
-    */
+    
+    // Computes the point in the canvas where the mouse event occurs
     function computePointInCanvas(e: MouseEvent) {
         const canvas = refs.canvasRef.current;
         if (!canvas) return;
@@ -427,15 +390,15 @@ export const addGraphVisualizer = (
     }
 
     /* 
-    For when the user is dragging a vertex around on the canvas,
-    the function adjusts the endpoints of all the edges connected
-    to the dragged vertex so that the vertex 'drags' all its edges 
-    with it. Returns immediately if there is no held object. 
+    For when the user is dragging a vertex around on the canvas, the function adjusts the endpoints of all the edges connected
+    to the dragged vertex so that the vertex 'drags' all its edges with it. Returns immediately if there is no held object. 
     */
     function relocateEdges() {
         if (!heldObject) return;
         for (let i = 0; i < heldObject.edges.length; i++) {
             var edge: Edge = heldObject.edges[i];
+            
+            // check which end of the edge is the held vertex
             if (edge.va == heldObject) {
                 var midX = (heldObject.x + edge.bx) / 2;
                 var midY = (heldObject.y + edge.by) / 2;
@@ -447,6 +410,7 @@ export const addGraphVisualizer = (
                 var a = edge.va.computeClosestPoint(midX, midY);
                 var b = heldObject.computeClosestPoint(midX, midY);
             }
+            // update the respective endpoint
             edge.ax = a.px;
             edge.ay = a.py;
             edge.bx = b.px;
@@ -465,14 +429,11 @@ export const addGraphVisualizer = (
     }
 
     /* 
-    Returns the edge or vertex at the given point and sets
-    its cursor as visible.
+    Returns the edge or vertex at the given point and sets its cursor as visible.
 
-    If there is a temp edge, then the edges are not checked
-    if they are selected. The function automatically returns null.
+    If there is a temp edge, then the edges are not checked if they are selected. The function automatically returns null.
 
-    The function also returns null if there is no edge or vertex 
-    at the given point.
+    The function also returns null if there is no edge or vertex at the given point.
     */
     function selectObject(x: number, y: number) {
         if (selectedObject) selectedObject.isCursorVisible = false;
@@ -492,10 +453,8 @@ export const addGraphVisualizer = (
         return null;
     }
 
-    /*
-    Schedules a function that switches the selected objects'
-    cursor on/off to execute repeatedly every 0.5 seconds  
-    */
+    
+    // Schedules a function that switches the selected objects' cursor on/off to execute repeatedly every 0.5 seconds  
     function pulseCursor() {
         clearInterval(timer); // reset Timeout object
         timer = setInterval(() => {
@@ -505,10 +464,10 @@ export const addGraphVisualizer = (
         }, 500);
     }
 
+    
     /*
-    Resets the canvas to a blank state with a line width 
-    for the next draw function. Returns a CanvasRenderingContext2D
-    object.
+    Resets the canvas to a blank state with a line width for the next draw function. Returns a 
+    CanvasRenderingContext2D object.
     */
     function resetContext() {
         var ctx = refs.canvasRef.current?.getContext("2d");
@@ -519,10 +478,7 @@ export const addGraphVisualizer = (
         return ctx;
     }
 
-    /*
-    Callback function for when the pre-build button is pressed. 
-    Loads a graph using saved data and draws it on the canvas.
-    */
+    // Callback function for when the pre-build button is pressed. Loads a graph using saved data and draws it on the canvas.
     function prebuild() {
         selectedObject = null;
         startingVertex = null;
@@ -533,9 +489,8 @@ export const addGraphVisualizer = (
     }
 
     /* 
-    Draws the graph using the using the graph object's arrays
-    of vertices and edges. A special colour is used for the selected 
-    object
+    Draws the graph using the using the graph object's arrays of vertices and edges. A special colour is used for the 
+    selected object
     */
     function drawGraph() {
         var colourScheme = { def: 'gray', selected: '#0284c7'};
@@ -559,10 +514,8 @@ export const addGraphVisualizer = (
         }
     }
 
-    /* 
-    Draws the graph when the user is selecting a start vertex.
-    A special colour is used for the chosen start vertex
-    */
+    
+    // Draws the graph when the user is selecting a start vertex. A special colour is used for the chosen start vertex
     function drawGraphInSelectionMode() {
         var colourScheme = { def: 'lightgray', start: '#075985'};
         const ctx = resetContext();
@@ -579,11 +532,8 @@ export const addGraphVisualizer = (
     }
 
     /* 
-    Set variables and html elements when the user enters
-    selection mode (when the user wants to choose a start vertex).
-
-    Exceptions are also checked and prompts are responded
-    accordingly
+    Set variables and html elements when the user enters selection mode (when the user wants to choose a start vertex).
+    Exceptions are also checked and prompts are responded accordingly
     */
     function onEnterSelectMode(e: MouseEvent) {
         if (!isValid()) {
@@ -615,10 +565,8 @@ export const addGraphVisualizer = (
         drawGraphInSelectionMode();
     }
 
-    /* 
-    Set variables and html elements when the user runs 
-    the visualization.
-    */
+    
+    // Set variables and html elements when the user runs the visualization.
     function onSubmitVisualize(e: MouseEvent) {
         inSelectionMode = false;
         inVisMode = true;
@@ -637,10 +585,8 @@ export const addGraphVisualizer = (
         if (refs.pauseRef.current) refs.pauseRef.current.hidden = false;
     }
 
-    /* 
-    Set variables and html elements when the user enters edit mode
-    (this only occurs after a visualization was ran)
-    */
+     
+    // Set variables and html elements when the user enters edit mode (this only occurs after a visualization was ran)
     function enterEditMode() {
         selectedObject = null;
         inSelectionMode = inVisMode = false;
@@ -663,10 +609,8 @@ export const addGraphVisualizer = (
         drawGraph();
     }
 
-    /* 
-    Set variables and html elements when the user wants to 
-    reselect a start vertex
-    */
+
+    // Set variables and html elements when the user wants to reselect a start vertex
     function restart() {
         selectedObject = startingVertex = null;
         inSelectionMode = true;

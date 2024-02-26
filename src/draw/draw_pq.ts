@@ -37,14 +37,9 @@ const styleCell = (cell: HTMLTableCellElement) => {
 }
 
 /* 
-Adds rows to the priority queue table to visualize
-each vertex in the priority queue.  
-
-Each row the vertex's label and its distance
-to the start vertex
-
-If a vertex's distance is Infinity, its label is 
-simply shortened to "Inf"
+Adds rows to the priority queue table to visualize each vertex in the priority queue. Each row the 
+vertex's label and its distance to the start vertex. If a vertex's distance is Infinity, its 
+label is simply shortened to "Inf"
 */
 export const addPQVisualizer = (
     pqRef: RefObject<HTMLTableElement>,
@@ -69,12 +64,10 @@ export const addPQVisualizer = (
 }
 
 /* 
-Updates the rows in the priority queue table and
-styles the rows depending on if the vertices have
+Updates the rows in the priority queue table and styles the rows depending on if the vertices have
 been visited or not.
 
-A highlighted row corresponds to a 'current' vertex
-in the graph traversal.
+A highlighted row corresponds to a 'current' vertex in the graph traversal.
 */
 export const updatePQVisualizer = (
     pqRef: RefObject<HTMLTableElement>,
