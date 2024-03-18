@@ -496,6 +496,8 @@ export const addGraphVisualizer = (
         var colourScheme = { def: 'gray', selected: '#0284c7'};
         const ctx = resetContext();
         if (!ctx) return;
+        ctx.save();
+        ctx.translate(0.5, 0.5);
         if (tempEdge && !tempEdge.vertex.containsPoint(tempEdge.px, tempEdge.py)) { 
             ctx.strokeStyle = colourScheme.selected;
             tempEdge.draw(ctx);
@@ -512,6 +514,7 @@ export const addGraphVisualizer = (
                 colourScheme.def;
             graph.vertices[i].draw(ctx, strokeStyle);
         }
+        ctx.restore();
     }
 
     
@@ -520,6 +523,8 @@ export const addGraphVisualizer = (
         var colourScheme = { def: 'lightgray', start: '#075985'};
         const ctx = resetContext();
         if (!ctx) return;
+        ctx.save();
+        ctx.translate(0.5, 0.5);
         for (let i = 0; i < graph.edges.length; i++) {
             graph.edges[i].draw(ctx, colourScheme.def);
         }
@@ -529,6 +534,7 @@ export const addGraphVisualizer = (
                 colourScheme.def;
             graph.vertices[i].draw(ctx, strokeStyle);
         }
+        ctx.restore();
     }
 
     /* 

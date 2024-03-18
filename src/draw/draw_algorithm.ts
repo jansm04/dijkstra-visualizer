@@ -14,8 +14,8 @@ export const addAlgorithmVisualizer = (
     graph: Graph
 ) => {
 
-    const ctx = refs.canvasRef.current?.getContext("2d");
-    const rect = refs.canvasRef.current?.getBoundingClientRect();
+    var ctx = refs.canvasRef.current?.getContext("2d");
+    var rect = refs.canvasRef.current?.getBoundingClientRect();
 
     // colours used to draw graph at each state in visualization
     const colourScheme = { 
@@ -59,6 +59,8 @@ export const addAlgorithmVisualizer = (
         if (!ctx || !rect) return;
         ctx.clearRect(0, 0, rect.width, rect.height);
         ctx.lineWidth = 2;
+        ctx.save();
+        ctx.translate(0.5, 0.5);
         var strokeStyle: string;
         for (let i = 0; i < graph.edges.length; i++) {
 
@@ -90,6 +92,7 @@ export const addAlgorithmVisualizer = (
                 strokeStyle = colourScheme.unvisisted;
             graph.vertices[i].draw(ctx, strokeStyle);
         }
+        ctx.restore();
     }
 
     /* 

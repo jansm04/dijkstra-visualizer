@@ -19,7 +19,7 @@ export const Main = () => {
     return (
         <div>
             <Header />
-            <div className="flex">
+            <div className="flex select-none">
                  <PriorityQueue pqRef={refs.pqRef} />
                  <div>
                     <Canvas canvasRef={refs.canvasRef} />
