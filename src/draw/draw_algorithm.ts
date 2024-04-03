@@ -19,6 +19,7 @@ export const addAlgorithmVisualizer = (
 
     // colours used to draw graph at each state in visualization
     const colourScheme = { 
+        start: 'green',
         unvisisted: 'lightgray',
         used: '#075985', // sky-800
         current: 'gold' 
@@ -81,13 +82,11 @@ export const addAlgorithmVisualizer = (
 
             // if animation is finished, check count to draw vertices in state of the flash effect
             if (isFinished) 
-                strokeStyle = count ? 
-                    colourScheme.unvisisted : 
-                    colourScheme.used;
+                strokeStyle = count ? colourScheme.unvisisted : graph.vertices[i] == startVertex ? colourScheme.start : colourScheme.used;
             else if (graph.vertices[i] == currVertex) 
                 strokeStyle = colourScheme.current;
             else if (visited.includes(graph.vertices[i])) 
-                strokeStyle = colourScheme.used;
+                strokeStyle = graph.vertices[i] == startVertex ? colourScheme.start : colourScheme.used;
             else 
                 strokeStyle = colourScheme.unvisisted;
             graph.vertices[i].draw(ctx, strokeStyle);
