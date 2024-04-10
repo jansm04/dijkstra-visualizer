@@ -58,10 +58,11 @@ export const addAlgorithmVisualizer = (
     function drawState() {
         if (pauseCount) return;
         if (!ctx || !rect) return;
-        ctx.clearRect(0, 0, rect.width, rect.height);
+        const dpi = window.devicePixelRatio;
+        ctx.clearRect(0, 0, rect.width * dpi, rect.height * dpi);
         ctx.lineWidth = 2;
         ctx.save();
-        ctx.translate(0.5, 0.5);
+        ctx.scale(dpi, dpi);
         var strokeStyle: string;
         for (let i = 0; i < graph.edges.length; i++) {
 

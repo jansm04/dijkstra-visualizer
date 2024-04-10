@@ -473,7 +473,8 @@ export const addGraphVisualizer = (
         var ctx = refs.canvasRef.current?.getContext("2d");
         var rect = refs.canvasRef.current?.getBoundingClientRect();
         if (!ctx || !rect) return;
-        ctx.clearRect(0, 0, rect.width, rect.height);
+        const dpi = window.devicePixelRatio;
+        ctx.clearRect(0, 0, rect.width * dpi, rect.height * dpi);
         ctx.lineWidth = 2;
         return ctx;
     }
@@ -497,7 +498,8 @@ export const addGraphVisualizer = (
         const ctx = resetContext();
         if (!ctx) return;
         ctx.save();
-        ctx.translate(0.5, 0.5);
+        const dpi = window.devicePixelRatio;
+        ctx.scale(dpi, dpi);
         if (tempEdge && !tempEdge.vertex.containsPoint(tempEdge.px, tempEdge.py)) { 
             ctx.strokeStyle = colourScheme.selected;
             tempEdge.draw(ctx);
@@ -520,7 +522,8 @@ export const addGraphVisualizer = (
         const ctx = resetContext();
         if (!ctx) return;
         ctx.save();
-        ctx.translate(0.5, 0.5);
+        const dpi = window.devicePixelRatio;
+        ctx.scale(dpi, dpi);
         for (let i = 0; i < graph.edges.length; i++) {
             graph.edges[i].draw(ctx, colourScheme.def);
         }
