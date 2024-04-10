@@ -67,9 +67,7 @@ export const addAlgorithmVisualizer = (
 
             // if animation is finished, check count to draw used eges in state of the flash effect
             if (isFinished && usedEdges.includes(graph.edges[i]))
-                strokeStyle = count ? 
-                    colourScheme.unvisisted : 
-                    colourScheme.used;
+                strokeStyle = count ? colourScheme.unvisisted : colourScheme.used;
             else if (graph.edges[i] == currEdge) 
                 strokeStyle = colourScheme.current;
             else if (usedEdges.includes(graph.edges[i])) 

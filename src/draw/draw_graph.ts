@@ -502,17 +502,13 @@ export const addGraphVisualizer = (
             ctx.strokeStyle = colourScheme.selected;
             tempEdge.draw(ctx);
         } 
-        for (let i = 0; i < graph.edges.length; i++) {
-            var strokeStyle = (graph.edges[i] == selectedObject) ? 
-                colourScheme.selected : 
-                colourScheme.def;
-            graph.edges[i].draw(ctx, strokeStyle);
-        }
         for (let i = 0; i < graph.vertices.length; i++) {
-            var strokeStyle = (graph.vertices[i] == selectedObject) ? 
-                colourScheme.selected : 
-                colourScheme.def;
+            var strokeStyle = (graph.vertices[i] == selectedObject) ? colourScheme.selected : colourScheme.def;
             graph.vertices[i].draw(ctx, strokeStyle);
+        }
+        for (let i = 0; i < graph.edges.length; i++) {
+            var strokeStyle = (graph.edges[i] == selectedObject) ? colourScheme.selected : colourScheme.def;
+            graph.edges[i].draw(ctx, strokeStyle);
         }
         ctx.restore();
     }
@@ -529,9 +525,7 @@ export const addGraphVisualizer = (
             graph.edges[i].draw(ctx, colourScheme.def);
         }
         for (let i = 0; i < graph.vertices.length; i++) {
-            var strokeStyle = (graph.vertices[i] == startingVertex) ? 
-                colourScheme.start : 
-                colourScheme.def;
+            var strokeStyle = (graph.vertices[i] == startingVertex) ? colourScheme.start : colourScheme.def;
             graph.vertices[i].draw(ctx, strokeStyle);
         }
         ctx.restore();
