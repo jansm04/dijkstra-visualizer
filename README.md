@@ -5,4 +5,4 @@ I built this project as a way to help students learning about data structures an
 
 If you're interested in how the code for the canvas works I have added documentation for all the related functions to make it easy to understand.
 
-Check it out here: https://www.davbyjan.com
+Check the app out here: https://www.davbyjan.com
