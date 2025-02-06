@@ -8,7 +8,17 @@ const Canvas = ({
     const [dpi, setDpi] = useState<number>(1);
     useEffect(() => {
         setDpi(window.devicePixelRatio);
-    })
+
+        const handleResize = () => {
+            location.reload()
+        }
+
+        window.addEventListener("resize", handleResize);
+
+        return () => {
+        window.removeEventListener("resize", handleResize);
+        };
+    }, [dpi]);
     return (
         <canvas 
             ref={canvasRef} 
